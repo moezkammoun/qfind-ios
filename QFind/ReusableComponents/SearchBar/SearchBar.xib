@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="ipad12_9" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchBarView" customModule="QFind" customModuleProvider="target">
+            <connections>
+                <outlet property="searchInnerView" destination="FaE-uI-dsG" id="2oD-DP-Jst"/>
+                <outlet property="searchText" destination="q5L-Vo-8Vc" id="Lek-6x-liL"/>
+                <outlet property="searchView" destination="iN0-l3-epB" id="JvA-zj-vcm"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="findByCategoryBG" translatesAutoresizingMaskIntoConstraints="NO" id="Ogp-DY-pvf">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-uI-dsG">
+                    <rect key="frame" x="20" y="21" width="285" height="18"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" translatesAutoresizingMaskIntoConstraints="NO" id="UbN-kp-qkG">
+                            <rect key="frame" x="12" y="-8.5" width="35" height="35"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="UbN-kp-qkG" secondAttribute="height" multiplier="11:11" id="N8D-Ma-Fga"/>
+                                <constraint firstAttribute="height" constant="20" id="kWn-7S-ocb">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="35"/>
+                                </constraint>
+                            </constraints>
+                        </imageView>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
+                            <rect key="frame" x="52" y="5" width="183" height="8"/>
+                            <color key="textColor" red="0.091605968770000004" green="0.19254547359999999" blue="0.24080395700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
+                            <textInputTraits key="textInputTraits"/>
+                            <variation key="heightClass=regular-widthClass=regular">
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="25"/>
+                            </variation>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMP-z7-6ko">
+                            <rect key="frame" x="240" y="-8.5" width="35" height="35"/>
+                            <state key="normal" title="Button" image="search"/>
+                            <connections>
+                                <action selector="didTapSearchButton:" destination="-1" eventType="touchUpInside" id="Bkw-pk-HHL"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="UbN-kp-qkG" firstAttribute="centerY" secondItem="q5L-Vo-8Vc" secondAttribute="centerY" id="0Po-OM-7mT"/>
+                        <constraint firstAttribute="trailing" secondItem="sMP-z7-6ko" secondAttribute="trailing" constant="10" id="FzU-L6-2bq"/>
+                        <constraint firstItem="UbN-kp-qkG" firstAttribute="height" secondItem="sMP-z7-6ko" secondAttribute="height" id="Lt3-hd-ksC"/>
+                        <constraint firstAttribute="bottom" secondItem="q5L-Vo-8Vc" secondAttribute="bottom" constant="5" id="QFR-7S-fjc"/>
+                        <constraint firstItem="UbN-kp-qkG" firstAttribute="width" secondItem="sMP-z7-6ko" secondAttribute="width" id="SlY-SC-7wG"/>
+                        <constraint firstItem="q5L-Vo-8Vc" firstAttribute="top" secondItem="FaE-uI-dsG" secondAttribute="top" constant="5" id="bAP-Ez-pHy"/>
+                        <constraint firstItem="sMP-z7-6ko" firstAttribute="leading" secondItem="q5L-Vo-8Vc" secondAttribute="trailing" constant="5" id="dvr-FS-Wy0"/>
+                        <constraint firstItem="UbN-kp-qkG" firstAttribute="leading" secondItem="FaE-uI-dsG" secondAttribute="leading" constant="12" id="eGt-bU-bfN"/>
+                        <constraint firstItem="q5L-Vo-8Vc" firstAttribute="centerY" secondItem="sMP-z7-6ko" secondAttribute="centerY" id="jik-b5-gMw"/>
+                        <constraint firstItem="UbN-kp-qkG" firstAttribute="centerY" secondItem="FaE-uI-dsG" secondAttribute="centerY" id="nEa-fP-Qr2"/>
+                        <constraint firstItem="q5L-Vo-8Vc" firstAttribute="leading" secondItem="UbN-kp-qkG" secondAttribute="trailing" constant="5" id="rW8-vm-4DN"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zeu-PG-ePr">
+                    <rect key="frame" x="323" y="17.5" width="36" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="ZhB-fX-NHQ">
+                            <variation key="heightClass=regular-widthClass=regular" constant="25"/>
+                        </constraint>
+                        <constraint firstAttribute="width" constant="30" id="wva-Zv-fot">
+                            <variation key="heightClass=regular-widthClass=regular" constant="36"/>
+                        </constraint>
+                    </constraints>
+                    <state key="normal" title="Button" image="hamburger"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="FaE-uI-dsG" secondAttribute="bottom" constant="12" id="93s-99-jRR">
+                    <variation key="heightClass=regular-widthClass=regular" constant="21"/>
+                </constraint>
+                <constraint firstItem="FaE-uI-dsG" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="M2G-hk-rPD">
+                    <variation key="heightClass=regular-widthClass=regular" constant="21"/>
+                </constraint>
+                <constraint firstAttribute="trailing" secondItem="Zeu-PG-ePr" secondAttribute="trailing" constant="16" id="PYx-mq-Qd1"/>
+                <constraint firstAttribute="trailing" secondItem="FaE-uI-dsG" secondAttribute="trailing" constant="70" id="Vla-Yx-0Lg"/>
+                <constraint firstItem="FaE-uI-dsG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="dJI-eY-MsM"/>
+                <constraint firstItem="Ogp-DY-pvf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mMj-oJ-RNH"/>
+                <constraint firstItem="Ogp-DY-pvf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mSk-KI-hou"/>
+                <constraint firstItem="Zeu-PG-ePr" firstAttribute="centerY" secondItem="FaE-uI-dsG" secondAttribute="centerY" id="oAr-WY-6jO"/>
+                <constraint firstAttribute="bottom" secondItem="Ogp-DY-pvf" secondAttribute="bottom" id="p0I-8Z-5t4"/>
+                <constraint firstAttribute="trailing" secondItem="Ogp-DY-pvf" secondAttribute="trailing" id="r1X-Jh-6fR"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="208.5" y="91"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Qmarker" width="120" height="135"/>
+        <image name="findByCategoryBG" width="1480" height="310"/>
+        <image name="hamburger" width="130" height="90"/>
+        <image name="search" width="95" height="95"/>
+    </resources>
+</document>
