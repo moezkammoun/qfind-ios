@@ -31,6 +31,7 @@ class BottomBarView: UIView {
         addSubview(bottomView)
         bottomView.frame = self.bounds
         bottomView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
+        
     }
    
     @IBAction func didTapFavorite(_ sender: UIButton) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="ipad12_9" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -31,12 +31,21 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ministries" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZR-vn-3gl">
-                        <rect key="frame" x="91" y="26.5" width="194" height="25.5"/>
-                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="14"/>
+                        <rect key="frame" x="91" y="22.5" width="194" height="16"/>
+                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="13"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                         <variation key="heightClass=regular-widthClass=regular">
                             <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="21"/>
+                        </variation>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor hujkio iop." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdm-fO-PM5">
+                        <rect key="frame" x="91" y="38.5" width="194" height="12"/>
+                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="10"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="14"/>
                         </variation>
                     </label>
                 </subviews>
@@ -44,11 +53,14 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="OZR-vn-3gl" firstAttribute="leading" secondItem="WKZ-1f-9BP" secondAttribute="trailing" constant="9" id="1Y1-ml-NPs"/>
-                <constraint firstItem="WKZ-1f-9BP" firstAttribute="centerY" secondItem="OZR-vn-3gl" secondAttribute="centerY" id="1uH-Qd-ER4"/>
+                <constraint firstItem="WKZ-1f-9BP" firstAttribute="centerY" secondItem="OZR-vn-3gl" secondAttribute="centerY" constant="8" id="1uH-Qd-ER4"/>
                 <constraint firstAttribute="bottom" secondItem="WKZ-1f-9BP" secondAttribute="bottom" id="Alc-Ho-foV"/>
+                <constraint firstItem="zdm-fO-PM5" firstAttribute="leading" secondItem="OZR-vn-3gl" secondAttribute="leading" id="KGw-xe-a2P"/>
                 <constraint firstItem="WKZ-1f-9BP" firstAttribute="leading" secondItem="qSs-A7-kMQ" secondAttribute="leading" id="TJh-Du-uOR"/>
                 <constraint firstAttribute="trailing" secondItem="OZR-vn-3gl" secondAttribute="trailing" constant="8" id="dgZ-Ba-HlT"/>
+                <constraint firstItem="zdm-fO-PM5" firstAttribute="top" secondItem="OZR-vn-3gl" secondAttribute="bottom" id="ual-N4-izy"/>
                 <constraint firstItem="WKZ-1f-9BP" firstAttribute="top" secondItem="qSs-A7-kMQ" secondAttribute="top" id="vQ1-MM-CiO"/>
+                <constraint firstAttribute="trailing" secondItem="zdm-fO-PM5" secondAttribute="trailing" constant="8" id="z6s-kK-Cwq"/>
             </constraints>
             <size key="customSize" width="293" height="77"/>
             <point key="canvasLocation" x="107.5" y="-127.5"/>

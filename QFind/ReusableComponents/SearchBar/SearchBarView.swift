@@ -36,6 +36,7 @@ class SearchBarView: UIView,UITextFieldDelegate {
         searchInnerView.layer.cornerRadius = 5.0
         searchInnerView.clipsToBounds = true
         searchText.delegate = self
+        
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

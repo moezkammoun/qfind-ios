@@ -9,11 +9,13 @@
 import UIKit
 
 class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol {
-  let bottomBar = BottomBarView()
-    let searchBar = SearchBarView()
+    
+    @IBOutlet weak var bottomBar: BottomBarView!
+    
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     
+    @IBOutlet weak var searchBarView: SearchBarView!
     @IBOutlet weak var slideShow: KASlideShow!
     
      var bannerArray = NSArray()
@@ -25,10 +27,15 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
       
         bottomBar.bottombarDelegate = self
-        searchBar.searchDelegate = self
-        
+    
+        searchBarView.searchDelegate = self
 
+        //setRTLSupport()
         
+    }
+    func setRTLSupport()
+    {
+        searchBarView.searchText.textAlignment = .right
     }
     func registerNib()
     {
@@ -58,7 +65,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
         slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next directly on the image (Tap or Swipe)
         /*************Set this value when langue is changed in settings*****/
-        slideShow.arabic = false
+        slideShow.arabic = true
         slideShow.start()
     }
     //KASlideShow delegate
