@@ -21,6 +21,8 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
 
         setUILayout()
         setSlideShow()
+        //setRTLSupport()
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
@@ -29,14 +31,12 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+    func setRTLSupport()
+    {
+        searchText.textAlignment = .right
+    }
     func setSlideShow()
     {
-        
-       
-        
-
-     
-        
         
         //KASlideshow
         slideShow.delegate = self

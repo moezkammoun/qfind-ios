@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B88A2D9B2008C3A000BF1B8A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */; };
-		B88A2D9D2008C3A000BF1B8A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2D9C2008C3A000BF1B8A /* ViewController.swift */; };
 		B88A2DA02008C3A000BF1B8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B88A2D9E2008C3A000BF1B8A /* Main.storyboard */; };
 		B88A2DA32008C3A000BF1B8A /* QFind.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DA12008C3A000BF1B8A /* QFind.xcdatamodeld */; };
 		B88A2DA52008C3A000BF1B8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B88A2DA42008C3A000BF1B8A /* Assets.xcassets */; };
@@ -16,6 +15,8 @@
 		B88A2DB32008C3A000BF1B8A /* QFindTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DB22008C3A000BF1B8A /* QFindTests.swift */; };
 		B88A2DBE2008C3A000BF1B8A /* QFindUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DBD2008C3A000BF1B8A /* QFindUITests.swift */; };
 		B88A2DCD2008D7D000BF1B8A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */; };
+		B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89227F8200E2F3F00677F54 /* DetailViewController.swift */; };
+		B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */; };
 		B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7D0200C8DCC00E8D448 /* KASlideShow.m */; };
 		B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */; };
 		B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */; };
@@ -49,7 +50,6 @@
 /* Begin PBXFileReference section */
 		B88A2D972008C3A000BF1B8A /* QFind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QFind.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B88A2D9C2008C3A000BF1B8A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B88A2D9F2008C3A000BF1B8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B88A2DA22008C3A000BF1B8A /* QFind.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = QFind.xcdatamodel; sourceTree = "<group>"; };
 		B88A2DA42008C3A000BF1B8A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -62,6 +62,8 @@
 		B88A2DBD2008C3A000BF1B8A /* QFindUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QFindUITests.swift; sourceTree = "<group>"; };
 		B88A2DBF2008C3A000BF1B8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		B89227F8200E2F3F00677F54 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
 		B8C4D7CE200C8DCB00E8D448 /* QFind-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QFind-Bridging-Header.h"; sourceTree = "<group>"; };
 		B8C4D7CF200C8DCC00E8D448 /* KASlideShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KASlideShow.h; sourceTree = "<group>"; };
 		B8C4D7D0200C8DCC00E8D448 /* KASlideShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KASlideShow.m; sourceTree = "<group>"; };
@@ -130,7 +132,6 @@
 				B8D3B826200C686C0032C78B /* Font */,
 				B88A2DCB2008D7AD00BF1B8A /* ViewController */,
 				B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */,
-				B88A2D9C2008C3A000BF1B8A /* ViewController.swift */,
 				B88A2D9E2008C3A000BF1B8A /* Main.storyboard */,
 				B88A2DA42008C3A000BF1B8A /* Assets.xcassets */,
 				B88A2DA62008C3A000BF1B8A /* LaunchScreen.storyboard */,
@@ -163,6 +164,7 @@
 			children = (
 				B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */,
 				B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */,
+				B89227F8200E2F3F00677F54 /* DetailViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -202,6 +204,7 @@
 			children = (
 				B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */,
 				B8D3B827200C686C0032C78B /* Lato-Bold.ttf */,
+				B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */,
 				B8D3B828200C686C0032C78B /* Lato-Regular.ttf */,
 			);
 			path = Font;
@@ -324,6 +327,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */,
 				B88A2DA82008C3A000BF1B8A /* LaunchScreen.storyboard in Resources */,
 				B8C4D7DA200CC3FF00E8D448 /* CategoryCell.xib in Resources */,
 				B8D5AC92200DBB5F004F0BE1 /* SearchBar.xib in Resources */,
@@ -357,11 +361,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */,
 				B88A2DA32008C3A000BF1B8A /* QFind.xcdatamodeld in Sources */,
 				B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */,
 				B8C4D7E3200CE6C400E8D448 /* BottomBarView.swift in Sources */,
 				B8C4D7DE200CC6D600E8D448 /* CategoryCollectionViewCell.swift in Sources */,
-				B88A2D9D2008C3A000BF1B8A /* ViewController.swift in Sources */,
 				B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */,
 				B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */,
 				B88A2D9B2008C3A000BF1B8A /* AppDelegate.swift in Sources */,
@@ -533,6 +537,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RS529R9N6Z;
 				INFOPLIST_FILE = QFind/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -551,6 +556,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = RS529R9N6Z;
 				INFOPLIST_FILE = QFind/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
