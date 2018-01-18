@@ -204,8 +204,8 @@
 			children = (
 				B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */,
 				B8D3B827200C686C0032C78B /* Lato-Bold.ttf */,
-				B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */,
 				B8D3B828200C686C0032C78B /* Lato-Regular.ttf */,
+				B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */,
 			);
 			path = Font;
 			sourceTree = "<group>";
