@@ -12,6 +12,7 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
 
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
+    @IBOutlet weak var titleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,11 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
     func initialSetUp()
     {
         detailBottomBar.bottombarDelegate = self
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            titleLabel.textAlignment = .center
+        }
+        
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -124,5 +130,36 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
     func historyButtonPressed() {
         
     }
-
+    @IBAction func didTapShare(_ sender: UIButton) {
+        let firstActivityItem = "Text you want"
+        let secondActivityItem : NSURL = NSURL(string: "http//:urlyouwant")!
+        // If you want to put an image
+        let image : UIImage = UIImage(named: "banner-1")!
+        
+        let activityViewController : UIActivityViewController = UIActivityViewController(
+            activityItems: [firstActivityItem, secondActivityItem, image], applicationActivities: nil)
+        
+        // This lines is for the popover you need to show in iPad
+        activityViewController.popoverPresentationController?.sourceView = (sender )
+        
+        // This line remove the arrow of the popover to show in iPad
+        activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.up
+        activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+        
+        // Anything you want to exclude
+        activityViewController.excludedActivityTypes = [
+            UIActivityType.postToWeibo,
+            UIActivityType.print,
+            UIActivityType.assignToContact,
+            UIActivityType.saveToCameraRoll,
+            UIActivityType.addToReadingList,
+            UIActivityType.postToFlickr,
+            UIActivityType.postToVimeo,
+            UIActivityType.postToTencentWeibo
+        ]
+        
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    
 }
