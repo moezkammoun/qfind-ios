@@ -21,7 +21,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
 
         setUILayout()
         setSlideShow()
-        //setRTLSupport()
+        setRTLSupport()
         
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -33,7 +33,25 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     }
     func setRTLSupport()
     {
-        searchText.textAlignment = .right
+        if #available(iOS 9.0, *) {
+            let attribute = view.semanticContentAttribute
+            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+            if layoutDirection == .leftToRight {
+                slideShow.arabic = false
+                searchText.textAlignment = .left
+                
+                
+               
+            }
+            else{
+                slideShow.arabic = true
+                searchText.textAlignment = .right
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+       
+        
     }
     func setSlideShow()
     {
@@ -47,7 +65,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
         slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next directly on the image (Tap or Swipe)
         /*************Set this value when langue is changed in settings*****/
-        slideShow.arabic = false
+       // slideShow.arabic = false
         slideShow.start()
     }
     func setUILayout()

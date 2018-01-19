@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-uI-dsG">
-                    <rect key="frame" x="20" y="21" width="285" height="18"/>
+                    <rect key="frame" x="20" y="21" width="245" height="18"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" translatesAutoresizingMaskIntoConstraints="NO" id="UbN-kp-qkG">
                             <rect key="frame" x="12" y="-8.5" width="35" height="35"/>
@@ -43,7 +43,7 @@
                             </constraints>
                         </imageView>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
-                            <rect key="frame" x="52" y="5" width="183" height="8"/>
+                            <rect key="frame" x="52" y="5" width="143" height="8"/>
                             <color key="textColor" red="0.091605968770000004" green="0.19254547359999999" blue="0.24080395700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
                             <textInputTraits key="textInputTraits"/>
@@ -52,7 +52,7 @@
                             </variation>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMP-z7-6ko">
-                            <rect key="frame" x="240" y="-8.5" width="35" height="35"/>
+                            <rect key="frame" x="200" y="-8.5" width="35" height="35"/>
                             <state key="normal" title="Button" image="search"/>
                             <connections>
                                 <action selector="didTapSearchButton:" destination="-1" eventType="touchUpInside" id="Bkw-pk-HHL"/>
@@ -75,13 +75,13 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zeu-PG-ePr">
-                    <rect key="frame" x="323" y="17.5" width="36" height="25"/>
+                    <rect key="frame" x="320" y="16" width="39" height="28"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="ZhB-fX-NHQ">
-                            <variation key="heightClass=regular-widthClass=regular" constant="25"/>
+                            <variation key="heightClass=regular-widthClass=regular" constant="28"/>
                         </constraint>
                         <constraint firstAttribute="width" constant="30" id="wva-Zv-fot">
-                            <variation key="heightClass=regular-widthClass=regular" constant="36"/>
+                            <variation key="heightClass=regular-widthClass=regular" constant="39"/>
                         </constraint>
                     </constraints>
                     <state key="normal" title="Button" image="hamburger"/>
@@ -95,8 +95,10 @@
                 <constraint firstItem="FaE-uI-dsG" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="M2G-hk-rPD">
                     <variation key="heightClass=regular-widthClass=regular" constant="21"/>
                 </constraint>
+                <constraint firstItem="Zeu-PG-ePr" firstAttribute="leading" secondItem="FaE-uI-dsG" secondAttribute="trailing" constant="24" id="P2v-Y5-Fev">
+                    <variation key="heightClass=regular-widthClass=regular" constant="55"/>
+                </constraint>
                 <constraint firstAttribute="trailing" secondItem="Zeu-PG-ePr" secondAttribute="trailing" constant="16" id="PYx-mq-Qd1"/>
-                <constraint firstAttribute="trailing" secondItem="FaE-uI-dsG" secondAttribute="trailing" constant="70" id="Vla-Yx-0Lg"/>
                 <constraint firstItem="FaE-uI-dsG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="dJI-eY-MsM"/>
                 <constraint firstItem="Ogp-DY-pvf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mMj-oJ-RNH"/>
                 <constraint firstItem="Ogp-DY-pvf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mSk-KI-hou"/>
@@ -109,9 +111,9 @@
         </view>
     </objects>
     <resources>
-        <image name="Qmarker" width="120" height="135"/>
+        <image name="Qmarker" width="29" height="29"/>
         <image name="findByCategoryBG" width="1480" height="310"/>
         <image name="hamburger" width="130" height="90"/>
-        <image name="search" width="95" height="95"/>
+        <image name="search" width="29" height="29"/>
     </resources>
 </document>

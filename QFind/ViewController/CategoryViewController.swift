@@ -30,12 +30,31 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     
         searchBarView.searchDelegate = self
 
-        //setRTLSupport()
+        setRTLSupport()
         
     }
     func setRTLSupport()
     {
-        searchBarView.searchText.textAlignment = .right
+        if #available(iOS 9.0, *) {
+            let attribute = view.semanticContentAttribute
+            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+            if layoutDirection == .leftToRight {
+                slideShow.arabic = false
+                searchBarView.searchText.textAlignment = .left
+                
+                
+                
+            }
+            else{
+                slideShow.arabic = true
+                 searchBarView.searchText.textAlignment = .right
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        
+       
     }
     func registerNib()
     {
@@ -126,6 +145,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         }
         
     }
+
     func favouriteButtonPressed() {
         
     }
