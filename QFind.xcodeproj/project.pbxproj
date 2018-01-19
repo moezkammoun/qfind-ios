@@ -24,6 +24,10 @@
 		B8C4D7DE200CC6D600E8D448 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7DD200CC6D600E8D448 /* CategoryCollectionViewCell.swift */; };
 		B8C4D7E1200CD42000E8D448 /* BottomBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8C4D7E0200CD42000E8D448 /* BottomBar.xib */; };
 		B8C4D7E3200CE6C400E8D448 /* BottomBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7E2200CE6C400E8D448 /* BottomBarView.swift */; };
+		B8D20D4A20107A37008DDDE8 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */; };
+		B8D20D4E20107ACC008DDDE8 /* HistoryOrSearchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8D20D4D20107ACC008DDDE8 /* HistoryOrSearchCell.xib */; };
+		B8D20D582010B0F3008DDDE8 /* HistoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D20D572010B0F3008DDDE8 /* HistoryCollectionViewCell.swift */; };
+		B8D20D5A2010B372008DDDE8 /* SectionHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D20D592010B372008DDDE8 /* SectionHeaderCollectionReusableView.swift */; };
 		B8D3B829200C686D0032C78B /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8D3B827200C686C0032C78B /* Lato-Bold.ttf */; };
 		B8D3B82A200C686D0032C78B /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8D3B828200C686C0032C78B /* Lato-Regular.ttf */; };
 		B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D5AC8F200DBB48004F0BE1 /* SearchBarView.swift */; };
@@ -73,6 +77,10 @@
 		B8C4D7DD200CC6D600E8D448 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8C4D7E0200CD42000E8D448 /* BottomBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomBar.xib; sourceTree = "<group>"; };
 		B8C4D7E2200CE6C400E8D448 /* BottomBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
+		B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		B8D20D4D20107ACC008DDDE8 /* HistoryOrSearchCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryOrSearchCell.xib; sourceTree = "<group>"; };
+		B8D20D572010B0F3008DDDE8 /* HistoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8D20D592010B372008DDDE8 /* SectionHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		B8D3B827200C686C0032C78B /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
 		B8D3B828200C686C0032C78B /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		B8D5AC8F200DBB48004F0BE1 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
@@ -165,6 +173,7 @@
 				B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */,
 				B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */,
 				B89227F8200E2F3F00677F54 /* DetailViewController.swift */,
+				B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -182,10 +191,10 @@
 		B8C4D7D8200CC3E100E8D448 /* ReusableComponents */ = {
 			isa = PBXGroup;
 			children = (
+				B8D20D4C20107A92008DDDE8 /* HistoryOrSearchCell */,
+				B8D20D4B20107A4F008DDDE8 /* CategoryCell */,
 				B8D5AC8C200DBA84004F0BE1 /* SearchBar */,
 				B8C4D7DF200CD41200E8D448 /* BottomBar */,
-				B8C4D7D9200CC3FF00E8D448 /* CategoryCell.xib */,
-				B8C4D7DD200CC6D600E8D448 /* CategoryCollectionViewCell.swift */,
 			);
 			path = ReusableComponents;
 			sourceTree = "<group>";
@@ -197,6 +206,25 @@
 				B8C4D7E2200CE6C400E8D448 /* BottomBarView.swift */,
 			);
 			path = BottomBar;
+			sourceTree = "<group>";
+		};
+		B8D20D4B20107A4F008DDDE8 /* CategoryCell */ = {
+			isa = PBXGroup;
+			children = (
+				B8C4D7D9200CC3FF00E8D448 /* CategoryCell.xib */,
+				B8C4D7DD200CC6D600E8D448 /* CategoryCollectionViewCell.swift */,
+			);
+			path = CategoryCell;
+			sourceTree = "<group>";
+		};
+		B8D20D4C20107A92008DDDE8 /* HistoryOrSearchCell */ = {
+			isa = PBXGroup;
+			children = (
+				B8D20D4D20107ACC008DDDE8 /* HistoryOrSearchCell.xib */,
+				B8D20D572010B0F3008DDDE8 /* HistoryCollectionViewCell.swift */,
+				B8D20D592010B372008DDDE8 /* SectionHeaderCollectionReusableView.swift */,
+			);
+			path = HistoryOrSearchCell;
 			sourceTree = "<group>";
 		};
 		B8D3B826200C686C0032C78B /* Font */ = {
@@ -330,6 +358,7 @@
 				B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */,
 				B88A2DA82008C3A000BF1B8A /* LaunchScreen.storyboard in Resources */,
 				B8C4D7DA200CC3FF00E8D448 /* CategoryCell.xib in Resources */,
+				B8D20D4E20107ACC008DDDE8 /* HistoryOrSearchCell.xib in Resources */,
 				B8D5AC92200DBB5F004F0BE1 /* SearchBar.xib in Resources */,
 				B88A2DA52008C3A000BF1B8A /* Assets.xcassets in Resources */,
 				B8D3B82A200C686D0032C78B /* Lato-Regular.ttf in Resources */,
@@ -361,9 +390,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8D20D5A2010B372008DDDE8 /* SectionHeaderCollectionReusableView.swift in Sources */,
 				B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */,
 				B88A2DA32008C3A000BF1B8A /* QFind.xcdatamodeld in Sources */,
 				B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */,
+				B8D20D582010B0F3008DDDE8 /* HistoryCollectionViewCell.swift in Sources */,
+				B8D20D4A20107A37008DDDE8 /* HistoryViewController.swift in Sources */,
 				B8C4D7E3200CE6C400E8D448 /* BottomBarView.swift in Sources */,
 				B8C4D7DE200CC6D600E8D448 /* CategoryCollectionViewCell.swift in Sources */,
 				B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */,

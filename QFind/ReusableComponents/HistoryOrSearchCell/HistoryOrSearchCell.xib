@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Light.ttf">
+            <string>Lato-Light</string>
+        </array>
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="historyCellId" id="75B-N3-hfH" customClass="HistoryCollectionViewCell" customModule="QFind" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="293" height="87"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="293" height="87"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="coG-oB-ipg">
+                        <rect key="frame" x="0.0" y="0.0" width="293" height="87"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car_service" translatesAutoresizingMaskIntoConstraints="NO" id="Ha1-rg-JMk">
+                                <rect key="frame" x="0.0" y="0.0" width="92.666666666666671" height="87"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Ha1-rg-JMk" secondAttribute="height" multiplier="82:77" id="iSa-iD-B1R"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For Season Hotel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zsX-h6-zP4">
+                                <rect key="frame" x="100.66666666666667" y="27.333333333333329" width="188.33333333333331" height="18"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="15"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="26"/>
+                                </variation>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laddda dsfsf fdfdg gdgd" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rda-0o-Kup">
+                                <rect key="frame" x="100.66666666666667" y="45.333333333333336" width="188.33333333333331" height="14.666666666666664"/>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="12"/>
+                                <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40392156862745099" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="15"/>
+                                </variation>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Rda-0o-Kup" firstAttribute="top" secondItem="zsX-h6-zP4" secondAttribute="bottom" id="6qr-Sm-tit"/>
+                            <constraint firstAttribute="bottom" secondItem="Ha1-rg-JMk" secondAttribute="bottom" id="92E-AZ-pfg"/>
+                            <constraint firstItem="Rda-0o-Kup" firstAttribute="leading" secondItem="zsX-h6-zP4" secondAttribute="leading" id="Eue-g3-V8R"/>
+                            <constraint firstAttribute="trailing" secondItem="zsX-h6-zP4" secondAttribute="trailing" constant="4" id="HfO-c8-VMD"/>
+                            <constraint firstAttribute="trailing" secondItem="Rda-0o-Kup" secondAttribute="trailing" constant="4" id="O04-P4-IGe"/>
+                            <constraint firstItem="zsX-h6-zP4" firstAttribute="centerY" secondItem="Ha1-rg-JMk" secondAttribute="centerY" constant="-8" id="c8s-ho-d3g"/>
+                            <constraint firstItem="Ha1-rg-JMk" firstAttribute="top" secondItem="coG-oB-ipg" secondAttribute="top" id="fOu-xe-0ox"/>
+                            <constraint firstItem="Ha1-rg-JMk" firstAttribute="leading" secondItem="coG-oB-ipg" secondAttribute="leading" id="jQM-UV-eAu"/>
+                            <constraint firstItem="zsX-h6-zP4" firstAttribute="leading" secondItem="Ha1-rg-JMk" secondAttribute="trailing" constant="8" id="ufB-ll-Iik"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="coG-oB-ipg" secondAttribute="trailing" id="4Oj-a9-q4w">
+                    <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
+                </constraint>
+                <constraint firstItem="coG-oB-ipg" firstAttribute="leading" secondItem="75B-N3-hfH" secondAttribute="leading" id="9G6-1q-KBN"/>
+                <constraint firstItem="coG-oB-ipg" firstAttribute="top" secondItem="75B-N3-hfH" secondAttribute="top" id="GF8-xR-ScH"/>
+                <constraint firstAttribute="bottom" secondItem="coG-oB-ipg" secondAttribute="bottom" id="zfL-Mf-cW0"/>
+            </constraints>
+            <connections>
+                <outlet property="historyView" destination="coG-oB-ipg" id="UA0-Ce-7v4"/>
+            </connections>
+            <point key="canvasLocation" x="361" y="213"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="car_service" width="185" height="175"/>
+    </resources>
+</document>
