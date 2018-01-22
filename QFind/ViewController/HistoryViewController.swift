@@ -16,6 +16,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     @IBOutlet weak var historyCollectionView: UICollectionView!
     @IBOutlet weak var historySearchBar: SearchBarView!
     
+    @IBOutlet weak var historyLoadingView: LoadingView!
     @IBOutlet weak var historyBottomBar: BottomBarView!
     
     var controller = PredicateSearchViewController()
@@ -28,6 +29,9 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         historySearchBar.searchDelegate = self
         historyBottomBar.bottombarDelegate = self
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
+        historyLoadingView.isHidden = true
+        //historyLoadingView.showLoading()
+        //historyLoadingView.showNoDataView()
        
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {

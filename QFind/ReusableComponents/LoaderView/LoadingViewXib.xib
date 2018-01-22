@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoadingView" customModule="QFind" customModuleProvider="target">
+            <connections>
+                <outlet property="activityIndicator" destination="qdS-uy-jdc" id="S1c-jp-a5Z"/>
+                <outlet property="noDataLabel" destination="jVS-tr-g9y" id="mWY-85-jHg"/>
+                <outlet property="noDataView" destination="re1-jH-FJV" id="YPO-PO-ZU3"/>
+                <outlet property="xibView" destination="iN0-l3-epB" id="QEi-SP-VgS"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="re1-jH-FJV">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Data Available" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVS-tr-g9y">
+                            <rect key="frame" x="93.5" y="319" width="188" height="29"/>
+                            <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="24"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <activityIndicatorView opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="qdS-uy-jdc">
+                            <rect key="frame" x="169.5" y="315.5" width="37" height="37"/>
+                            <color key="backgroundColor" red="0.51764705879999995" green="0.36862745099999999" blue="0.65490196079999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="37" id="EwV-gS-V0d">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="70"/>
+                                </constraint>
+                                <constraint firstAttribute="height" constant="37" id="Ry4-ut-3Iq">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="70"/>
+                                </constraint>
+                            </constraints>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="jVS-tr-g9y" firstAttribute="centerY" secondItem="re1-jH-FJV" secondAttribute="centerY" id="Bho-io-miL"/>
+                        <constraint firstItem="qdS-uy-jdc" firstAttribute="centerY" secondItem="re1-jH-FJV" secondAttribute="centerY" id="VBC-Fa-6RS"/>
+                        <constraint firstItem="jVS-tr-g9y" firstAttribute="centerX" secondItem="re1-jH-FJV" secondAttribute="centerX" id="dZa-0m-HiX"/>
+                        <constraint firstItem="qdS-uy-jdc" firstAttribute="centerX" secondItem="re1-jH-FJV" secondAttribute="centerX" id="rwK-ZM-vLy"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="re1-jH-FJV" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="B0d-sI-8Yr"/>
+                <constraint firstItem="re1-jH-FJV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="L9k-Ej-rTe"/>
+                <constraint firstAttribute="bottom" secondItem="re1-jH-FJV" secondAttribute="bottom" id="N93-du-3Vm"/>
+                <constraint firstAttribute="trailing" secondItem="re1-jH-FJV" secondAttribute="trailing" id="Z0I-wM-PZq"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

@@ -13,6 +13,8 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var searchText: UITextField!
+    
+    @IBOutlet weak var homeLoadingView: LoadingView!
     @IBOutlet weak var slideShow: KASlideShow!
     var bannerArray = NSArray()
     var controller = PredicateSearchViewController()
@@ -74,6 +76,9 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     func setUILayout()
     {
         
+        homeLoadingView.isHidden = true
+       // homeLoadingView.showLoading()
+       // homeLoadingView.showNoDataView()
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
         bannerArray = ["banner", "findByCategoryBG", "car_service","cloth_stores"]
         searchView.layer.cornerRadius = 7.5

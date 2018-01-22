@@ -12,6 +12,9 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
 
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
+    
+    
+    @IBOutlet weak var detailLoadingView: LoadingView!
     @IBOutlet weak var titleLabel: UILabel!
     var phnNumber = 0
     
@@ -28,6 +31,8 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         {
             titleLabel.textAlignment = .center
         }
+        detailLoadingView.isHidden = true
+       // detailLoadingView.showLoading()
         
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {

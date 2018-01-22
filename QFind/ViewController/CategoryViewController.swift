@@ -12,6 +12,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     
     @IBOutlet weak var bottomBar: BottomBarView!
     
+    @IBOutlet weak var categoryLoadingView: LoadingView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     
@@ -35,6 +36,8 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
           controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
 
         setRTLSupport()
+        categoryLoadingView.isHidden = true
+        //categoryLoadingView.showLoading()
         
     }
     func setRTLSupport()
@@ -195,7 +198,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                     controller.view.frame = CGRect(x: searchBarView.searchInnerView.frame.origin.x, y:
                         
                         //give height as number of items * height of cell. height is set in PredicateVC
-                        searchBarView.searchInnerView.frame.origin.y+searchBarView.searchInnerView.frame.height+20, width: searchBarView.searchInnerView.frame.width, height: 510)
+                        searchBarView.searchInnerView.frame.origin.y+searchBarView.searchInnerView.frame.height+20, width: searchBarView.searchInnerView.frame.width, height: 300)
                     
                     view.addSubview((controller.view)!)
                     controller.didMove(toParentViewController: self)
