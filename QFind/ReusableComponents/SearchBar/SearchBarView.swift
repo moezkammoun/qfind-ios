@@ -9,6 +9,9 @@
 import UIKit
 protocol SearchBarProtocol {
     func searchButtonPressed()
+    
+    func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool
+   // func searchTextFieldDidBeginEditing(_ textField: UITextField) 
 }
 class SearchBarView: UIView,UITextFieldDelegate {
     @IBOutlet var searchView: UIView!
@@ -43,7 +46,16 @@ class SearchBarView: UIView,UITextFieldDelegate {
         searchText.resignFirstResponder()
         return true
     }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        print(textField.text)
+    }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print(string)
+       // searchDelegate?.searchTextshouldChangeCharacters()
+        searchDelegate?.textField(searchText, shouldChangeSearcgCharacters: range, replacementString: string)
+        return true
+    }
     @IBAction func didTapSearchButton(_ sender: UIButton) {
         searchDelegate?.searchButtonPressed()
     }

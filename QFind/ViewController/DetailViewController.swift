@@ -13,6 +13,7 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
     @IBOutlet weak var titleLabel: UILabel!
+    var phnNumber = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +39,7 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         // Dispose of any resources that can be recreated.
     }
     @IBAction func didTapCallButton(_ sender: UIButton) {
-        if let url = URL(string: "tel://\(9847510019)"), UIApplication.shared.canOpenURL(url) {
+        if let url = URL(string: "tel://\(phnNumber)"), UIApplication.shared.canOpenURL(url) {
             if #available(iOS 10, *) {
                 UIApplication.shared.open(url)
             } else {
@@ -161,5 +162,8 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         self.present(activityViewController, animated: true, completion: nil)
     }
     
+    @IBAction func didTapBack(_ sender: UIButton) {
+        self.dismiss(animated: false, completion: nil)
+    }
     
 }

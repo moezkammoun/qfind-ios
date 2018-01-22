@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol{
+class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
 
 
    
@@ -17,15 +17,41 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     @IBOutlet weak var historySearchBar: SearchBarView!
     
     @IBOutlet weak var historyBottomBar: BottomBarView!
+    
+    var controller = PredicateSearchViewController()
+    var tapGesture = UITapGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setRTLSupportForHistory()
         registerCell()
         historySearchBar.searchDelegate = self
         historyBottomBar.bottombarDelegate = self
+        controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
+       
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    func setRTLSupportForHistory()
+    {
+        if #available(iOS 9.0, *) {
+            let attribute = view.semanticContentAttribute
+            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+            if layoutDirection == .leftToRight {
+                
+                historySearchBar.searchText.textAlignment = .left
+            }
+            else{
+                
+                historySearchBar.searchText.textAlignment = .right
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+        
+        
+        
     }
     func registerCell()
     {
@@ -103,5 +129,53 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     func searchButtonPressed() {
         print("search")
     }
+    func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
+      
+       
+        let  char = string.cString(using: String.Encoding.utf8)!
+        let isBackSpace = strcmp(char, "\\b")
+        
+       
+        if ((controller.view.tag == 0)&&(isBackSpace != -92))
+        {
+            
+        controller.view.tag = 1
+        print(controller.view.tag)
+        controller.predicateProtocol = self
+        addChildViewController(controller)
+        controller.view.frame = CGRect(x: historySearchBar.searchInnerView.frame.origin.x, y:
+            
+            //give height as number of items * height of cell. height is set in PredicateVC
+            historySearchBar.searchInnerView.frame.origin.y+historySearchBar.searchInnerView.frame.height+20, width: historySearchBar.searchInnerView.frame.width, height: 510)
+        
+        view.addSubview((controller.view)!)
+        controller.didMove(toParentViewController: self)
+        
+       
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(HistoryViewController.removeSubview))
+        self.view.addGestureRecognizer(tapGesture)
+        }
+        return true
+    }
+
+    @objc func removeSubview()
+    {
+        controller.view.removeFromSuperview()
+        controller.view.tag = 0
+      
+    }
+    func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
+        cell.precictaeTxet.text = "hospital" 
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
+        
+    }
+    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
+        return 6
+    }
+
+    
 
 }

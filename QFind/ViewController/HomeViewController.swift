@@ -8,13 +8,15 @@
 
 import UIKit
 
-class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDelegate {
+class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDelegate,predicateTableviewProtocol {
 
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var searchText: UITextField!
     @IBOutlet weak var slideShow: KASlideShow!
     var bannerArray = NSArray()
+    var controller = PredicateSearchViewController()
+    var tapGesture = UITapGestureRecognizer()
     // let keyboardSize = 50
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         setUILayout()
         setSlideShow()
         setRTLSupport()
+        
         
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -70,6 +73,8 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     }
     func setUILayout()
     {
+        
+        controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
         bannerArray = ["banner", "findByCategoryBG", "car_service","cloth_stores"]
         searchView.layer.cornerRadius = 7.5
         searchView.layer.borderWidth = 2.0
@@ -141,10 +146,62 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     @objc func pageChanged() {
         print("pageChanged")
     }
+   
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+        
+        if (controller.view.tag == 0)
+        {
+            
+            controller.view.tag = 1
+            print(controller.view.tag)
+            controller.predicateProtocol = self
+            addChildViewController(controller)
+           
+                
+                //give height as number of items * height of cell. height is set in PredicateVC
+                if (UIDevice.current.userInterfaceIdiom == .pad)
+                {
+                controller.view.frame = CGRect(x: searchView.frame.origin.x, y: searchView.frame.origin.y+searchView.frame.height+20, width: searchView.frame.width, height: 255)
+                
+                }
+                else{
+                 controller.view.frame = CGRect(x: searchView.frame.origin.x, y: searchView.frame.origin.y+searchView.frame.height+20, width: searchView.frame.width, height: 150)
+                
+                }
+              
+            view.addSubview((controller.view)!)
+            controller.didMove(toParentViewController: self)
+            
+            
+            tapGesture = UITapGestureRecognizer(target: self, action: #selector(HistoryViewController.removeSubview))
+            self.view.addGestureRecognizer(tapGesture)
+        }
+        return true
+    }
     
-    
+    @objc func removeSubview()
+    {
+        controller.view.removeFromSuperview()
+        controller.view.tag = 0
+        
+    }
+    func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
+        cell.precictaeTxet.text = "hi"
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
+        
+    }
+    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
+        return 3
+    }
 
     @IBAction func didTapFindCategory(_ sender: UIButton) {
+        let categoryVC : CategoryViewController = storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
+        
+        self.present(categoryVC, animated: false, completion: nil)
     }
     @IBAction func didTapMenu(_ sender: UIButton) {
     }
