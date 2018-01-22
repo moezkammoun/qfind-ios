@@ -80,7 +80,10 @@
                                     <variation key="heightClass=regular-widthClass=regular" constant="35"/>
                                 </constraint>
                             </constraints>
-                            <state key="normal" image="history"/>
+                            <color key="tintColor" red="0.90588235289999997" green="0.54901960780000003" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <state key="normal" image="history">
+                                <color key="titleShadowColor" red="1" green="0.60997188979999994" blue="0.26175884700000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
                             <connections>
                                 <action selector="didTapHistory:" destination="-1" eventType="touchUpInside" id="JBE-eY-6bo"/>
                             </connections>
@@ -114,6 +117,6 @@
     <resources>
         <image name="Qmarker" width="29" height="29"/>
         <image name="history" width="29" height="29"/>
-        <image name="star" width="87" height="84"/>
+        <image name="star" width="40" height="40"/>
     </resources>
 </document>

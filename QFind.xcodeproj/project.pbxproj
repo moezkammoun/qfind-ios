@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4AC2015EE1800C4812D /* LoadingView.swift */; };
+		B858B4AF2015EE2B00C4812D /* LoadingViewXib.xib in Resources */ = {isa = PBXBuildFile; fileRef = B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */; };
+		B87BBFEE2011E17000A026FB /* PredicateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87BBFED2011E17000A026FB /* PredicateCell.swift */; };
+		B87BBFF02011E31900A026FB /* GE_SS_Unique_Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = B87BBFEF2011E31900A026FB /* GE_SS_Unique_Light.otf */; };
 		B88A2D9B2008C3A000BF1B8A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */; };
 		B88A2DA02008C3A000BF1B8A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B88A2D9E2008C3A000BF1B8A /* Main.storyboard */; };
 		B88A2DA32008C3A000BF1B8A /* QFind.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DA12008C3A000BF1B8A /* QFind.xcdatamodeld */; };
@@ -32,6 +36,7 @@
 		B8D3B82A200C686D0032C78B /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8D3B828200C686C0032C78B /* Lato-Regular.ttf */; };
 		B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8D5AC8F200DBB48004F0BE1 /* SearchBarView.swift */; };
 		B8D5AC92200DBB5F004F0BE1 /* SearchBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8D5AC91200DBB5F004F0BE1 /* SearchBar.xib */; };
+		B8E4D2932011C90F00074C37 /* PredicateSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +57,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B858B4AC2015EE1800C4812D /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingViewXib.xib; sourceTree = "<group>"; };
+		B87BBFED2011E17000A026FB /* PredicateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredicateCell.swift; sourceTree = "<group>"; };
+		B87BBFEF2011E31900A026FB /* GE_SS_Unique_Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GE_SS_Unique_Light.otf; sourceTree = "<group>"; };
 		B88A2D972008C3A000BF1B8A /* QFind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QFind.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B88A2D9F2008C3A000BF1B8A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -85,6 +94,7 @@
 		B8D3B828200C686C0032C78B /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Regular.ttf"; sourceTree = "<group>"; };
 		B8D5AC8F200DBB48004F0BE1 /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		B8D5AC91200DBB5F004F0BE1 /* SearchBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchBar.xib; sourceTree = "<group>"; };
+		B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredicateSearchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +122,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B858B4A92015EC9B00C4812D /* LoaderView */ = {
+			isa = PBXGroup;
+			children = (
+				B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */,
+				B858B4AC2015EE1800C4812D /* LoadingView.swift */,
+			);
+			path = LoaderView;
+			sourceTree = "<group>";
+		};
 		B88A2D8E2008C3A000BF1B8A = {
 			isa = PBXGroup;
 			children = (
@@ -174,6 +193,7 @@
 				B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */,
 				B89227F8200E2F3F00677F54 /* DetailViewController.swift */,
 				B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */,
+				B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -191,6 +211,8 @@
 		B8C4D7D8200CC3E100E8D448 /* ReusableComponents */ = {
 			isa = PBXGroup;
 			children = (
+				B858B4A92015EC9B00C4812D /* LoaderView */,
+				B8E4D28D2011B85000074C37 /* PredicateSearch */,
 				B8D20D4C20107A92008DDDE8 /* HistoryOrSearchCell */,
 				B8D20D4B20107A4F008DDDE8 /* CategoryCell */,
 				B8D5AC8C200DBA84004F0BE1 /* SearchBar */,
@@ -230,6 +252,7 @@
 		B8D3B826200C686C0032C78B /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				B87BBFEF2011E31900A026FB /* GE_SS_Unique_Light.otf */,
 				B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */,
 				B8D3B827200C686C0032C78B /* Lato-Bold.ttf */,
 				B8D3B828200C686C0032C78B /* Lato-Regular.ttf */,
@@ -245,6 +268,14 @@
 				B8D5AC91200DBB5F004F0BE1 /* SearchBar.xib */,
 			);
 			path = SearchBar;
+			sourceTree = "<group>";
+		};
+		B8E4D28D2011B85000074C37 /* PredicateSearch */ = {
+			isa = PBXGroup;
+			children = (
+				B87BBFED2011E17000A026FB /* PredicateCell.swift */,
+			);
+			path = PredicateSearch;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -363,8 +394,10 @@
 				B88A2DA52008C3A000BF1B8A /* Assets.xcassets in Resources */,
 				B8D3B82A200C686D0032C78B /* Lato-Regular.ttf in Resources */,
 				B8C4D7E1200CD42000E8D448 /* BottomBar.xib in Resources */,
+				B858B4AF2015EE2B00C4812D /* LoadingViewXib.xib in Resources */,
 				B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */,
 				B88A2DA02008C3A000BF1B8A /* Main.storyboard in Resources */,
+				B87BBFF02011E31900A026FB /* GE_SS_Unique_Light.otf in Resources */,
 				B8D3B829200C686D0032C78B /* Lato-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,11 +424,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8D20D5A2010B372008DDDE8 /* SectionHeaderCollectionReusableView.swift in Sources */,
+				B87BBFEE2011E17000A026FB /* PredicateCell.swift in Sources */,
 				B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */,
 				B88A2DA32008C3A000BF1B8A /* QFind.xcdatamodeld in Sources */,
 				B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */,
+				B8E4D2932011C90F00074C37 /* PredicateSearchViewController.swift in Sources */,
 				B8D20D582010B0F3008DDDE8 /* HistoryCollectionViewCell.swift in Sources */,
 				B8D20D4A20107A37008DDDE8 /* HistoryViewController.swift in Sources */,
+				B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */,
 				B8C4D7E3200CE6C400E8D448 /* BottomBarView.swift in Sources */,
 				B8C4D7DE200CC6D600E8D448 /* CategoryCollectionViewCell.swift in Sources */,
 				B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */,

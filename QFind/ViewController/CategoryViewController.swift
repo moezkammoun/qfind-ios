@@ -8,16 +8,20 @@
 
 import UIKit
 
-class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol {
+class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol,predicateTableviewProtocol {
     
     @IBOutlet weak var bottomBar: BottomBarView!
     
+    @IBOutlet weak var categoryLoadingView: LoadingView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     
     @IBOutlet weak var searchBarView: SearchBarView!
     @IBOutlet weak var slideShow: KASlideShow!
+     var controller = PredicateSearchViewController()
+     var tapGesture = UITapGestureRecognizer()
     
+    var dummyString = String()
      var bannerArray = NSArray()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +33,11 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         bottomBar.bottombarDelegate = self
     
         searchBarView.searchDelegate = self
+          controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
 
         setRTLSupport()
+        categoryLoadingView.isHidden = true
+        //categoryLoadingView.showLoading()
         
     }
     func setRTLSupport()
@@ -77,7 +84,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
         //KASlideshow
         slideShow.delegate = self
-        slideShow.delay = 2 // Delay between transitions
+        slideShow.delay = 1 // Delay between transitions
         slideShow.transitionDuration = 1.5 // Transition duration
         slideShow.transitionType = KASlideShowTransitionType.slide // Choose a transition type (fade or slide)
         slideShow.imagesContentMode = .scaleAspectFill // Choose a content mode for images to display
@@ -132,7 +139,8 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
+        self.present(informationVC, animated: true, completion: nil)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let heightValue = UIScreen.main.bounds.height/100
@@ -153,10 +161,86 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
     }
     func historyButtonPressed() {
-        
+        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+        self.present(historyVC, animated: false, completion: nil)
     }
     func searchButtonPressed() {
         print("search")
+    }
+    func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
+        
+        let  char = string.cString(using: String.Encoding.utf8)!
+        let isBackSpace = strcmp(char, "\\b")
+        if let countValue = searchBarView.searchText.text
+        {
+//            if ((countValue.count) >= 1)
+//            {
+                if ((controller.view.tag == 0)&&(isBackSpace != -92))
+                {
+                    
+                    switch countValue
+                    {
+                    case  "ho" :
+                        dummyString = "Hotel"
+                    case "re" :
+                        dummyString = "Restaurant"
+                    case "Hos" :
+                        dummyString = "Hospital"
+                    default :
+                        dummyString = ""
+                        
+                        
+                    }
+                    controller.view.tag = 1
+                    print(controller.view.tag)
+                    controller.predicateProtocol = self
+                    addChildViewController(controller)
+                    controller.view.frame = CGRect(x: searchBarView.searchInnerView.frame.origin.x, y:
+                        
+                        //give height as number of items * height of cell. height is set in PredicateVC
+                        searchBarView.searchInnerView.frame.origin.y+searchBarView.searchInnerView.frame.height+20, width: searchBarView.searchInnerView.frame.width, height: 300)
+                    
+                    view.addSubview((controller.view)!)
+                    controller.didMove(toParentViewController: self)
+                    
+                    
+                    tapGesture = UITapGestureRecognizer(target: self, action: #selector(HistoryViewController.removeSubview))
+                    self.view.addGestureRecognizer(tapGesture)
+                    controller.predicateSearchTable.reloadData()
+                }
+                
+            }
+            
+       // }
+       
+        return true
+    }
+
+    @objc func removeSubview()
+    {
+        controller.view.removeFromSuperview()
+        controller.view.tag = 0
+        
+    }
+    func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
+        if (searchBarView.searchText.isEqual("ho"))
+        {
+            cell.precictaeTxet.text = "Hotel"
+        }
+       else if (searchBarView.searchText.isEqual("hos"))
+        {
+            cell.precictaeTxet.text = "Hospital"
+        }
+        cell.precictaeTxet.text = "Hospital"
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
+        
+    }
+    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
+        return 6
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
