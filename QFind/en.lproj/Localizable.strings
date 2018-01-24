@@ -1,0 +1,29 @@
+/* 
+  Localizable.strings
+  QFind
+
+  Created by Exalture on 23/01/18.
+  Copyright © 2018 QFind. All rights reserved.
+*/
+/* Class = "UILabel"; text = "OR"; ObjectID = "1On-zl-FLe"; */
+
+"QFIND_OF_THE_DAY" = "QFIND OF THE DAY";
+"SEARCH_TEXT" = "What would you like to find today?";
+"OR" = "OR";
+"FIND_BY_CATEGORY" = "FIND BY CATEGORY";
+"CATEGORIES" = "CATEGORIES";
+"HISTORY" = "HISTORY";
+"Today" = "Today";
+"Yesterday" = "Yesterday";
+"Earlier" = "Earlier";
+"Menu" = "Menu";
+"About us" = "About us";
+"How to become qfinder" = "How to become qfinder";
+"Terms & conditions" = "Terms & conditions";
+"Contact us" = "Contact us";
+"Settings" = "Settings";
+"Search_results" = "Search results";
+"Select_language" = "Select language";
+"Favorites" = "Favorites";
+"Arabic" = "عربى";
+"ENGLISH" = "ENGLISH";

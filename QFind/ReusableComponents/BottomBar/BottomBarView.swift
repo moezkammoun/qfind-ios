@@ -10,12 +10,20 @@ import UIKit
 protocol BottomProtocol
 {
     func favouriteButtonPressed()
-    func qFindMakerPressed()
+    func homebuttonPressed()
     func historyButtonPressed()
     
 }
 class BottomBarView: UIView {
     @IBOutlet var bottomView: BottomBarView!
+    
+    @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var homeButton: UIButton!
+    @IBOutlet weak var historyButton: UIButton!
+    @IBOutlet weak var favoriteview: UIView!
+    @IBOutlet weak var homeView: UIView!
+    
+    @IBOutlet weak var historyView: UIView!
     var bottombarDelegate : BottomProtocol?
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,12 +44,18 @@ class BottomBarView: UIView {
    
     @IBAction func didTapFavorite(_ sender: UIButton) {
         self.bottombarDelegate?.favouriteButtonPressed()
+        favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        
     }
-    @IBAction func didTapQFindMarker(_ sender: UIButton) {
-        self.bottombarDelegate?.qFindMakerPressed()
-    }
+   
     
+    @IBAction func didTapHome(_ sender: UIButton) {
+         self.bottombarDelegate?.homebuttonPressed()
+        homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        
+    }
     @IBAction func didTapHistory(_ sender: UIButton) {
         self.bottombarDelegate?.historyButtonPressed()
+        historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
     }
 }

@@ -24,6 +24,14 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         initialSetUp()
        
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        setLocalizedVariables()
+        detailBottomBar.favoriteview.backgroundColor = UIColor.white
+        detailBottomBar.historyView.backgroundColor = UIColor.white
+        detailBottomBar.homeView.backgroundColor = UIColor.white
+        
+    }
     func initialSetUp()
     {
         detailBottomBar.bottombarDelegate = self
@@ -35,6 +43,11 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
        // detailLoadingView.showLoading()
         
     }
+    func setLocalizedVariables()
+    {
+       // self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -128,13 +141,23 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         }
     }
     func favouriteButtonPressed() {
+        detailBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
+        historyVC.pageNameString = PageName.favorite
+        self.present(historyVC, animated: false, completion: nil)
     }
-    func qFindMakerPressed() {
-        
+    func homebuttonPressed() {
+       
+        detailBottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
     func historyButtonPressed() {
+         detailBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
+        historyVC.pageNameString = PageName.history
+        self.present(historyVC, animated: false, completion: nil)
     }
     @IBAction func didTapShare(_ sender: UIButton) {
         let firstActivityItem = "Text you want"

@@ -7,7 +7,11 @@
 //
 
 import UIKit
-
+enum PageName{
+    case history
+    case searchResult
+    case favorite
+}
 class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
 
 
@@ -16,23 +20,36 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     @IBOutlet weak var historyCollectionView: UICollectionView!
     @IBOutlet weak var historySearchBar: SearchBarView!
     
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var historyLabel: UILabel!
     @IBOutlet weak var historyLoadingView: LoadingView!
     @IBOutlet weak var historyBottomBar: BottomBarView!
     
     var controller = PredicateSearchViewController()
     var tapGesture = UITapGestureRecognizer()
+    var pageNameString : PageName?
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setUi()
         setRTLSupportForHistory()
         registerCell()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+       setLocalizedVariable()
+        
+        
+    }
+    func setUi()
+    {
         historySearchBar.searchDelegate = self
         historyBottomBar.bottombarDelegate = self
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
         historyLoadingView.isHidden = true
         //historyLoadingView.showLoading()
         //historyLoadingView.showNoDataView()
-       
+        historyLabel.textAlignment = .center
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -57,6 +74,24 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         
         
     }
+    func setLocalizedVariable()
+    {
+        
+       
+        switch pageNameString {
+        case .history?:
+             self.historyLabel.text = NSLocalizedString("HISTORY", comment: "HISTORY Label in the history page")
+            historyBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        case .favorite? :
+            self.historyLabel.text = NSLocalizedString("Favorites", comment: "Favorites Title Label in the Favorites page").uppercased()
+            historyBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        case .searchResult? :
+            self.historyLabel.text = NSLocalizedString("Search_results", comment: "Search_results Title Label in the history page")
+        default:
+            break
+        }
+        
+    }
     func registerCell()
     {
        
@@ -72,6 +107,14 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     }
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
          let cell : HistoryCollectionViewCell = historyCollectionView.dequeueReusableCell(withReuseIdentifier: "historyCellId", for: indexPath) as! HistoryCollectionViewCell
+        if (pageNameString == PageName.favorite)
+        {
+            cell.favoriteButton.isHidden = false
+        }
+        else
+        {
+            cell.favoriteButton.isHidden = true
+        }
         
         cell.layer.shadowColor = UIColor.lightGray.cgColor
         cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
@@ -100,22 +143,56 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     
 
             let header = historyCollectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "SectionHeader", for: indexPath) as! SectionHeaderCollectionReusableView
+            switch pageNameString {
+            case .history?:
+                if (indexPath.section == 0)
+                {
+                    header.headerLabel.text = NSLocalizedString("Today", comment: "section header Label in the history page")
+                    
+                    // header.headerLabel.text = "Today"
+                }
+                else if (indexPath.section == 1){
+                    header.headerLabel.text = NSLocalizedString("Yesterday", comment: "section header Label in the history page")
+                }
+                else {
+                    header.headerLabel.text = "21-1-2018"
+                }
+            case .favorite? :
+                 header.headerLabel.text = ""
+            case .searchResult? :
+                header.headerLabel.text = ""
+            default:
+                break
+            }
             
-            header.headerLabel.text = "Today"
+            
             
             return header
         }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
        let heightValue = UIScreen.main.bounds.height/100
-        if (UIDevice.current.userInterfaceIdiom == .pad)
-        {
-            return CGSize(width: historyCollectionView.frame.width, height: heightValue*8)
-        }
-        else{
-            return CGSize(width: historyCollectionView.frame.width, height: heightValue*8)
+        switch pageNameString {
+        case .history?:
+            if (UIDevice.current.userInterfaceIdiom == .pad)
+            {
+                return CGSize(width: historyCollectionView.frame.width, height: heightValue*8)
+            }
+            else{
+                return CGSize(width: historyCollectionView.frame.width, height: heightValue*8)
+            }
+        case .favorite? :
+           return CGSize.zero
+        case .searchResult? :
+           return CGSize.zero
+        default:
+            return CGSize.zero
+            break
         }
         
+       
+        
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -123,12 +200,39 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     
     func favouriteButtonPressed() {
         
+        historyBottomBar.historyView.backgroundColor = UIColor.white
+        historyBottomBar.homeView.backgroundColor = UIColor.white
+         historyBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        if (pageNameString != PageName.favorite)
+        {
+            pageNameString = PageName.favorite
+            setLocalizedVariable()
+            historyCollectionView.reloadData()
+            //self.view.layoutIfNeeded()
+            
+        }
+        
+        
     }
-    func qFindMakerPressed() {
+    func homebuttonPressed() {
+        historyBottomBar.favoriteview.backgroundColor = UIColor.white
+        historyBottomBar.historyView.backgroundColor = UIColor.white
+       historyBottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
         
     }
     func historyButtonPressed() {
-        
+        historyBottomBar.favoriteview.backgroundColor = UIColor.white
+        historyBottomBar.homeView.backgroundColor = UIColor.white
+         historyBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        if (pageNameString != PageName.history)
+        {
+            pageNameString = PageName.history
+            setLocalizedVariable()
+            historyCollectionView.reloadData()
+            
+            
+        }
     }
     func searchButtonPressed() {
         print("search")
@@ -150,7 +254,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         controller.view.frame = CGRect(x: historySearchBar.searchInnerView.frame.origin.x, y:
             
             //give height as number of items * height of cell. height is set in PredicateVC
-            historySearchBar.searchInnerView.frame.origin.y+historySearchBar.searchInnerView.frame.height+20, width: historySearchBar.searchInnerView.frame.width, height: 510)
+            historySearchBar.searchInnerView.frame.origin.y+historySearchBar.searchInnerView.frame.height+20, width: historySearchBar.searchInnerView.frame.width, height: 300)
         
         view.addSubview((controller.view)!)
         controller.didMove(toParentViewController: self)
@@ -179,7 +283,10 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
         return 6
     }
-
+    @IBAction func didTapBack(_ sender: UIButton) {
+        self.dismiss(animated: false, completion: nil)
+    }
+    
     
 
 }

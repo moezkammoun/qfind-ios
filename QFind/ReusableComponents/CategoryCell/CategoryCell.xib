@@ -24,43 +24,55 @@
                 <rect key="frame" x="0.0" y="0.0" width="293" height="77"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car_service" translatesAutoresizingMaskIntoConstraints="NO" id="WKZ-1f-9BP">
-                        <rect key="frame" x="0.0" y="0.0" width="82" height="77"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oCK-CE-vZ2">
+                        <rect key="frame" x="0.0" y="0.0" width="293" height="77"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ministries" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZR-vn-3gl">
+                                <rect key="frame" x="91" y="20.5" width="194" height="16"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="13"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="21"/>
+                                </variation>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor hujkio iop." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdm-fO-PM5">
+                                <rect key="frame" x="91" y="36.5" width="122" height="12"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="10"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular-widthClass=regular">
+                                    <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="14"/>
+                                </variation>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="car_service" translatesAutoresizingMaskIntoConstraints="NO" id="WKZ-1f-9BP">
+                                <rect key="frame" x="0.0" y="0.0" width="82" height="77"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="WKZ-1f-9BP" secondAttribute="height" multiplier="82:77" id="c9m-Kb-O0Y"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="WKZ-1f-9BP" secondAttribute="height" multiplier="82:77" id="c9m-Kb-O0Y"/>
+                            <constraint firstAttribute="trailing" secondItem="OZR-vn-3gl" secondAttribute="trailing" constant="8" id="Gfe-FJ-JIS"/>
+                            <constraint firstAttribute="trailing" secondItem="zdm-fO-PM5" secondAttribute="trailing" constant="80" id="NkW-hA-CqE"/>
+                            <constraint firstAttribute="bottom" secondItem="WKZ-1f-9BP" secondAttribute="bottom" id="Q9V-YU-xFB"/>
+                            <constraint firstItem="zdm-fO-PM5" firstAttribute="top" secondItem="OZR-vn-3gl" secondAttribute="bottom" id="TyZ-TO-oV1"/>
+                            <constraint firstItem="OZR-vn-3gl" firstAttribute="leading" secondItem="WKZ-1f-9BP" secondAttribute="trailing" constant="9" id="Y0y-az-LGJ"/>
+                            <constraint firstItem="WKZ-1f-9BP" firstAttribute="top" secondItem="oCK-CE-vZ2" secondAttribute="top" id="aKh-b1-fZl"/>
+                            <constraint firstItem="WKZ-1f-9BP" firstAttribute="centerY" secondItem="OZR-vn-3gl" secondAttribute="centerY" constant="10" id="gZH-Px-zEh"/>
+                            <constraint firstItem="OZR-vn-3gl" firstAttribute="leading" secondItem="zdm-fO-PM5" secondAttribute="leading" id="weJ-J8-GP8"/>
+                            <constraint firstItem="WKZ-1f-9BP" firstAttribute="leading" secondItem="oCK-CE-vZ2" secondAttribute="leading" id="yp1-ks-Mlz"/>
                         </constraints>
-                    </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ministries" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZR-vn-3gl">
-                        <rect key="frame" x="91" y="22.5" width="194" height="16"/>
-                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="13"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                        <variation key="heightClass=regular-widthClass=regular">
-                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="21"/>
-                        </variation>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor hujkio iop." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdm-fO-PM5">
-                        <rect key="frame" x="91" y="38.5" width="194" height="12"/>
-                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="10"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                        <variation key="heightClass=regular-widthClass=regular">
-                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="14"/>
-                        </variation>
-                    </label>
+                    </view>
                 </subviews>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="OZR-vn-3gl" firstAttribute="leading" secondItem="WKZ-1f-9BP" secondAttribute="trailing" constant="9" id="1Y1-ml-NPs"/>
-                <constraint firstItem="WKZ-1f-9BP" firstAttribute="centerY" secondItem="OZR-vn-3gl" secondAttribute="centerY" constant="8" id="1uH-Qd-ER4"/>
-                <constraint firstAttribute="bottom" secondItem="WKZ-1f-9BP" secondAttribute="bottom" id="Alc-Ho-foV"/>
-                <constraint firstItem="zdm-fO-PM5" firstAttribute="leading" secondItem="OZR-vn-3gl" secondAttribute="leading" id="KGw-xe-a2P"/>
-                <constraint firstItem="WKZ-1f-9BP" firstAttribute="leading" secondItem="qSs-A7-kMQ" secondAttribute="leading" id="TJh-Du-uOR"/>
-                <constraint firstAttribute="trailing" secondItem="OZR-vn-3gl" secondAttribute="trailing" constant="8" id="dgZ-Ba-HlT"/>
-                <constraint firstItem="zdm-fO-PM5" firstAttribute="top" secondItem="OZR-vn-3gl" secondAttribute="bottom" id="ual-N4-izy"/>
-                <constraint firstItem="WKZ-1f-9BP" firstAttribute="top" secondItem="qSs-A7-kMQ" secondAttribute="top" id="vQ1-MM-CiO"/>
-                <constraint firstAttribute="trailing" secondItem="zdm-fO-PM5" secondAttribute="trailing" constant="8" id="z6s-kK-Cwq"/>
+                <constraint firstItem="oCK-CE-vZ2" firstAttribute="top" secondItem="qSs-A7-kMQ" secondAttribute="top" id="Tk3-VZ-YJp"/>
+                <constraint firstAttribute="bottom" secondItem="oCK-CE-vZ2" secondAttribute="bottom" id="WeF-Z2-Njd"/>
+                <constraint firstAttribute="trailing" secondItem="oCK-CE-vZ2" secondAttribute="trailing" id="eQ6-3A-kbw"/>
+                <constraint firstItem="oCK-CE-vZ2" firstAttribute="leading" secondItem="qSs-A7-kMQ" secondAttribute="leading" id="pcE-Q6-EuZ"/>
             </constraints>
             <size key="customSize" width="293" height="77"/>
             <point key="canvasLocation" x="107.5" y="-127.5"/>
