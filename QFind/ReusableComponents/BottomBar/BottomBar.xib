@@ -12,6 +12,12 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BottomBarView" customModule="QFind" customModuleProvider="target">
             <connections>
                 <outlet property="bottomView" destination="iN0-l3-epB" id="kc7-ef-0JL"/>
+                <outlet property="favoriteButton" destination="TSK-w7-Q7b" id="wmp-Di-6wz"/>
+                <outlet property="favoriteview" destination="Wc3-wB-chg" id="CCK-SL-Bv5"/>
+                <outlet property="historyButton" destination="VVX-Np-EO6" id="TYy-3x-Vpw"/>
+                <outlet property="historyView" destination="MMu-hb-Yk3" id="GGA-pp-Kkf"/>
+                <outlet property="homeButton" destination="82X-ES-3kD" id="7RA-d2-GKi"/>
+                <outlet property="homeView" destination="3EX-Zg-3Lk" id="Urw-qb-did"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -58,7 +64,7 @@
                             </constraints>
                             <state key="normal" image="Qmarker"/>
                             <connections>
-                                <action selector="didTapQFindMarker:" destination="-1" eventType="touchUpInside" id="l9Z-ks-e9g"/>
+                                <action selector="didTapHome:" destination="-1" eventType="touchUpInside" id="jTT-sl-pwJ"/>
                             </connections>
                         </button>
                     </subviews>

@@ -40,6 +40,8 @@ class SearchBarView: UIView,UITextFieldDelegate {
         searchInnerView.clipsToBounds = true
         searchText.delegate = self
         
+         self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+        
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

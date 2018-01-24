@@ -10,8 +10,8 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="Lato-Regular.ttf">
-            <string>Lato-Regular</string>
+        <array key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
         </array>
     </customFonts>
     <objects>
@@ -31,7 +31,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-uI-dsG">
-                    <rect key="frame" x="20" y="12" width="285" height="36"/>
+                    <rect key="frame" x="20" y="12" width="268" height="36"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" translatesAutoresizingMaskIntoConstraints="NO" id="UbN-kp-qkG">
                             <rect key="frame" x="12" y="8" width="20" height="20"/>
@@ -43,16 +43,16 @@
                             </constraints>
                         </imageView>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
-                            <rect key="frame" x="42" y="5" width="208" height="26"/>
+                            <rect key="frame" x="42" y="5" width="191" height="26"/>
                             <color key="textColor" red="0.091605968770000004" green="0.19254547359999999" blue="0.24080395700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
+                            <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="10"/>
                             <textInputTraits key="textInputTraits"/>
                             <variation key="heightClass=regular-widthClass=regular">
-                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="25"/>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="22"/>
                             </variation>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMP-z7-6ko">
-                            <rect key="frame" x="255" y="8" width="20" height="20"/>
+                            <rect key="frame" x="238" y="8" width="20" height="20"/>
                             <state key="normal" title="Button" image="search"/>
                             <connections>
                                 <action selector="didTapSearchButton:" destination="-1" eventType="touchUpInside" id="Bkw-pk-HHL"/>
@@ -75,16 +75,16 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zeu-PG-ePr">
-                    <rect key="frame" x="329" y="21" width="30" height="18"/>
+                    <rect key="frame" x="312" y="5.6666666666666679" width="47" height="49"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="18" id="ZhB-fX-NHQ">
-                            <variation key="heightClass=regular-widthClass=regular" constant="28"/>
+                        <constraint firstAttribute="height" constant="49" id="ZhB-fX-NHQ">
+                            <variation key="heightClass=regular-widthClass=regular" constant="70"/>
                         </constraint>
-                        <constraint firstAttribute="width" constant="30" id="wva-Zv-fot">
-                            <variation key="heightClass=regular-widthClass=regular" constant="39"/>
+                        <constraint firstAttribute="width" constant="47" id="wva-Zv-fot">
+                            <variation key="heightClass=regular-widthClass=regular" constant="70"/>
                         </constraint>
                     </constraints>
-                    <state key="normal" title="Button" image="hamburger"/>
+                    <state key="normal" image="hamburger-white"/>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -117,7 +117,7 @@
     <resources>
         <image name="Qmarker" width="29" height="29"/>
         <image name="findByCategoryBG" width="740" height="155"/>
-        <image name="hamburger" width="40" height="40"/>
+        <image name="hamburger-white" width="60" height="60"/>
         <image name="search" width="29" height="29"/>
     </resources>
 </document>

@@ -16,6 +16,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     
+    @IBOutlet weak var categoryTitle: UILabel!
     @IBOutlet weak var searchBarView: SearchBarView!
     @IBOutlet weak var slideShow: KASlideShow!
      var controller = PredicateSearchViewController()
@@ -26,19 +27,32 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        setRTLSupport()
         setImageSlideShow()
         registerNib()
+        setUpUi()
         
-      
-        bottomBar.bottombarDelegate = self
+        
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        setLocalizedVariables()
+        bottomBar.favoriteview.backgroundColor = UIColor.white
+        bottomBar.historyView.backgroundColor = UIColor.white
+        bottomBar.homeView.backgroundColor = UIColor.white
+    }
     
+    func setUpUi()
+    {
+        categoryTitle.textAlignment = .center
+        
+        bottomBar.bottombarDelegate = self
+        
         searchBarView.searchDelegate = self
-          controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
-
-        setRTLSupport()
+        controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
         categoryLoadingView.isHidden = true
         //categoryLoadingView.showLoading()
-        
     }
     func setRTLSupport()
     {
@@ -62,6 +76,10 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
         
        
+    }
+    func setLocalizedVariables()
+    {
+         self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
     }
     func registerNib()
     {
@@ -91,7 +109,6 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
         slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next directly on the image (Tap or Swipe)
         /*************Set this value when langue is changed in settings*****/
-        slideShow.arabic = true
         slideShow.start()
     }
     //KASlideShow delegate
@@ -140,13 +157,13 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
-        self.present(informationVC, animated: true, completion: nil)
+        self.present(informationVC, animated: false, completion: nil)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let heightValue = UIScreen.main.bounds.height/100
         if (UIDevice.current.userInterfaceIdiom == .pad)
             {
-                return CGSize(width: categoryCollectionView.frame.width/2-10, height: heightValue*8)
+                return CGSize(width: categoryCollectionView.frame.width/2-10, height: heightValue*7)
         }
         else{
             return CGSize(width: categoryCollectionView.frame.width/2-6.5, height: heightValue*6)
@@ -155,13 +172,24 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
 
     func favouriteButtonPressed() {
+      
+       
+        //bottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
+        historyVC.pageNameString = PageName.favorite
+        self.present(historyVC, animated: false, completion: nil)
     }
-    func qFindMakerPressed() {
-        
+    func homebuttonPressed() {
+
+        // bottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
     func historyButtonPressed() {
+          //bottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+       
+        historyVC.pageNameString = PageName.history
         self.present(historyVC, animated: false, completion: nil)
     }
     func searchButtonPressed() {
@@ -250,6 +278,9 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         return .lightContent
     }
 
-  
+    @IBAction func didTapBack(_ sender: UIButton) {
+        self.dismiss(animated: false, completion: nil)
+    }
+    
 
 }

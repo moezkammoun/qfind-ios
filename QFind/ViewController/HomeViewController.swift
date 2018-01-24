@@ -9,13 +9,19 @@
 import UIKit
 
 class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDelegate,predicateTableviewProtocol {
-
+    @IBOutlet weak var findByCategoryLabel: UILabel!
+    @IBOutlet weak var qfindDayLabel: UILabel!
+    
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var searchText: UITextField!
     
     @IBOutlet weak var homeLoadingView: LoadingView!
     @IBOutlet weak var slideShow: KASlideShow!
+    @IBOutlet weak var orLabel: UILabel!
+    
+    
+    @IBOutlet weak var aspectRationHome: NSLayoutConstraint!
     var bannerArray = NSArray()
     var controller = PredicateSearchViewController()
     var tapGesture = UITapGestureRecognizer()
@@ -24,15 +30,18 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         super.viewDidLoad()
 
         setUILayout()
-        setSlideShow()
+        
         setRTLSupport()
+        setSlideShow()
         
         
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(false)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        setLocalizedStrings()
+        print(aspectRationHome.multiplier)
+    }
     
-    }
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -44,8 +53,6 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
             if layoutDirection == .leftToRight {
                 slideShow.arabic = false
                 searchText.textAlignment = .left
-                
-                
                
             }
             else{
@@ -70,7 +77,6 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
         slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next directly on the image (Tap or Swipe)
         /*************Set this value when langue is changed in settings*****/
-       // slideShow.arabic = false
         slideShow.start()
     }
     func setUILayout()
@@ -92,8 +98,17 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         pageControl.numberOfPages = bannerArray.count
         pageControl.currentPage = Int(slideShow.currentIndex)
         pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
+        
 
         
+    }
+    func setLocalizedStrings()
+    {
+        self.qfindDayLabel.text = NSLocalizedString("QFIND_OF_THE_DAY", comment: "QFIND_OF_THE_DAY Label in the home page")
+       // self.searchText.text = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
+        self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
+        self.findByCategoryLabel.text = NSLocalizedString("FIND_BY_CATEGORY", comment: "FIND_BY_CATEGORY Label in the home page")
+        self.orLabel.text = NSLocalizedString("OR", comment: "OR Label in the home page")
     }
     @objc func keyboardWillShow(notification: NSNotification) {
        
@@ -209,6 +224,9 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         self.present(categoryVC, animated: false, completion: nil)
     }
     @IBAction func didTapMenu(_ sender: UIButton) {
+        let settingsVc : SettingsViewController = storyboard?.instantiateViewController(withIdentifier: "settingsId") as! SettingsViewController
+        self.present(settingsVc, animated: false, completion: nil)
+        
     }
     
 }
