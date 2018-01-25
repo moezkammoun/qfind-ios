@@ -6,8 +6,9 @@
 //  Copyright © 2018 Exalture. All rights reserved.
 //
 
-import UIKit
+import Alamofire
 import CoreData
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,7 +20,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UIApplication.shared.statusBarStyle = .lightContent
           AppLocalizer.DoTheMagic()
+        
+//        Alamofire.request(QFindRouter.getAccessToken("DEB47D9B-61DD-25A6-CB6F-46F310F78130", "7B446C1F-94F4-967D-25BF-45A63DBC2BAF"))
+        Alamofire.request(QFindRouter.getAccessToken(["clientid": "DEB47D9B-61DD-25A6-CB6F-46F310F78130",
+                                                      "clientsecret": "7B446C1F-94F4-967D-25BF-45A63DBC2BAF"]))
+            .responseObject { (response: DataResponse<TokenData>) -> Void in
+                switch response.result {
+                case .success(let data):
+                    print(data)
+                case .failure(let error):
+                   print(error)
+                    }
+                
+                }
         return true
+        
+    
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

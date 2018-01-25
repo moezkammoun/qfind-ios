@@ -26,6 +26,11 @@
 		B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89227F8200E2F3F00677F54 /* DetailViewController.swift */; };
 		B89F67412017556C006D3EFA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B89F67432017556C006D3EFA /* Localizable.strings */; };
 		B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */; };
+		B8C4AC512019E79D004DEFF6 /* ModelClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4AC502019E79D004DEFF6 /* ModelClass.swift */; };
+		B8C4AC532019E7D5004DEFF6 /* QFindRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4AC522019E7D5004DEFF6 /* QFindRouter.swift */; };
+		B8C4AC552019EA46004DEFF6 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4AC542019EA46004DEFF6 /* Config.swift */; };
+		B8C4AC572019F343004DEFF6 /* QFindRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4AC562019F343004DEFF6 /* QFindRequest.swift */; };
+		B8C4AC592019F9D8004DEFF6 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4AC582019F9D8004DEFF6 /* APIClient.swift */; };
 		B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7D0200C8DCC00E8D448 /* KASlideShow.m */; };
 		B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */; };
 		B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */; };
@@ -93,6 +98,11 @@
 		B89F67422017556C006D3EFA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B89F67442017565A006D3EFA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
+		B8C4AC502019E79D004DEFF6 /* ModelClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelClass.swift; sourceTree = "<group>"; };
+		B8C4AC522019E7D5004DEFF6 /* QFindRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QFindRouter.swift; sourceTree = "<group>"; };
+		B8C4AC542019EA46004DEFF6 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		B8C4AC562019F343004DEFF6 /* QFindRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QFindRequest.swift; sourceTree = "<group>"; };
+		B8C4AC582019F9D8004DEFF6 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		B8C4D7CE200C8DCB00E8D448 /* QFind-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QFind-Bridging-Header.h"; sourceTree = "<group>"; };
 		B8C4D7CF200C8DCC00E8D448 /* KASlideShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KASlideShow.h; sourceTree = "<group>"; };
 		B8C4D7D0200C8DCC00E8D448 /* KASlideShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KASlideShow.m; sourceTree = "<group>"; };
@@ -183,6 +193,8 @@
 		B88A2D992008C3A000BF1B8A /* QFind */ = {
 			isa = PBXGroup;
 			children = (
+				B8C4AC4F2019E780004DEFF6 /* Model */,
+				B8C4AC4C2019E70C004DEFF6 /* WebService */,
 				B8C4D7D8200CC3E100E8D448 /* ReusableComponents */,
 				B8C4D7CD200C8DAB00E8D448 /* KASlideShow */,
 				B8D3B826200C686C0032C78B /* Font */,
@@ -194,6 +206,7 @@
 				B88A2DA92008C3A000BF1B8A /* Info.plist */,
 				B88A2DA12008C3A000BF1B8A /* QFind.xcdatamodeld */,
 				B89F67432017556C006D3EFA /* Localizable.strings */,
+				B8C4AC542019EA46004DEFF6 /* Config.swift */,
 			);
 			path = QFind;
 			sourceTree = "<group>";
@@ -227,6 +240,24 @@
 				B858B4B0201606A400C4812D /* SettingsViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		B8C4AC4C2019E70C004DEFF6 /* WebService */ = {
+			isa = PBXGroup;
+			children = (
+				B8C4AC522019E7D5004DEFF6 /* QFindRouter.swift */,
+				B8C4AC562019F343004DEFF6 /* QFindRequest.swift */,
+				B8C4AC582019F9D8004DEFF6 /* APIClient.swift */,
+			);
+			path = WebService;
+			sourceTree = "<group>";
+		};
+		B8C4AC4F2019E780004DEFF6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B8C4AC502019E79D004DEFF6 /* ModelClass.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B8C4D7CD200C8DAB00E8D448 /* KASlideShow */ = {
@@ -540,11 +571,16 @@
 				B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */,
 				B8E4D2932011C90F00074C37 /* PredicateSearchViewController.swift in Sources */,
 				B8D20D582010B0F3008DDDE8 /* HistoryCollectionViewCell.swift in Sources */,
+				B8C4AC572019F343004DEFF6 /* QFindRequest.swift in Sources */,
 				B858B4B1201606A400C4812D /* SettingsViewController.swift in Sources */,
 				B8D20D4A20107A37008DDDE8 /* HistoryViewController.swift in Sources */,
+				B8C4AC592019F9D8004DEFF6 /* APIClient.swift in Sources */,
+				B8C4AC532019E7D5004DEFF6 /* QFindRouter.swift in Sources */,
+				B8C4AC512019E79D004DEFF6 /* ModelClass.swift in Sources */,
 				B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */,
 				B8C4D7E3200CE6C400E8D448 /* BottomBarView.swift in Sources */,
 				B8C4D7DE200CC6D600E8D448 /* CategoryCollectionViewCell.swift in Sources */,
+				B8C4AC552019EA46004DEFF6 /* Config.swift in Sources */,
 				B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */,
 				B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */,
 				B8C657AB2018623D000C23A9 /* MirroringViewController.swift in Sources */,
