@@ -25,10 +25,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oCK-CE-vZ2">
-                        <rect key="frame" x="0.0" y="0.0" width="293" height="77"/>
+                        <rect key="frame" x="0.0" y="0.0" width="291" height="77"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ministries" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OZR-vn-3gl">
-                                <rect key="frame" x="91" y="20.5" width="194" height="16"/>
+                                <rect key="frame" x="91" y="20.5" width="192" height="16"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="13"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -37,7 +37,7 @@
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorem ipsum dolor hujkio iop." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zdm-fO-PM5">
-                                <rect key="frame" x="91" y="36.5" width="122" height="12"/>
+                                <rect key="frame" x="91" y="36.5" width="120" height="12"/>
                                 <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="10"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -71,10 +71,15 @@
             <constraints>
                 <constraint firstItem="oCK-CE-vZ2" firstAttribute="top" secondItem="qSs-A7-kMQ" secondAttribute="top" id="Tk3-VZ-YJp"/>
                 <constraint firstAttribute="bottom" secondItem="oCK-CE-vZ2" secondAttribute="bottom" id="WeF-Z2-Njd"/>
-                <constraint firstAttribute="trailing" secondItem="oCK-CE-vZ2" secondAttribute="trailing" id="eQ6-3A-kbw"/>
+                <constraint firstAttribute="trailing" secondItem="oCK-CE-vZ2" secondAttribute="trailing" constant="2" id="eQ6-3A-kbw">
+                    <variation key="heightClass=regular-widthClass=regular" constant="30"/>
+                </constraint>
                 <constraint firstItem="oCK-CE-vZ2" firstAttribute="leading" secondItem="qSs-A7-kMQ" secondAttribute="leading" id="pcE-Q6-EuZ"/>
             </constraints>
             <size key="customSize" width="293" height="77"/>
+            <connections>
+                <outlet property="categoryViewTrailing" destination="eQ6-3A-kbw" id="dm2-HK-Jho"/>
+            </connections>
             <point key="canvasLocation" x="107.5" y="-127.5"/>
         </collectionViewCell>
     </objects>

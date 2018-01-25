@@ -9,6 +9,7 @@
 import UIKit
 
 class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDelegate,predicateTableviewProtocol {
+    @IBOutlet weak var findByCategoryButton: UIButton!
     @IBOutlet weak var findByCategoryLabel: UILabel!
     @IBOutlet weak var qfindDayLabel: UILabel!
     
@@ -31,13 +32,14 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
 
         setUILayout()
         
-        setRTLSupport()
-        setSlideShow()
+        
         
         
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        setRTLSupport()
+        setSlideShow()
         setLocalizedStrings()
         print(aspectRationHome.multiplier)
     }
@@ -98,14 +100,20 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         pageControl.numberOfPages = bannerArray.count
         pageControl.currentPage = Int(slideShow.currentIndex)
         pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
+
         
+        
+        self.findByCategoryButton.layer.masksToBounds = false;
+        self.findByCategoryButton.layer.shadowOffset = CGSize(width: -1, height: 15)
+        self.findByCategoryButton.layer.shadowRadius = 12;
+        self.findByCategoryButton.layer.shadowOpacity = 0.5;
 
         
     }
     func setLocalizedStrings()
     {
         self.qfindDayLabel.text = NSLocalizedString("QFIND_OF_THE_DAY", comment: "QFIND_OF_THE_DAY Label in the home page")
-       // self.searchText.text = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
+       
         self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         self.findByCategoryLabel.text = NSLocalizedString("FIND_BY_CATEGORY", comment: "FIND_BY_CATEGORY Label in the home page")
         self.orLabel.text = NSLocalizedString("OR", comment: "OR Label in the home page")

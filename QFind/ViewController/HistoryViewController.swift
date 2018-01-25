@@ -12,6 +12,7 @@ enum PageName{
     case searchResult
     case favorite
 }
+
 class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
 
 
@@ -28,6 +29,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     var controller = PredicateSearchViewController()
     var tapGesture = UITapGestureRecognizer()
     var pageNameString : PageName?
+   
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -116,13 +118,34 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
             cell.favoriteButton.isHidden = true
         }
         
-        cell.layer.shadowColor = UIColor.lightGray.cgColor
-        cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
-        cell.layer.shadowRadius = 2.0
-        cell.layer.shadowOpacity = 1.0
-        cell.layer.masksToBounds = false;
-        cell.layer.shadowPath = UIBezierPath(roundedRect:cell.bounds, cornerRadius:cell.contentView.layer.cornerRadius).cgPath
- 
+        let shadowSize : CGFloat = 5.0
+        var shadowPath : UIBezierPath?
+        if #available(iOS 9.0, *) {
+            let attribute = view.semanticContentAttribute
+            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+            if layoutDirection == .leftToRight {
+                //left
+                 shadowPath = UIBezierPath(rect: CGRect(x: -shadowSize / 2,
+                                                           y: -shadowSize / 2,
+                                                           width: cell.frame.size.width - (shadowSize*3) ,
+                                                           height: cell.frame.size.height + shadowSize ))
+            }
+            else{
+
+                 shadowPath = UIBezierPath(rect: CGRect(x:  shadowSize*3,
+                                                           y: -shadowSize / 2,
+                                                           width: cell.frame.size.width + shadowSize*5  ,
+                                                           height: cell.frame.size.height + shadowSize ))
+            }
+        } else {
+            // Fallback on earlier versions
+        }
+
+        cell.layer.masksToBounds = false
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        cell.layer.shadowOpacity = 0.19
+        cell.layer.shadowPath = shadowPath?.cgPath
         
         
         return cell
