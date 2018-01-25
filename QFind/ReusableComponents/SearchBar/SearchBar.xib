@@ -43,7 +43,7 @@
                             </constraints>
                         </imageView>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
-                            <rect key="frame" x="42" y="5" width="191" height="26"/>
+                            <rect key="frame" x="42" y="5" width="186" height="26"/>
                             <color key="textColor" red="0.091605968770000004" green="0.19254547359999999" blue="0.24080395700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="10"/>
                             <textInputTraits key="textInputTraits"/>
@@ -53,7 +53,7 @@
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMP-z7-6ko">
                             <rect key="frame" x="238" y="8" width="20" height="20"/>
-                            <state key="normal" title="Button" image="search"/>
+                            <state key="normal" backgroundImage="search"/>
                             <connections>
                                 <action selector="didTapSearchButton:" destination="-1" eventType="touchUpInside" id="Bkw-pk-HHL"/>
                             </connections>
@@ -62,12 +62,14 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="UbN-kp-qkG" firstAttribute="centerY" secondItem="q5L-Vo-8Vc" secondAttribute="centerY" id="0Po-OM-7mT"/>
-                        <constraint firstAttribute="trailing" secondItem="sMP-z7-6ko" secondAttribute="trailing" constant="10" id="FzU-L6-2bq"/>
+                        <constraint firstAttribute="trailing" secondItem="sMP-z7-6ko" secondAttribute="trailing" constant="10" id="FzU-L6-2bq">
+                            <variation key="heightClass=regular-widthClass=regular" constant="10"/>
+                        </constraint>
                         <constraint firstItem="UbN-kp-qkG" firstAttribute="height" secondItem="sMP-z7-6ko" secondAttribute="height" id="Lt3-hd-ksC"/>
                         <constraint firstAttribute="bottom" secondItem="q5L-Vo-8Vc" secondAttribute="bottom" constant="5" id="QFR-7S-fjc"/>
                         <constraint firstItem="UbN-kp-qkG" firstAttribute="width" secondItem="sMP-z7-6ko" secondAttribute="width" id="SlY-SC-7wG"/>
                         <constraint firstItem="q5L-Vo-8Vc" firstAttribute="top" secondItem="FaE-uI-dsG" secondAttribute="top" constant="5" id="bAP-Ez-pHy"/>
-                        <constraint firstItem="sMP-z7-6ko" firstAttribute="leading" secondItem="q5L-Vo-8Vc" secondAttribute="trailing" constant="5" id="dvr-FS-Wy0"/>
+                        <constraint firstItem="sMP-z7-6ko" firstAttribute="leading" secondItem="q5L-Vo-8Vc" secondAttribute="trailing" constant="10" id="dvr-FS-Wy0"/>
                         <constraint firstItem="UbN-kp-qkG" firstAttribute="leading" secondItem="FaE-uI-dsG" secondAttribute="leading" constant="12" id="eGt-bU-bfN"/>
                         <constraint firstItem="q5L-Vo-8Vc" firstAttribute="centerY" secondItem="sMP-z7-6ko" secondAttribute="centerY" id="jik-b5-gMw"/>
                         <constraint firstItem="UbN-kp-qkG" firstAttribute="centerY" secondItem="FaE-uI-dsG" secondAttribute="centerY" id="nEa-fP-Qr2"/>

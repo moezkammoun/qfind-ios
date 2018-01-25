@@ -27,8 +27,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setRTLSupport()
-        setImageSlideShow()
+       
         registerNib()
         setUpUi()
         
@@ -37,6 +36,8 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        setRTLSupport()
+        setImageSlideShow()
         setLocalizedVariables()
         bottomBar.favoriteview.backgroundColor = UIColor.white
         bottomBar.historyView.backgroundColor = UIColor.white
@@ -163,10 +164,10 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         let heightValue = UIScreen.main.bounds.height/100
         if (UIDevice.current.userInterfaceIdiom == .pad)
             {
-                return CGSize(width: categoryCollectionView.frame.width/2-10, height: heightValue*7)
+                return CGSize(width: categoryCollectionView.frame.width/2-20, height: heightValue*7)
         }
         else{
-            return CGSize(width: categoryCollectionView.frame.width/2-6.5, height: heightValue*6)
+            return CGSize(width: categoryCollectionView.frame.width/2-19, height: heightValue*6)
         }
         
     }

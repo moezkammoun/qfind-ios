@@ -81,7 +81,7 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     }
     func setLocalizedVariablesForSettings()
     {
-         self.settingsLabel.text = NSLocalizedString("Settings", comment: "Settings Label in the Settings page")
+         self.settingsLabel.text = NSLocalizedString("Settings", comment: "Settings Label in the Settings page").uppercased()
         self.selectLanguageLabel.text = NSLocalizedString("Select_language", comment: "Select_language Label in the Settings page")
         self.englishButtonLabel.text = NSLocalizedString("ENGLISH", comment: "ENGLISH BUTTON LABEL in the Settings page")
          self.arabicButtonLabel.text = NSLocalizedString("Arabic", comment: "Arabic button label in the Settings page")

@@ -26,6 +26,8 @@
 		B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89227F8200E2F3F00677F54 /* DetailViewController.swift */; };
 		B89F67412017556C006D3EFA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B89F67432017556C006D3EFA /* Localizable.strings */; };
 		B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */; };
+		B8C4AC492019D4C9004DEFF6 /* DetailTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8C4AC482019D4C9004DEFF6 /* DetailTableCell.xib */; };
+		B8C4AC4B2019D509004DEFF6 /* DetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4AC4A2019D509004DEFF6 /* DetailTableViewCell.swift */; };
 		B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7D0200C8DCC00E8D448 /* KASlideShow.m */; };
 		B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */; };
 		B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */; };
@@ -93,6 +95,8 @@
 		B89F67422017556C006D3EFA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B89F67442017565A006D3EFA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
+		B8C4AC482019D4C9004DEFF6 /* DetailTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailTableCell.xib; sourceTree = "<group>"; };
+		B8C4AC4A2019D509004DEFF6 /* DetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailTableViewCell.swift; sourceTree = "<group>"; };
 		B8C4D7CE200C8DCB00E8D448 /* QFind-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "QFind-Bridging-Header.h"; sourceTree = "<group>"; };
 		B8C4D7CF200C8DCC00E8D448 /* KASlideShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KASlideShow.h; sourceTree = "<group>"; };
 		B8C4D7D0200C8DCC00E8D448 /* KASlideShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KASlideShow.m; sourceTree = "<group>"; };
@@ -229,6 +233,15 @@
 			path = ViewController;
 			sourceTree = "<group>";
 		};
+		B8C4AC442019D475004DEFF6 /* InformationTableCell */ = {
+			isa = PBXGroup;
+			children = (
+				B8C4AC4A2019D509004DEFF6 /* DetailTableViewCell.swift */,
+				B8C4AC482019D4C9004DEFF6 /* DetailTableCell.xib */,
+			);
+			path = InformationTableCell;
+			sourceTree = "<group>";
+		};
 		B8C4D7CD200C8DAB00E8D448 /* KASlideShow */ = {
 			isa = PBXGroup;
 			children = (
@@ -242,6 +255,7 @@
 		B8C4D7D8200CC3E100E8D448 /* ReusableComponents */ = {
 			isa = PBXGroup;
 			children = (
+				B8C4AC442019D475004DEFF6 /* InformationTableCell */,
 				B8C657A9201861EF000C23A9 /* RTLSupportFiles */,
 				B858B4A92015EC9B00C4812D /* LoaderView */,
 				B8E4D28D2011B85000074C37 /* PredicateSearch */,
@@ -453,6 +467,7 @@
 				B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */,
 				B88A2DA02008C3A000BF1B8A /* Main.storyboard in Resources */,
 				B87BBFF02011E31900A026FB /* GE_SS_Unique_Light.otf in Resources */,
+				B8C4AC492019D4C9004DEFF6 /* DetailTableCell.xib in Resources */,
 				B8D3B829200C686D0032C78B /* Lato-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -550,6 +565,7 @@
 				B8C657AB2018623D000C23A9 /* MirroringViewController.swift in Sources */,
 				B88A2D9B2008C3A000BF1B8A /* AppDelegate.swift in Sources */,
 				B88A2DCD2008D7D000BF1B8A /* HomeViewController.swift in Sources */,
+				B8C4AC4B2019D509004DEFF6 /* DetailTableViewCell.swift in Sources */,
 				B858B4BF20164EE600C4812D /* AppLocalizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

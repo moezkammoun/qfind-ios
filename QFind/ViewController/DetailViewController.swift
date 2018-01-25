@@ -8,11 +8,12 @@
 
 import UIKit
 import MessageUI
-class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewControllerDelegate {
+class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewControllerDelegate,UITableViewDelegate,UITableViewDataSource {
 
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
     
+    @IBOutlet weak var detailTableView: UITableView!
     
     @IBOutlet weak var detailLoadingView: LoadingView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -41,7 +42,7 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         }
         detailLoadingView.isHidden = true
        // detailLoadingView.showLoading()
-        
+        self.detailTableView.register(UINib(nibName: "DetailTableCell", bundle: nil), forCellReuseIdentifier: "detailCellId")
     }
     func setLocalizedVariables()
     {
@@ -56,90 +57,7 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    @IBAction func didTapCallButton(_ sender: UIButton) {
-        if let url = URL(string: "tel://\(phnNumber)"), UIApplication.shared.canOpenURL(url) {
-            if #available(iOS 10, *) {
-                UIApplication.shared.open(url)
-            } else {
-                UIApplication.shared.openURL(url)
-            }
-        }
-    }
-    @IBAction func didTapWebsiteButton(_ sender: UIButton) {
-        let websiteUrlString = "http://www.techotopia.com/"
-        if let websiteUrl = NSURL(string: websiteUrlString) {
-            // show alert to choose app
-            if UIApplication.shared.canOpenURL(websiteUrl as URL) {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(websiteUrl as URL, options: [:], completionHandler: nil)
-                } else {
-                    UIApplication.shared.openURL(websiteUrl as URL)
-                }
-            }
-        }
-    }
-    
-    @IBAction func didTapLocation(_ sender: UIButton) {
-        //Working in Swift new versions.
-        let latitude = 10.0158685
-        let longitude =  76.3418586
-        
-        if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!, options: [:], completionHandler: nil)
-            } else {
-                 UIApplication.shared.openURL(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!)
-            }
-        } else {
-            print("Can't use comgooglemaps://");
-           
-            if (UIApplication.shared.canOpenURL(URL(string:"https://maps.google.com")! ))
-            {
-                UIApplication.shared.openURL(URL(string:
-                    "https://maps.google.com/?q=@\(latitude),\(longitude)")!)
-            }
-        }
 
-    
-    }
-    @IBAction func didTapGmailButton(_ sender: UIButton) {
-        let email = "vidyar851@gmail.com"
-        if let url = URL(string: "mailto:\(email)") {
-            if (UIApplication.shared.canOpenURL(url))
-            {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(url)
-                } else {
-                    UIApplication.shared.openURL(url)
-                }
-            }
-            else{
-                //let urlString = URL(string: "inbox-gmail://")
-               // UIApplication.shared.openURL(urlString!)
-              
-                
-            }
-        }//
-    }
-
-    @IBAction func didTapFacebookButton(_ sender: UIButton) {
-      
-         let facebookUrl = URL(string: "fb://profile/vidyarajan.rajan.5")
-       if( UIApplication.shared.canOpenURL(facebookUrl!))
-       {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(facebookUrl!, options: [:], completionHandler: nil)
-            } else {
-            
-                UIApplication.shared.openURL(facebookUrl!)
-            
-        }
-        }
-       else{
-        let facebookUrlString = URL(string: "http://www.facebook.com/vidyarajan.rajan.5")
-        UIApplication.shared.openURL(facebookUrlString!)
-        }
-    }
     func favouriteButtonPressed() {
         detailBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
@@ -189,7 +107,117 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         
         self.present(activityViewController, animated: true, completion: nil)
     }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 6
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell : DetailTableViewCell = tableView.dequeueReusableCell(withIdentifier: "detailCellId", for:indexPath) as! DetailTableViewCell
+        if (indexPath.row == 5)
+        {
+            cell.separatorView.isHidden = true
+        }
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            return 90
+        }
+        else{
+            return 66
+        }
+        
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath.row == 0)
+        {
+            if let url = URL(string: "tel://\(phnNumber)"), UIApplication.shared.canOpenURL(url) {
+                if #available(iOS 10, *) {
+                    UIApplication.shared.open(url)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+        }
+        else if (indexPath.row == 1)
+        {
+            let websiteUrlString = "http://www.techotopia.com/"
+            if let websiteUrl = NSURL(string: websiteUrlString) {
+                // show alert to choose app
+                if UIApplication.shared.canOpenURL(websiteUrl as URL) {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(websiteUrl as URL, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.openURL(websiteUrl as URL)
+                    }
+                }
+            }
+        }
+        else if (indexPath.row == 2)
+        {
+            //Working in Swift new versions.
+            let latitude = 10.0158685
+            let longitude =  76.3418586
+            
+            if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!)
+                }
+            } else {
+                print("Can't use comgooglemaps://");
+                
+                if (UIApplication.shared.canOpenURL(URL(string:"https://maps.google.com")! ))
+                {
+                    UIApplication.shared.openURL(URL(string:
+                        "https://maps.google.com/?q=@\(latitude),\(longitude)")!)
+                }
+            }
+        }
     
+    else if (indexPath.row == 4)
+    {
+        let email = "vidyar851@gmail.com"
+        if let url = URL(string: "mailto:\(email)") {
+            if (UIApplication.shared.canOpenURL(url))
+            {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(url)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+            else{
+                //let urlString = URL(string: "inbox-gmail://")
+                // UIApplication.shared.openURL(urlString!)
+                
+                
+            }
+        }//
+    }
+         else if (indexPath.row == 5)
+        {
+            
+            let facebookUrl = URL(string: "fb://profile/vidyarajan.rajan.5")
+            if( UIApplication.shared.canOpenURL(facebookUrl!))
+            {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(facebookUrl!, options: [:], completionHandler: nil)
+                } else {
+                    
+                    UIApplication.shared.openURL(facebookUrl!)
+                    
+                }
+            }
+            else{
+                let facebookUrlString = URL(string: "http://www.facebook.com/vidyarajan.rajan.5")
+                UIApplication.shared.openURL(facebookUrlString!)
+            }
+        }
+        
+        
+    }
     @IBAction func didTapBack(_ sender: UIButton) {
         self.dismiss(animated: false, completion: nil)
     }
