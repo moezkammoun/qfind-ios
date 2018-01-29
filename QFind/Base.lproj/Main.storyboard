@@ -335,7 +335,7 @@
                                         </constraints>
                                     </pageControl>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="scrollableAxes" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Uld-AQ-t4H">
-                                        <rect key="frame" x="20" y="348" width="391" height="312.33333333333326"/>
+                                        <rect key="frame" x="13" y="348" width="398" height="312.33333333333326"/>
                                         <color key="backgroundColor" red="0.95294117647058818" green="0.94509803921568625" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="13" minimumInteritemSpacing="10" id="e1f-xM-r4O">
                                             <size key="itemSize" width="50" height="50"/>
@@ -381,7 +381,7 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LFO-HV-ygA" customClass="LoadingView" customModule="QFind" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="75" width="414" height="586"/>
+                                        <rect key="frame" x="0.0" y="65" width="414" height="603.33333333333337"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
@@ -390,7 +390,7 @@
                                     <constraint firstAttribute="bottom" secondItem="YUw-6E-5gt" secondAttribute="bottom" id="5tV-am-clb"/>
                                     <constraint firstItem="8wm-IT-k1n" firstAttribute="centerX" secondItem="V1C-LI-2Bx" secondAttribute="centerX" id="7Oz-5L-zpe"/>
                                     <constraint firstItem="NcC-Td-Sl6" firstAttribute="centerX" secondItem="4a0-Jv-JZE" secondAttribute="centerX" id="7Y8-vg-0A1"/>
-                                    <constraint firstItem="Uld-AQ-t4H" firstAttribute="leading" secondItem="4a0-Jv-JZE" secondAttribute="leading" constant="20" id="AH1-1w-fTc">
+                                    <constraint firstItem="Uld-AQ-t4H" firstAttribute="leading" secondItem="4a0-Jv-JZE" secondAttribute="leading" constant="13" id="AH1-1w-fTc">
                                         <variation key="heightClass=regular-widthClass=regular" constant="70"/>
                                     </constraint>
                                     <constraint firstItem="V1C-LI-2Bx" firstAttribute="top" secondItem="NcC-Td-Sl6" secondAttribute="bottom" constant="12" id="BqN-r1-aPX">
@@ -401,7 +401,7 @@
                                     <constraint firstItem="SIP-rv-cQh" firstAttribute="leading" secondItem="4a0-Jv-JZE" secondAttribute="leading" constant="16" id="GF8-tq-rEc">
                                         <variation key="heightClass=regular-widthClass=regular" constant="25"/>
                                     </constraint>
-                                    <constraint firstItem="LFO-HV-ygA" firstAttribute="top" secondItem="vIN-NE-qEf" secondAttribute="bottom" constant="10" id="NuO-Fg-GXt"/>
+                                    <constraint firstItem="LFO-HV-ygA" firstAttribute="top" secondItem="vIN-NE-qEf" secondAttribute="bottom" id="NuO-Fg-GXt"/>
                                     <constraint firstItem="SIP-rv-cQh" firstAttribute="centerY" secondItem="NcC-Td-Sl6" secondAttribute="centerY" id="R5m-lJ-QAq"/>
                                     <constraint firstAttribute="trailing" secondItem="YUw-6E-5gt" secondAttribute="trailing" id="TQA-Ri-fJZ"/>
                                     <constraint firstItem="LFO-HV-ygA" firstAttribute="leading" secondItem="4a0-Jv-JZE" secondAttribute="leading" id="VHP-bH-skb"/>
@@ -418,7 +418,7 @@
                                     <constraint firstItem="NcC-Td-Sl6" firstAttribute="top" secondItem="vIN-NE-qEf" secondAttribute="bottom" constant="12" id="tVn-rk-qel">
                                         <variation key="heightClass=regular-widthClass=regular" constant="15"/>
                                     </constraint>
-                                    <constraint firstItem="YUw-6E-5gt" firstAttribute="top" secondItem="LFO-HV-ygA" secondAttribute="bottom" constant="7.3333333333333712" id="xGB-JT-gbU"/>
+                                    <constraint firstItem="YUw-6E-5gt" firstAttribute="top" secondItem="LFO-HV-ygA" secondAttribute="bottom" id="xGB-JT-gbU"/>
                                     <constraint firstItem="vIN-NE-qEf" firstAttribute="top" secondItem="4a0-Jv-JZE" secondAttribute="top" id="ym1-hg-VqW"/>
                                 </constraints>
                             </view>
@@ -892,7 +892,7 @@
                                         <state key="normal" image="hamburger-white"/>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Four Season Hotel" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7Q-eK-alp">
-                                        <rect key="frame" x="20" y="60" width="380" height="36.333333333333343"/>
+                                        <rect key="frame" x="20" y="60.000000000000007" width="380" height="94.666666666666686"/>
                                         <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="31"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -901,7 +901,7 @@
                                         </variation>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qfp-dN-HcP">
-                                        <rect key="frame" x="20" y="96.333333333333329" width="25" height="25"/>
+                                        <rect key="frame" x="20" y="154.66666666666666" width="25" height="25"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="HGU-JY-SwH">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="45"/>
@@ -916,7 +916,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zr7-hM-wIc">
-                                        <rect key="frame" x="21.666666666666671" y="125.33333333333334" width="22" height="22"/>
+                                        <rect key="frame" x="21.666666666666671" y="183.66666666666666" width="22" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="22" id="1EN-QC-uLA">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="28"/>
@@ -928,7 +928,7 @@
                                         <state key="normal" image="favorite-White"/>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="West baby" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmz-hX-nBh">
-                                        <rect key="frame" x="307" y="99.333333333333329" width="75" height="20"/>
+                                        <rect key="frame" x="307" y="157.66666666666666" width="75" height="20"/>
                                         <fontDescription key="fontDescription" name="Lato-Italic" family="Lato" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -972,6 +972,7 @@
                                 <constraints>
                                     <constraint firstItem="rLh-LG-inu" firstAttribute="top" secondItem="vX1-vJ-OOv" secondAttribute="bottom" id="4uu-yD-T68"/>
                                     <constraint firstItem="Zr7-hM-wIc" firstAttribute="centerX" secondItem="Qfp-dN-HcP" secondAttribute="centerX" id="9i7-2K-Zs1"/>
+                                    <constraint firstItem="a9O-6Q-NZk" firstAttribute="top" secondItem="Zr7-hM-wIc" secondAttribute="bottom" constant="16" id="ASF-Mc-7pf"/>
                                     <constraint firstItem="rLh-LG-inu" firstAttribute="leading" secondItem="6f7-dm-e67" secondAttribute="leading" id="Btb-aA-1tm"/>
                                     <constraint firstItem="U7Q-eK-alp" firstAttribute="top" secondItem="vX1-vJ-OOv" secondAttribute="bottom" constant="5" id="C3b-Ob-aDo">
                                         <variation key="heightClass=regular-widthClass=regular" constant="40"/>

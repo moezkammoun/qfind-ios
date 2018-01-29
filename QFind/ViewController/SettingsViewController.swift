@@ -100,6 +100,7 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
         }
         else {
             LocalizationLanguage.setAppleLAnguageTo(lang: "en")
+            languageKey = 1
             if #available(iOS 9.0, *) {
                 UIView.appearance().semanticContentAttribute = .forceLeftToRight
                  self.dismiss(animated: false, completion: nil)
@@ -115,6 +116,7 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     @IBAction func didTapArabic(_ sender: UIButton) {
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
         LocalizationLanguage.setAppleLAnguageTo(lang: "ar")
+            languageKey = 2
             if #available(iOS 9.0, *) {
                                 UIView.appearance().semanticContentAttribute = .forceRightToLeft
                 self.dismiss(animated: false, completion: nil)

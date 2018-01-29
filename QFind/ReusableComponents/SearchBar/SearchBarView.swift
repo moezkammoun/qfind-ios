@@ -49,11 +49,11 @@ class SearchBarView: UIView,UITextFieldDelegate {
         return true
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        print(textField.text)
+        
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print(string)
+       
        // searchDelegate?.searchTextshouldChangeCharacters()
         searchDelegate?.textField(searchText, shouldChangeSearcgCharacters: range, replacementString: string)
         return true

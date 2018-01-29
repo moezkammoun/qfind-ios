@@ -9,6 +9,8 @@
 import Alamofire
 import CoreData
 import UIKit
+let tokenDefault = UserDefaults.standard
+var languageKey = 1
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,19 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         UIApplication.shared.statusBarStyle = .lightContent
           AppLocalizer.DoTheMagic()
+        getAccessTokenFromServer()
+
         
-//        Alamofire.request(QFindRouter.getAccessToken("DEB47D9B-61DD-25A6-CB6F-46F310F78130", "7B446C1F-94F4-967D-25BF-45A63DBC2BAF"))
-        Alamofire.request(QFindRouter.getAccessToken(["clientid": "DEB47D9B-61DD-25A6-CB6F-46F310F78130",
-                                                      "clientsecret": "7B446C1F-94F4-967D-25BF-45A63DBC2BAF"]))
-            .responseObject { (response: DataResponse<TokenData>) -> Void in
-                switch response.result {
-                case .success(let data):
-                    print(data)
-                case .failure(let error):
-                   print(error)
-                    }
-                
-                }
         return true
         
     
@@ -113,5 +105,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func getAccessTokenFromServer()
+    {
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en"){
+            languageKey = 1
+        }
+        else{
+            languageKey = 2
+        }
+        if (tokenDefault.value(forKey: "accessTokenString") == nil)
+        {
+        Alamofire.request(QFindRouter.getAccessToken(["clientid": "DEB47D9B-61DD-25A6-CB6F-46F310F78130",
+                                                      "clientsecret": "7B446C1F-94F4-967D-25BF-45A63DBC2BAF"]))
+            .responseObject { (response: DataResponse<TokenData>) -> Void in
+                switch response.result {
+                case .success(let data):
+                    if let token = data.accessToken{
+                        print(token)
+                       
+                           tokenDefault.set(token, forKey: "accessTokenString")
+                    }
+                    print(data.accessToken!)
+                    
+                case .failure(let error):
+                    print(error)
+                }
+                
+        }
+    }
+    }
 }
 

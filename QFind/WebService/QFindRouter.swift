@@ -11,7 +11,7 @@ import Foundation
 
 enum QFindRouter: URLRequestConvertible {
     case getAccessToken([String: Any])
-//    case Compare(String)
+    case getCategory([String :Any])
 //    case GetTopThreeTarget(String, [String: Any])
 //    case GetPlayerDetail(String)
 //    case Logout(String)
@@ -23,8 +23,8 @@ enum QFindRouter: URLRequestConvertible {
         switch self {
         case .getAccessToken:
             return .get
-//        case .Compare:
-//            return .post
+        case .getCategory:
+            return .get
 //        case .GetTopThreeTarget:
 //            return .post
 //        case .GetPlayerDetail:
@@ -43,9 +43,11 @@ enum QFindRouter: URLRequestConvertible {
     var path: String {
         switch self {
         case .getAccessToken( _):
+           // return "api-clients/oauth-token?clientid=80581B4C-C060-D166-7893-A4424C15A63D&clientsecret=0488AFF2-BCE0-BC87-F614-10F055107FEB"
             return "api-clients/oauth-token"
-//        case .Compare(let userId):
-//            return "/compare/\(userId)"
+            
+        case .getCategory( _):
+            return "api/get-category"
 //        case .GetTopThreeTarget(let userId, _):
 //            return "/topthree/\(userId)"
 //        case .GetPlayerDetail(let userId):
@@ -64,7 +66,7 @@ enum QFindRouter: URLRequestConvertible {
 //    var parameterEncoding: ParameterEncoding {
 //        switch self {
 //        case .getAccessToken:
-//            return URLEncoding.httpBody
+//            return URLEncoding.default
 //        default:
 //            return JSONEncoding.default
 //        }
@@ -82,9 +84,10 @@ enum QFindRouter: URLRequestConvertible {
 //        }
         switch self {
         case .getAccessToken(let parameters):
-            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest, with: parameters)
-//        case .Compare(_):
-//            return mutableURLRequest
+          
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
+        case .getCategory(let parameters):
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
 //        case .GetTopThreeTarget( _, let parameters):
 //            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest,
 //                                                              with: parameters)

@@ -28,17 +28,33 @@ struct TokenData: ResponseObjectSerializable {
     }
 }
 
-//struct LocationDetail: ResponseObjectSerializable {
-//    var type: String? = nil
-//    var coordinates: [Double]? = []
+struct CategoryData: ResponseObjectSerializable {
+        var categoryData: [Category]? = []
+    
+        public init?(response: HTTPURLResponse, representation: AnyObject) {
+            if let data = representation["result"] as? [[String: Any]] {
+                self.categoryData = Category.collection(response: response, representation: data as AnyObject )
+            }
+        }
+}
+
+struct Category: ResponseObjectSerializable, ResponseCollectionSerializable {
+    var categories_id: Int? = nil
+    var categories_imge: String? = nil
+    var categories_name: String? = nil
+   
+
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        if let representation = representation as? [String: Any] {
+            self.categories_id = representation["id"] as? Int
+            self.categories_imge = representation["categories_imge"] as? String
+            self.categories_name = representation["categories_name"] as? String
+            
+            
+        }
+    }
+}
 //
-//    public init?(response: HTTPURLResponse, representation: AnyObject) {
-//        if let representation = representation as? [String: Any] {
-//            self.type = representation["type"] as? String
-//            self.coordinates = representation["coordinates"] as? [Double]
-//        }
-//    }
-//}
 //
 //struct Badge: ResponseObjectSerializable, ResponseCollectionSerializable {
 //    var id: String? = nil

@@ -6,8 +6,14 @@
 //  Copyright © 2018 QFind. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 
+enum PageNameInCategory{
+    case category
+    case subcategory
+    
+}
 class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol,predicateTableviewProtocol {
     
     @IBOutlet weak var bottomBar: BottomBarView!
@@ -21,9 +27,10 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     @IBOutlet weak var slideShow: KASlideShow!
      var controller = PredicateSearchViewController()
      var tapGesture = UITapGestureRecognizer()
-    
+     var categoryPageNameString : PageNameInCategory?
     var dummyString = String()
      var bannerArray = NSArray()
+    var categoryDataArray : [Category]? = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,6 +49,8 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         bottomBar.favoriteview.backgroundColor = UIColor.white
         bottomBar.historyView.backgroundColor = UIColor.white
         bottomBar.homeView.backgroundColor = UIColor.white
+        categoryPageNameString = PageNameInCategory.category
+        getCategoriesFromServer()
     }
     
     func setUpUi()
@@ -52,8 +61,8 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
         searchBarView.searchDelegate = self
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
-        categoryLoadingView.isHidden = true
-        //categoryLoadingView.showLoading()
+        categoryLoadingView.isHidden = false
+        categoryLoadingView.showLoading()
     }
     func setRTLSupport()
     {
@@ -115,48 +124,70 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     //KASlideShow delegate
     
     func kaSlideShowWillShowNext(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowWillShowNext")
+        
         
         
     }
     
     func kaSlideShowWillShowPrevious(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowWillShowPrevious")
+        
     }
     
     func kaSlideShowDidShowNext(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowDidNext")
-        print(Int(slideShow.currentIndex))
+       
+      
         
         
         pageControl.currentPage = Int(slideShow.currentIndex)
         
-        print(pageControl.currentPage)
-        print(pageControl.numberOfPages)
+       
     }
     
     func kaSlideShowDidShowPrevious(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowDidPrevious")
+       
         pageControl.currentPage = Int(slideShow.currentIndex)
     }
     @objc func pageChanged() {
-        print("pageChanged")
+        
     }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return (categoryDataArray?.count)!
         
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell : CategoryCollectionViewCell = categoryCollectionView.dequeueReusableCell(withReuseIdentifier: "categoryCellId", for: indexPath) as! CategoryCollectionViewCell
+        
+        if (categoryPageNameString == PageNameInCategory.category)
+        {
+            cell.titleCenterConstraint.constant = 0
+            cell.subTitleLabel.isHidden = true
+        }
+        else{
+            cell.titleCenterConstraint.constant = 10
+            cell.subTitleLabel.isHidden = false
+        }
         cell.layer.shadowColor = UIColor.lightGray.cgColor
         cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
         cell.layer.shadowRadius = 2.0
         cell.layer.shadowOpacity = 1.0
         cell.layer.masksToBounds = false;
         cell.layer.shadowPath = UIBezierPath(roundedRect:cell.bounds, cornerRadius:cell.contentView.layer.cornerRadius).cgPath
+        
+        print(categoryDataArray)
+        let categoryDictionary = categoryDataArray![indexPath.row]
+        print(categoryDictionary)
+        cell.setCategoryCellValues(categoryValues: categoryDictionary)
+        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if categoryPageNameString == PageNameInCategory.category
+        {
+            
+            
+           
+        }
         let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
         self.present(informationVC, animated: false, completion: nil)
     }
@@ -167,7 +198,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                 return CGSize(width: categoryCollectionView.frame.width/2-20, height: heightValue*7)
         }
         else{
-            return CGSize(width: categoryCollectionView.frame.width/2-19, height: heightValue*6)
+            return CGSize(width: categoryCollectionView.frame.width/2-17, height: heightValue*6)
         }
         
     }
@@ -175,7 +206,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     func favouriteButtonPressed() {
       
        
-        //bottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
         historyVC.pageNameString = PageName.favorite
@@ -183,18 +214,18 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
     func homebuttonPressed() {
 
-        // bottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+      
         self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
     func historyButtonPressed() {
-          //bottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
        
         historyVC.pageNameString = PageName.history
         self.present(historyVC, animated: false, completion: nil)
     }
     func searchButtonPressed() {
-        print("search")
+        
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         
@@ -221,7 +252,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                         
                     }
                     controller.view.tag = 1
-                    print(controller.view.tag)
+                    
                     controller.predicateProtocol = self
                     addChildViewController(controller)
                     controller.view.frame = CGRect(x: searchBarView.searchInnerView.frame.origin.x, y:
@@ -281,6 +312,31 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
 
     @IBAction func didTapBack(_ sender: UIButton) {
         self.dismiss(animated: false, completion: nil)
+    }
+    func getCategoriesFromServer()
+    {
+       
+            if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+            {
+            Alamofire.request(QFindRouter.getCategory(["token": tokenString,
+                                                          "language": languageKey]))
+                .responseObject { (response: DataResponse<CategoryData>) -> Void in
+                    switch response.result {
+                    case .success(let data):
+                        
+                        self.categoryDataArray = data.categoryData
+                        print(data.categoryData!)
+                        self.categoryCollectionView.reloadData()
+                        self.categoryLoadingView.isHidden = true
+                        self.categoryLoadingView.stopLoading()
+                    case .failure(let error):
+                        self.categoryLoadingView.isHidden = true
+                        self.categoryLoadingView.stopLoading()
+                        self.categoryLoadingView.noDataView.isHidden = false
+                    }
+                    
+                }
+            }
     }
     
 

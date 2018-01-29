@@ -6,17 +6,22 @@
 //  Copyright © 2018 QFind. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 
 class CategoryCollectionViewCell: UICollectionViewCell {
-//    override func awakeFromNib() {
-//        super.awakeFromNib()
-//        self.layer.shadowColor = UIColor.lightGray.cgColor
-//        self.layer.shadowOffset = CGSize(width:0,height: 1.0)
-//        self.layer.shadowRadius = 1.0
-//        self.layer.shadowOpacity = 0.5
-//        self.layer.masksToBounds = false;
-//        self.layer.shadowPath = UIBezierPath(roundedRect:self.bounds, cornerRadius:self.contentView.layer.cornerRadius).cgPath
-//    }
+
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var categoryViewTrailing: NSLayoutConstraint!
+    @IBOutlet weak var subTitleLabel: UILabel!
+    @IBOutlet weak var thumbnailView: UIImageView!
+    @IBOutlet weak var titleCenterConstraint: NSLayoutConstraint!
+    
+    func setCategoryCellValues(categoryValues : Category)
+    {
+        
+        self.titleLabel.text = categoryValues.categories_name
+       
+    }
+    
 }
