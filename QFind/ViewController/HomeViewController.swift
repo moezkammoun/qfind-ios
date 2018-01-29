@@ -41,7 +41,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         setRTLSupport()
         setSlideShow()
         setLocalizedStrings()
-        print(aspectRationHome.multiplier)
+        
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -147,32 +147,26 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     //KASlideShow delegate
     
     func kaSlideShowWillShowNext(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowWillShowNext")
+       
       
        
     }
     
     func kaSlideShowWillShowPrevious(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowWillShowPrevious")
+        
     }
     
     func kaSlideShowDidShowNext(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowDidNext")
-        print(Int(slideShow.currentIndex))
-        
-        
         pageControl.currentPage = Int(slideShow.currentIndex)
-        
-        print(pageControl.currentPage)
-        print(pageControl.numberOfPages)
+      
     }
     
     func kaSlideShowDidShowPrevious(_ slideshow: KASlideShow) {
-        NSLog("kaSlideShowDidPrevious")
+        
          pageControl.currentPage = Int(slideShow.currentIndex)
     }
     @objc func pageChanged() {
-        print("pageChanged")
+       
     }
    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -182,7 +176,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         {
             
             controller.view.tag = 1
-            print(controller.view.tag)
+            
             controller.predicateProtocol = self
             addChildViewController(controller)
            
