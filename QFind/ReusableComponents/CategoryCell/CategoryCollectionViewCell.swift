@@ -7,6 +7,7 @@
 //
 
 import Alamofire
+import Kingfisher
 import UIKit
 
 class CategoryCollectionViewCell: UICollectionViewCell {
@@ -21,7 +22,11 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     {
         
         self.titleLabel.text = categoryValues.categories_name
-       
+        if let imageUrl = categoryValues.categories_imge{
+        
+            thumbnailView.kf.setImage(with: URL(string: imageUrl))
+        }
+        
     }
     
 }

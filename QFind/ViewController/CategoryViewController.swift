@@ -37,7 +37,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
        
         registerNib()
         setUpUi()
-        
+         getCategoriesFromServer()
         
         
     }
@@ -50,7 +50,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         bottomBar.historyView.backgroundColor = UIColor.white
         bottomBar.homeView.backgroundColor = UIColor.white
         categoryPageNameString = PageNameInCategory.category
-        getCategoriesFromServer()
+       
     }
     
     func setUpUi()
@@ -325,12 +325,12 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                     case .success(let data):
                         
                         self.categoryDataArray = data.categoryData
-                        print(data.categoryData!)
+                        
                         self.categoryCollectionView.reloadData()
                         self.categoryLoadingView.isHidden = true
                         self.categoryLoadingView.stopLoading()
                     case .failure(let error):
-                        self.categoryLoadingView.isHidden = true
+                        self.categoryLoadingView.isHidden = false
                         self.categoryLoadingView.stopLoading()
                         self.categoryLoadingView.noDataView.isHidden = false
                     }
