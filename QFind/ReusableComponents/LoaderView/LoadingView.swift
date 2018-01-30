@@ -59,6 +59,7 @@ class LoadingView: UIView {
         
         self.isHidden = false
         self.noDataLabel.isHidden = true
+        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         self.isHidden = false
         

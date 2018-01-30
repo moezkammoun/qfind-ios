@@ -28,5 +28,16 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         }
         
     }
+    func setSubCategoryCellValues(subCategoryValues : SubCategory)
+    {
+        
+        self.titleLabel.text = subCategoryValues.sub_categories_name
+        self.subTitleLabel.text = subCategoryValues.sub_categories_description
+        if let imageUrl = subCategoryValues.sub_categories_imge{
+            
+            thumbnailView.kf.setImage(with: URL(string: imageUrl))
+        }
+        
+    }
     
 }

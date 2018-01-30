@@ -42,16 +42,60 @@ struct Category: ResponseObjectSerializable, ResponseCollectionSerializable {
     var categories_id: Int? = nil
     var categories_imge: String? = nil
     var categories_name: String? = nil
+    
    
 
     public init?(response: HTTPURLResponse, representation: AnyObject) {
         if let representation = representation as? [String: Any] {
-            self.categories_id = representation["id"] as? Int
+            self.categories_id = representation["categories_id"] as? Int
             self.categories_imge = representation["categories_imge"] as? String
             self.categories_name = representation["categories_name"] as? String
             
             
+            
         }
+    }
+}
+struct SubCategoryData: ResponseObjectSerializable {
+    var subCategoryData: [SubCategory]? = []
+    var code:  String? = nil
+    var response: String? = nil
+    
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        print(representation)
+        if let representationData = representation as? [String: Any] {
+            print(representationData)
+            self.code = representationData["code"] as? String
+            
+            self.response = representationData["response"] as? String
+            
+        }
+        if let data = representation["result"] as? [[String: Any]] {
+           
+            self.subCategoryData = SubCategory.collection(response: response, representation: data as AnyObject )
+        }
+        
+        
+    }
+}
+
+struct SubCategory: ResponseObjectSerializable, ResponseCollectionSerializable {
+    var sub_categories_id: Int? = nil
+    var sub_categories_imge: String? = nil
+    var sub_categories_name: String? = nil
+    var sub_categories_description: String? = nil
+    
+    
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        if let representation = representation as? [String: Any] {
+            self.sub_categories_id = representation["sub_categories_id"] as? Int
+            self.sub_categories_imge = representation["sub_categories_imge"] as? String
+            self.sub_categories_name = representation["sub_categories_name"] as? String
+            self.sub_categories_description = representation["sub_categories_description"] as? String
+           
+            
+        }
+       
     }
 }
 //

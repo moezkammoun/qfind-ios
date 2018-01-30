@@ -12,6 +12,7 @@ import UIKit
 enum PageNameInCategory{
     case category
     case subcategory
+    case informationPage
     
 }
 class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol,predicateTableviewProtocol {
@@ -31,13 +32,20 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     var dummyString = String()
      var bannerArray = NSArray()
     var categoryDataArray : [Category]? = []
+    var subCategoryDataArray : [SubCategory]? = []
+    var subCategoryTitle : String?
+    var categoryIdVar : Int?
     override func viewDidLoad() {
         super.viewDidLoad()
 
        
         registerNib()
         setUpUi()
-         getCategoriesFromServer()
+        
+        categoryPageNameString = PageNameInCategory.category
+        getCategoriesFromServer()
+        setLocalizedVariables()
+        
         
         
     }
@@ -45,11 +53,11 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         super.viewWillAppear(false)
         setRTLSupport()
         setImageSlideShow()
-        setLocalizedVariables()
+        //setLocalizedVariables()
         bottomBar.favoriteview.backgroundColor = UIColor.white
         bottomBar.historyView.backgroundColor = UIColor.white
         bottomBar.homeView.backgroundColor = UIColor.white
-        categoryPageNameString = PageNameInCategory.category
+        //categoryPageNameString = PageNameInCategory.category
        
     }
     
@@ -89,7 +97,9 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
     func setLocalizedVariables()
     {
+        
          self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+
     }
     func registerNib()
     {
@@ -151,21 +161,35 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
     }
     
+    // MARK: CollectionView
+ 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return (categoryDataArray?.count)!
+        if (categoryPageNameString == PageNameInCategory.category)
+        {
+            return (categoryDataArray?.count)!
+        }
+        else{
+            return (subCategoryDataArray?.count)!
+        }
+        
         
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell : CategoryCollectionViewCell = categoryCollectionView.dequeueReusableCell(withReuseIdentifier: "categoryCellId", for: indexPath) as! CategoryCollectionViewCell
-        
+        self.categoryLoadingView.hideNoDataView()
         if (categoryPageNameString == PageNameInCategory.category)
         {
             cell.titleCenterConstraint.constant = 0
             cell.subTitleLabel.isHidden = true
+            let categoryDictionary = categoryDataArray![indexPath.row]
+            cell.setCategoryCellValues(categoryValues: categoryDictionary)
         }
         else{
-            cell.titleCenterConstraint.constant = 10
+            cell.titleCenterConstraint.constant = 7
             cell.subTitleLabel.isHidden = false
+            let subCategoryDictionary = subCategoryDataArray![indexPath.row]
+            print(subCategoryDictionary)
+            cell.setSubCategoryCellValues(subCategoryValues: subCategoryDictionary)
         }
         cell.layer.shadowColor = UIColor.lightGray.cgColor
         cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
@@ -174,22 +198,30 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         cell.layer.masksToBounds = false;
         cell.layer.shadowPath = UIBezierPath(roundedRect:cell.bounds, cornerRadius:cell.contentView.layer.cornerRadius).cgPath
         
-        print(categoryDataArray)
-        let categoryDictionary = categoryDataArray![indexPath.row]
-        print(categoryDictionary)
-        cell.setCategoryCellValues(categoryValues: categoryDictionary)
+      
+       
         
         return cell
     }
+ 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if categoryPageNameString == PageNameInCategory.category
         {
-            
-            
+            categoryPageNameString = PageNameInCategory.subcategory
+            let categoryDict = categoryDataArray![indexPath.row]
+            categoryIdVar = categoryDict.categories_id
+            categoryTitle.text = categoryDict.categories_name?.uppercased()
+            categoryLoadingView.activityIndicator.startAnimating()
+            getSubcategoriesFromServer()
            
         }
-        let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
-        self.present(informationVC, animated: false, completion: nil)
+        else {
+            categoryPageNameString = PageNameInCategory.informationPage
+            let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
+            self.present(informationVC, animated: false, completion: nil)
+        }
+        
+        
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let heightValue = UIScreen.main.bounds.height/100
@@ -198,11 +230,11 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                 return CGSize(width: categoryCollectionView.frame.width/2-20, height: heightValue*7)
         }
         else{
-            return CGSize(width: categoryCollectionView.frame.width/2-17, height: heightValue*6)
+            return CGSize(width: categoryCollectionView.frame.width/2-17, height: heightValue*7)
         }
         
     }
-
+ // MARK: Bottombar
     func favouriteButtonPressed() {
       
        
@@ -224,6 +256,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         historyVC.pageNameString = PageName.history
         self.present(historyVC, animated: false, completion: nil)
     }
+    // MARK: Searchbar
     func searchButtonPressed() {
         
     }
@@ -282,6 +315,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         controller.view.tag = 0
         
     }
+    // MARK: Tableview
     func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
         if (searchBarView.searchText.isEqual("ho"))
@@ -311,7 +345,19 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
 
     @IBAction func didTapBack(_ sender: UIButton) {
-        self.dismiss(animated: false, completion: nil)
+        if categoryPageNameString == PageNameInCategory.category{
+            self.dismiss(animated: false, completion: nil)
+            
+            //self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+           
+        }
+        else{
+            categoryPageNameString = PageNameInCategory.category
+            self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+            
+            categoryCollectionView.reloadData()
+        }
+        
     }
     func getCategoriesFromServer()
     {
@@ -337,6 +383,50 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                     
                 }
             }
+    }
+    func getSubcategoriesFromServer()
+    {
+        categoryLoadingView.isHidden = false
+        categoryLoadingView.showLoading()
+        
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            if let categoryIdvar = self.categoryIdVar
+            {
+                print(categoryIdVar!)
+            Alamofire.request(QFindRouter.getSubCategory(["token": tokenString,
+                                                          "language": languageKey , "category" :categoryIdvar]))
+                .responseObject { (response: DataResponse<SubCategoryData>) -> Void in
+                    switch response.result {
+                        
+                    case .success(let data):
+                        
+                        self.subCategoryDataArray = data.subCategoryData
+                        DispatchQueue.main.async {
+                            self.categoryCollectionView.reloadData()
+                        }
+                        
+                        
+                       
+                         if ((data.response == "error") || (data.code != "200")){
+                           // self.categoryLoadingView.isHidden = false
+                           // self.categoryLoadingView.stopLoading()
+                            self.categoryLoadingView.showNoDataView()
+                        }
+                         else{
+                           
+                            self.categoryLoadingView.isHidden = true
+                            self.categoryLoadingView.stopLoading()
+                        }
+                    case .failure(let error):
+                        self.categoryLoadingView.isHidden = false
+                        self.categoryLoadingView.stopLoading()
+                        self.categoryLoadingView.noDataView.isHidden = false
+                    }
+                    
+            }
+            }
+        }
     }
     
 
