@@ -12,7 +12,7 @@ import Foundation
 enum QFindRouter: URLRequestConvertible {
     case getAccessToken([String: Any])
     case getCategory([String :Any])
-//    case GetTopThreeTarget(String, [String: Any])
+    case getSubCategory([String :Any])
 //    case GetPlayerDetail(String)
 //    case Logout(String)
 //    case SendMessageToTarget(String, [String: Any])
@@ -25,8 +25,8 @@ enum QFindRouter: URLRequestConvertible {
             return .get
         case .getCategory:
             return .get
-//        case .GetTopThreeTarget:
-//            return .post
+        case .getSubCategory:
+            return .get
 //        case .GetPlayerDetail:
 //            return .get
 //        case .Logout:
@@ -48,8 +48,8 @@ enum QFindRouter: URLRequestConvertible {
             
         case .getCategory( _):
             return "api/get-category"
-//        case .GetTopThreeTarget(let userId, _):
-//            return "/topthree/\(userId)"
+        case .getSubCategory( _):
+            return "api/get-sub-category"
 //        case .GetPlayerDetail(let userId):
 //            return "/user/\(userId)"
 //        case .Logout(let userId):
@@ -88,9 +88,8 @@ enum QFindRouter: URLRequestConvertible {
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
         case .getCategory(let parameters):
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
-//        case .GetTopThreeTarget( _, let parameters):
-//            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest,
-//                                                              with: parameters)
+        case .getSubCategory(let parameters):
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,with: parameters)
 //        case .GetPlayerDetail( _):
 //            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest)
 //        case .Logout( _):
