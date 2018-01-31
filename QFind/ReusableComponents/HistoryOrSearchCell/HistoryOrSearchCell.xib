@@ -36,8 +36,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="51J-Wq-ibl">
                                 <rect key="frame" x="90" y="0.0" width="111" height="87"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For Season Hotel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ly-Vb-S96">
-                                        <rect key="frame" x="10" y="18" width="92.5" height="31.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ly-Vb-S96">
+                                        <rect key="frame" x="55.5" y="34" width="0.0" height="0.0"/>
                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -45,8 +45,8 @@
                                             <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="26"/>
                                         </variation>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laddda dsfsf fdfdg Laddda " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8W-8r-Svc">
-                                        <rect key="frame" x="9.5" y="49.5" width="93" height="18"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8W-8r-Svc">
+                                        <rect key="frame" x="56" y="34" width="0.0" height="0.0"/>
                                         <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="12"/>
                                         <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
@@ -110,6 +110,7 @@
             </constraints>
             <connections>
                 <outlet property="favoriteButton" destination="thR-vN-y2R" id="Caa-ce-uzV"/>
+                <outlet property="historyThumbnail" destination="4Uz-OJ-OQM" id="n2L-Zi-1c3"/>
                 <outlet property="historyView" destination="7vg-gy-lIe" id="RPO-Vk-DxM"/>
                 <outlet property="subLabel" destination="d8W-8r-Svc" id="Gj8-aC-CUp"/>
                 <outlet property="titleLabel" destination="3Ly-Vb-S96" id="OgS-xC-Bo5"/>

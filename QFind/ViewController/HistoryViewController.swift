@@ -6,6 +6,7 @@
 //  Copyright © 2018 QFind. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 enum PageName{
     case history
@@ -27,9 +28,15 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     @IBOutlet weak var historyBottomBar: BottomBarView!
     
     var controller = PredicateSearchViewController()
-    var tapGesture = UITapGestureRecognizer()
+    
     var pageNameString : PageName?
-   
+    
+    var predicateSearchKey = String()
+    var predicateSearchArray : [PredicateSearch]? = []
+    var previousPage : PageName?
+    var searchResultArray: [SearchResult]? = []
+    var predicateSearchdict : PredicateSearch?
+    var favoriteArray : NSMutableArray?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,15 +49,19 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
        setLocalizedVariable()
         
         
+        if (pageNameString == PageName.searchResult)
+        {
+            getSearchResultFromServer(searchPredicateData: predicateSearchdict!)
+        }
+        
     }
     func setUi()
     {
         historySearchBar.searchDelegate = self
         historyBottomBar.bottombarDelegate = self
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
-        historyLoadingView.isHidden = true
-        //historyLoadingView.showLoading()
-        //historyLoadingView.showNoDataView()
+        historyLoadingView.isHidden = false
+        historyLoadingView.showLoading()
         historyLabel.textAlignment = .center
     }
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -88,7 +99,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
             self.historyLabel.text = NSLocalizedString("Favorites", comment: "Favorites Title Label in the Favorites page").uppercased()
             historyBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         case .searchResult? :
-            self.historyLabel.text = NSLocalizedString("Search_results", comment: "Search_results Title Label in the history page")
+            self.historyLabel.text = NSLocalizedString("Search_results", comment: "Search_results Title Label in the history page").uppercased()
         default:
             break
         }
@@ -100,22 +111,79 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         let nib = UINib(nibName: "HistoryOrSearchCell", bundle: nil)
         historyCollectionView?.register(nib, forCellWithReuseIdentifier: "historyCellId")
     }
-
+    //MARK: CollectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        switch pageNameString{
+        case .history?:
+            return 3
+        case .favorite?:
+            return 3
+        case .searchResult?:
+            return (searchResultArray?.count)!
+        default:
+            return 0
+            
+        }
     }
      func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+        switch pageNameString{
+        case .history?:
+            historyLoadingView.isHidden = true
+            return 3
+            
+           
+            
+        case .favorite?:
+           // if (favoriteArray?.count != 0){
+             historyLoadingView.isHidden = true
+                return 1
+               
+           
+//            }
+//            else{
+//                return 0
+//            }
+        
+        case .searchResult?:
+            if (searchResultArray!.count > 0)
+            {
+                if((searchResultArray![0].service_provider_name) != nil && (searchResultArray![0].service_provider_address) != nil)
+            {
+                return 1
+            }
+        
+            else{
+                return 0
+            }
+            }
+            else
+            {
+                return 0
+            }
+        default:
+            return 0
+    }
+        
     }
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
          let cell : HistoryCollectionViewCell = historyCollectionView.dequeueReusableCell(withReuseIdentifier: "historyCellId", for: indexPath) as! HistoryCollectionViewCell
-        if (pageNameString == PageName.favorite)
-        {
-            cell.favoriteButton.isHidden = false
-        }
-        else
-        {
+        
+        switch pageNameString{
+        case .history?:
             cell.favoriteButton.isHidden = true
+            cell.titleLabel.text = "Four Season Hotel"
+            cell.subLabel.text = "qwerty uiop"
+        case .favorite?:
+            cell.favoriteButton.isHidden = false
+            cell.titleLabel.text = "Four Season Hotel"
+            cell.subLabel.text = "qwerty uiop"
+        case .searchResult?:
+            cell.favoriteButton.isHidden = true
+            let searchResultDict = searchResultArray![indexPath.row]
+            cell.searchResultData(searchResultCellValues: searchResultDict)
+        default:
+            break
+            
         }
         
         let shadowSize : CGFloat = 5.0
@@ -220,18 +288,17 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    //MARK: BottomBar
     func favouriteButtonPressed() {
         
-        historyBottomBar.historyView.backgroundColor = UIColor.white
-        historyBottomBar.homeView.backgroundColor = UIColor.white
-         historyBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        setBottomBarFavoriteBackground()
+        previousPage = pageNameString
         if (pageNameString != PageName.favorite)
         {
             pageNameString = PageName.favorite
             setLocalizedVariable()
             historyCollectionView.reloadData()
-            //self.view.layoutIfNeeded()
+            
             
         }
         
@@ -245,71 +312,201 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         
     }
     func historyButtonPressed() {
-        historyBottomBar.favoriteview.backgroundColor = UIColor.white
-        historyBottomBar.homeView.backgroundColor = UIColor.white
-         historyBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        if (pageNameString != PageName.history)
-        {
+       setBottomBarHistoryBackground()
+        previousPage = pageNameString
+        if (pageNameString != PageName.history){
+            
             pageNameString = PageName.history
+            
             setLocalizedVariable()
             historyCollectionView.reloadData()
             
             
         }
     }
+    func setBottomBarHistoryBackground(){
+        historyBottomBar.favoriteview.backgroundColor = UIColor.white
+        historyBottomBar.homeView.backgroundColor = UIColor.white
+        historyBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        historySearchBar.searchText.text = ""
+    }
+     func setBottomBarFavoriteBackground(){
+        historyBottomBar.historyView.backgroundColor = UIColor.white
+        historyBottomBar.homeView.backgroundColor = UIColor.white
+        historyBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+        historySearchBar.searchText.text = ""
+    }
+    func setBottomBarSearchBackground(){
+        historyBottomBar.favoriteview.backgroundColor = UIColor.white
+        historyBottomBar.homeView.backgroundColor = UIColor.white
+        historyBottomBar.historyView.backgroundColor = UIColor.white
+        historySearchBar.searchText.text = ""
+    }
+    //MARK:Searchbar
     func searchButtonPressed() {
-        print("search")
+        controller.view.removeFromSuperview()
+        previousPage = pageNameString
+        pageNameString = PageName.searchResult
+        setLocalizedVariable()
+        getSearchResultFromServer(searchPredicateData: predicateSearchdict!)
+        controller.predicateSearchTable.reloadData()
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
       
-       
+        predicateSearchKey = textField.text! + string
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
+        if (isBackSpace == -92){
+            predicateSearchKey = String(predicateSearchKey.characters.dropLast())
+
+        }
         
-       
-        if ((controller.view.tag == 0)&&(isBackSpace != -92))
+        if ((predicateSearchKey.count) >= 2)
         {
             
-        controller.view.tag = 1
-        print(controller.view.tag)
-        controller.predicateProtocol = self
-        addChildViewController(controller)
-        controller.view.frame = CGRect(x: historySearchBar.searchInnerView.frame.origin.x, y:
+
+            controller.view.tag = 1
             
-            //give height as number of items * height of cell. height is set in PredicateVC
-            historySearchBar.searchInnerView.frame.origin.y+historySearchBar.searchInnerView.frame.height+20, width: historySearchBar.searchInnerView.frame.width, height: 300)
-        
-        view.addSubview((controller.view)!)
-        controller.didMove(toParentViewController: self)
-        
-       
-        tapGesture = UITapGestureRecognizer(target: self, action: #selector(HistoryViewController.removeSubview))
-        self.view.addGestureRecognizer(tapGesture)
+            controller.predicateProtocol = self
+            self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+            addChildViewController(controller)
+            view.addSubview((controller.view)!)
+            controller.didMove(toParentViewController: self)
+            
+          
+            getPredicateSearchFromServer()
+            
+          
+        }
+        else{
+            controller.view.removeFromSuperview()
         }
         return true
     }
-
-    @objc func removeSubview()
-    {
-        controller.view.removeFromSuperview()
-        controller.view.tag = 0
-      
+    //MARK:TableView
+    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
+        return (predicateSearchArray?.count)!
     }
+   
     func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
-        cell.precictaeTxet.text = "hospital" 
+        let predicatedict = predicateSearchArray![indexPath.row]
+        cell.setPredicateCellValues(cellValues: predicatedict)
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
+        predicateSearchdict = predicateSearchArray![indexPath.row]
+        historySearchBar.searchText.text = predicateSearchdict?.search_name
+        controller.view.removeFromSuperview()
+        setBottomBarSearchBackground()
+        previousPage = pageNameString
+        pageNameString = PageName.searchResult
+        setLocalizedVariable()
+        getSearchResultFromServer(searchPredicateData: predicateSearchdict!)
+        controller.predicateSearchTable.reloadData()
         
     }
-    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
-        return 6
-    }
-    @IBAction func didTapBack(_ sender: UIButton) {
-        self.dismiss(animated: false, completion: nil)
-    }
     
+    @IBAction func didTapBack(_ sender: UIButton) {
+       historySearchBar.searchText.text = ""
+        if ((previousPage == PageName.history)&&(pageNameString == PageName.searchResult)){
+            previousPage = pageNameString
+            pageNameString = PageName.history
+            setLocalizedVariable()
+            setBottomBarHistoryBackground()
+            historyCollectionView.reloadData()
+        }
+        else if((previousPage == PageName.favorite)&&(pageNameString == PageName.searchResult)){
+            
+            previousPage = pageNameString
+            pageNameString = PageName.favorite
+            setLocalizedVariable()
+            setBottomBarFavoriteBackground()
+            historyCollectionView.reloadData()
+        }
+//        else if((previousPage == PageName.searchResult)&&(pageNameString == PageName.history))
+//    {
+//            previousPage = pageNameString
+//            pageNameString = PageName.searchResult
+//            setLocalizedVariable()
+//            historyCollectionView.reloadData()
+//        }
+        else{
+             self.dismiss(animated: false, completion: nil)
+        }
+    }
+    func getPredicateSearchFromServer()
+    {
+        
+        
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            
+            Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
+                                                              "search_key": predicateSearchKey , "language" :languageKey]))
+                .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
+                    switch response.result {
+                        
+                    case .success(let data):
+                       
+                        self.predicateSearchArray = data.predicateSearchData
+                        self.controller.predicateSearchTable.reloadData()
+                        self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+                        
+                        
+                    case .failure(let error):
+                        self.historyLoadingView.isHidden = false
+                        self.historyLoadingView.stopLoading()
+                        self.historyLoadingView.noDataView.isHidden = false
+                    }
+                    
+            }
+            
+        }
+    }
+    func getSearchResultFromServer(searchPredicateData: PredicateSearch)
+    {
+        historyLoadingView.isHidden = false
+        historyLoadingView.showLoading()
+      
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            Alamofire.request(QFindRouter.getSearchResult(["token": tokenString,
+                                                              "search_key": searchPredicateData.search_name! , "language" :languageKey , "search_type": searchPredicateData.search_type!]))
+                .responseObject { (response: DataResponse<SearchResultData>) -> Void in
+                    switch response.result {
+                    case .success(let data):
+                        
+                        self.searchResultArray = data.searchResultData
+                        
+                        if ((data.response == "error") || (data.code != "200")){
+                            self.historyLoadingView.stopLoading()
+                            self.historyLoadingView.noDataView.isHidden = false
+                             self.historyCollectionView.reloadData()
+                            self.historyLoadingView.showNoDataView()
+                        }
+                        else{
+                            
+                            self.historyLoadingView.isHidden = true
+                            self.historyLoadingView.stopLoading()
+                           
+                            self.historyCollectionView.reloadData()
+                        }
+                        
+                        
+                    case .failure(let error):
+                        self.historyLoadingView.isHidden = false
+                        self.historyLoadingView.stopLoading()
+                        self.historyCollectionView.reloadData()
+                         self.historyLoadingView.showNoDataView()
+                        self.historyLoadingView.noDataView.isHidden = false
+                    }
+                    
+            }
+            
+        }
+    }
+
     
 
 }

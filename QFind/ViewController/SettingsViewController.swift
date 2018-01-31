@@ -6,6 +6,7 @@
 //  Copyright © 2018 QFind. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 
 class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol {
@@ -20,8 +21,10 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     @IBOutlet weak var settingsLabel: UILabel!
     @IBOutlet weak var settingsLoadingView: LoadingView!
     var controller = PredicateSearchViewController()
-    var tapGesture = UITapGestureRecognizer()
+    
     @IBOutlet weak var englishButtonLabel: UILabel!
+    var predicateSearchKey = String()
+    var predicateSearchArray : [PredicateSearch]? = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -41,6 +44,7 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
         settingsBottomBar.favoriteview.backgroundColor = UIColor.white
         settingsBottomBar.historyView.backgroundColor = UIColor.white
         settingsBottomBar.homeView.backgroundColor = UIColor.white
+        settingsSearchBar.searchText.text = ""
     }
     func setUILayout()
     {
@@ -152,59 +156,102 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
         historyVC.pageNameString = PageName.history
         self.present(historyVC, animated: false, completion: nil)
     }
+     //MARK:Searchbar
     func searchButtonPressed() {
-        print("search")
+        controller.view.removeFromSuperview()
+        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+        
+        historyVC.pageNameString = PageName.searchResult
+        self.present(historyVC, animated: false, completion: nil)
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         
         
+        
+        predicateSearchKey = textField.text! + string
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
+        if (isBackSpace == -92){
+            predicateSearchKey = String(predicateSearchKey.characters.dropLast())
+            
+        }
         
-        
-        if ((controller.view.tag == 0)&&(isBackSpace != -92))
+        if ((predicateSearchKey.count) >= 2)
         {
             
-            controller.view.tag = 1
-            print(controller.view.tag)
-            controller.predicateProtocol = self
-            addChildViewController(controller)
-            controller.view.frame = CGRect(x: settingsSearchBar.searchInnerView.frame.origin.x, y:
-                
-                //give height as number of items * height of cell. height is set in PredicateVC
-                settingsSearchBar.searchInnerView.frame.origin.y+settingsSearchBar.searchInnerView.frame.height+20, width: settingsSearchBar.searchInnerView.frame.width, height: 300)
             
+            controller.view.tag = 1
+            
+            controller.predicateProtocol = self
+            self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: self.settingsSearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+            addChildViewController(controller)
             view.addSubview((controller.view)!)
             controller.didMove(toParentViewController: self)
             
             
-            tapGesture = UITapGestureRecognizer(target: self, action: #selector(HistoryViewController.removeSubview))
-            self.view.addGestureRecognizer(tapGesture)
+            getPredicateSearchFromSettings()
+            
+            
+        }
+        else{
+            controller.view.removeFromSuperview()
         }
         return true
     }
     
-    @objc func removeSubview()
-    {
-        controller.view.removeFromSuperview()
-        controller.view.tag = 0
-        
+    //MARK:TableView
+    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
+        return (predicateSearchArray?.count)!
     }
     func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
-        cell.precictaeTxet.text = "hospital"
+        let predicatedict = predicateSearchArray![indexPath.row]
+        cell.setPredicateCellValues(cellValues: predicatedict)
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
+        let predicatedict = predicateSearchArray![indexPath.row]
+        settingsSearchBar.searchText.text = predicatedict.search_name
+        controller.view.removeFromSuperview()
+          let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
+        historyVC.pageNameString = PageName.searchResult
+        historyVC.predicateSearchdict = predicatedict
+        self.present(historyVC, animated: false, completion: nil)
     }
-    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
-        return 6
-    }
+    
     @IBAction func didTapBack(_ sender: UIButton) {
         self.dismiss(animated: false, completion: nil)
     }
-    
+    func getPredicateSearchFromSettings()
+    {
+        
+        
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            
+            Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
+                                                              "search_key": predicateSearchKey , "language" :languageKey]))
+                .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
+                    switch response.result {
+                        
+                    case .success(let data):
+                        
+                        self.predicateSearchArray = data.predicateSearchData
+                        self.controller.predicateSearchTable.reloadData()
+                        self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: self.settingsSearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+                        
+                        
+                    case .failure(let error):
+                        self.settingsLoadingView.isHidden = false
+                        self.settingsLoadingView.stopLoading()
+                        self.settingsLoadingView.noDataView.isHidden = false
+                    }
+                    
+            }
+            
+        }
+    }
    
 
 }

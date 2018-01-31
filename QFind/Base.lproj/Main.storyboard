@@ -106,6 +106,9 @@
                                                             </constraint>
                                                         </constraints>
                                                         <state key="normal" backgroundImage="search"/>
+                                                        <connections>
+                                                            <action selector="didTapHomeSearch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zx7-jj-upy"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -184,7 +187,7 @@
                                                 </variation>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1aE-tq-RP5" customClass="LoadingView" customModule="QFind" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="1024" height="1077.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="612.66666666666663"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
@@ -240,11 +243,6 @@
                                                 <variation key="heightClass=regular-widthClass=regular" constant="150"/>
                                             </constraint>
                                         </constraints>
-                                        <variation key="default">
-                                            <mask key="subviews">
-                                                <exclude reference="1aE-tq-RP5"/>
-                                            </mask>
-                                        </variation>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.95294117647058818" green="0.94509803921568625" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -470,12 +468,12 @@
                                             </constraint>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HISTORY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cTa-PV-HSm">
-                                        <rect key="frame" x="145.33333333333334" y="73" width="123.66666666666666" height="47"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HISTORY" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="cTa-PV-HSm">
+                                        <rect key="frame" x="149.66666666666666" y="73" width="114.99999999999997" height="47"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="47" id="LNK-tF-2co"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="29"/>
+                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="27"/>
                                         <color key="textColor" red="0.21568627450980393" green="0.21568627450980393" blue="0.21568627450980393" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                         <variation key="heightClass=regular-widthClass=regular">
@@ -497,7 +495,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61u-Mp-R5R">
-                                                    <rect key="frame" x="162" y="15" width="50.333333333333343" height="21"/>
+                                                    <rect key="frame" x="162" y="0.0" width="50.333333333333343" height="50"/>
                                                     <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="19"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -508,8 +506,8 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="61u-Mp-R5R" firstAttribute="centerX" secondItem="we5-rC-wTG" secondAttribute="centerX" id="ATy-6F-GIk"/>
-                                                <constraint firstAttribute="bottom" secondItem="61u-Mp-R5R" secondAttribute="bottom" constant="14" id="ETG-a0-VT3"/>
-                                                <constraint firstItem="61u-Mp-R5R" firstAttribute="top" secondItem="we5-rC-wTG" secondAttribute="top" constant="15" id="KTZ-UL-73F"/>
+                                                <constraint firstAttribute="bottom" secondItem="61u-Mp-R5R" secondAttribute="bottom" id="ETG-a0-VT3"/>
+                                                <constraint firstItem="61u-Mp-R5R" firstAttribute="top" secondItem="we5-rC-wTG" secondAttribute="top" id="KTZ-UL-73F"/>
                                             </constraints>
                                             <connections>
                                                 <outlet property="headerLabel" destination="61u-Mp-R5R" id="i1u-ky-zYz"/>
@@ -543,7 +541,7 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D6D-Dn-LlM" customClass="LoadingView" customModule="QFind" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="65" width="414" height="603.33333333333337"/>
+                                        <rect key="frame" x="0.0" y="135" width="414" height="534"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
@@ -551,13 +549,13 @@
                                 <constraints>
                                     <constraint firstItem="Aik-4X-Wpk" firstAttribute="top" secondItem="D6D-Dn-LlM" secondAttribute="bottom" id="2gr-X2-boQ"/>
                                     <constraint firstItem="rEg-Bp-G8C" firstAttribute="leading" secondItem="bKd-mB-UGV" secondAttribute="leading" id="9HI-wD-7kV"/>
-                                    <constraint firstItem="D6D-Dn-LlM" firstAttribute="top" secondItem="rEg-Bp-G8C" secondAttribute="bottom" id="FOM-Re-om5"/>
                                     <constraint firstItem="cTa-PV-HSm" firstAttribute="top" secondItem="rEg-Bp-G8C" secondAttribute="bottom" constant="8" id="FPa-bb-pxJ">
                                         <variation key="heightClass=regular-widthClass=regular" constant="30"/>
                                     </constraint>
                                     <constraint firstItem="Aik-4X-Wpk" firstAttribute="leading" secondItem="bKd-mB-UGV" secondAttribute="leading" id="M5U-67-N5I"/>
                                     <constraint firstAttribute="trailing" secondItem="Aik-4X-Wpk" secondAttribute="trailing" id="Mg4-k4-gaT"/>
                                     <constraint firstItem="rEg-Bp-G8C" firstAttribute="top" secondItem="bKd-mB-UGV" secondAttribute="top" id="TGe-u4-41C"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cTa-PV-HSm" secondAttribute="trailing" id="U5x-bM-IIf"/>
                                     <constraint firstItem="mmz-1j-KHl" firstAttribute="centerY" secondItem="cTa-PV-HSm" secondAttribute="centerY" id="UuJ-5n-2G5"/>
                                     <constraint firstAttribute="trailing" secondItem="D6D-Dn-LlM" secondAttribute="trailing" id="Xcz-ut-Iu9"/>
                                     <constraint firstItem="Aik-4X-Wpk" firstAttribute="top" secondItem="FkV-a2-coa" secondAttribute="bottom" constant="10" id="Z9V-9R-51A"/>
@@ -568,6 +566,8 @@
                                     <constraint firstAttribute="trailing" secondItem="FkV-a2-coa" secondAttribute="trailing" constant="10" id="fX6-2D-y8G">
                                         <variation key="heightClass=regular-widthClass=regular" constant="50"/>
                                     </constraint>
+                                    <constraint firstItem="cTa-PV-HSm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="mmz-1j-KHl" secondAttribute="trailing" constant="3" id="gMO-SI-jjq"/>
+                                    <constraint firstItem="D6D-Dn-LlM" firstAttribute="top" secondItem="FkV-a2-coa" secondAttribute="top" constant="-10" id="nUB-QA-wTw"/>
                                     <constraint firstItem="D6D-Dn-LlM" firstAttribute="leading" secondItem="bKd-mB-UGV" secondAttribute="leading" id="pgV-Nx-YRA"/>
                                     <constraint firstItem="FkV-a2-coa" firstAttribute="top" secondItem="cTa-PV-HSm" secondAttribute="bottom" constant="25" id="tHl-tQ-tKO">
                                         <variation key="heightClass=regular-widthClass=regular" constant="30"/>
@@ -622,22 +622,25 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="prd-q1-muy">
-                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
-                                                    <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="17"/>
+                                                    <rect key="frame" x="25" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular-widthClass=regular">
+                                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="prd-q1-muy" firstAttribute="leading" secondItem="1c6-jA-yua" secondAttribute="leading" constant="20" id="7GE-7E-43I"/>
+                                                <constraint firstItem="prd-q1-muy" firstAttribute="leading" secondItem="1c6-jA-yua" secondAttribute="leading" constant="25" id="7GE-7E-43I"/>
                                                 <constraint firstItem="prd-q1-muy" firstAttribute="top" secondItem="1c6-jA-yua" secondAttribute="top" id="A1B-tX-Z6n"/>
-                                                <constraint firstAttribute="trailing" secondItem="prd-q1-muy" secondAttribute="trailing" constant="20" id="BHz-rY-qQs"/>
+                                                <constraint firstAttribute="trailing" secondItem="prd-q1-muy" secondAttribute="trailing" constant="10" id="BHz-rY-qQs"/>
                                                 <constraint firstAttribute="bottom" secondItem="prd-q1-muy" secondAttribute="bottom" id="EGo-IK-qXy"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <inset key="separatorInset" minX="20" minY="0.0" maxX="20" maxY="0.0"/>
                                         <connections>
-                                            <outlet property="precictaeTxet" destination="prd-q1-muy" id="Ib0-Zi-5WG"/>
+                                            <outlet property="predicateText" destination="prd-q1-muy" id="dFs-ro-yox"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
