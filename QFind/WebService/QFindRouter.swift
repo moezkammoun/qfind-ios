@@ -13,8 +13,8 @@ enum QFindRouter: URLRequestConvertible {
     case getAccessToken([String: Any])
     case getCategory([String :Any])
     case getSubCategory([String :Any])
-//    case GetPlayerDetail(String)
-//    case Logout(String)
+    case getPredicateSearch([String: Any])
+    case getSearchResult([String: Any])
 //    case SendMessageToTarget(String, [String: Any])
 //    case Strikes(String)
 //    case UpdateUserProfile(String)
@@ -27,10 +27,10 @@ enum QFindRouter: URLRequestConvertible {
             return .get
         case .getSubCategory:
             return .get
-//        case .GetPlayerDetail:
-//            return .get
-//        case .Logout:
-//            return .delete
+        case .getPredicateSearch:
+            return .get
+        case .getSearchResult:
+            return .get
 //        case .SendMessageToTarget:
 //            return .post
 //        case .Strikes:
@@ -50,10 +50,10 @@ enum QFindRouter: URLRequestConvertible {
             return "api/get-category"
         case .getSubCategory( _):
             return "api/get-sub-category"
-//        case .GetPlayerDetail(let userId):
-//            return "/user/\(userId)"
-//        case .Logout(let userId):
-//            return "/logout/\(userId)"
+        case .getPredicateSearch( _):
+            return "api/search"
+        case .getSearchResult( _):
+            return "api/search-result"
 //        case .SendMessageToTarget(let userId, _):
 //            return "/message/\(userId)"
 //        case .Strikes(let userId):
@@ -90,10 +90,10 @@ enum QFindRouter: URLRequestConvertible {
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
         case .getSubCategory(let parameters):
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,with: parameters)
-//        case .GetPlayerDetail( _):
-//            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest)
-//        case .Logout( _):
-//            return mutableURLRequest
+        case .getPredicateSearch(let parameters):
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,with: parameters)
+        case .getSearchResult(let parameters):
+           return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,with: parameters)
 //        case .SendMessageToTarget( _, let parameters):
 //            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest,
 //                                                              with: parameters)

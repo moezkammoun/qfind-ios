@@ -32,23 +32,10 @@ class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITabl
         self.view.clipsToBounds = true
         predicateSearchTable.layer.cornerRadius = 7.0
         predicateSearchTable.clipsToBounds = true
-        
-        
-        
         self.view.layer.masksToBounds = false;
         self.view.layer.shadowOffset = CGSize(width: -1, height: 15)
         self.view.layer.shadowRadius = 5;
         self.view.layer.shadowOpacity = 0.5;
-        
-//        self.view.layer.shadowColor = UIColor.lightGray.cgColor
-//        self.view.layer.shadowOffset = CGSize(width:0,height: 2.0)
-//        self.view.layer.shadowRadius = 2.0
-//        self.view.layer.shadowOpacity = 1.0
-//        self.view.layer.masksToBounds = false;
-//        self.view.layer.shadowPath = UIBezierPath(roundedRect:self.view.bounds, cornerRadius:self.view.layer.cornerRadius).cgPath
-//
-        
-        
 
     }
 
@@ -67,7 +54,6 @@ class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITabl
         return numberOfRows!
     }
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // let cell:UITableViewCell = self.predicateSearchTable.dequeueReusableCell(withIdentifier: "predicateCellId") as UITableViewCell!
       let cell =  predicateProtocol?.tableView(predicateSearchTable, cellForSearchRowAt: indexPath)
         return cell!
     }
@@ -79,7 +65,7 @@ class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITabl
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     
 
 }

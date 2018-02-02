@@ -11,7 +11,7 @@ protocol SearchBarProtocol {
     func searchButtonPressed()
     
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool
-   // func searchTextFieldDidBeginEditing(_ textField: UITextField) 
+   func menuButtonSelected()
 }
 class SearchBarView: UIView,UITextFieldDelegate {
     @IBOutlet var searchView: UIView!
@@ -40,7 +40,7 @@ class SearchBarView: UIView,UITextFieldDelegate {
         searchInnerView.clipsToBounds = true
         searchText.delegate = self
         
-         self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+       //  self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
         
     }
 
@@ -60,5 +60,9 @@ class SearchBarView: UIView,UITextFieldDelegate {
     }
     @IBAction func didTapSearchButton(_ sender: UIButton) {
         searchDelegate?.searchButtonPressed()
+        
+    }
+    @IBAction func didTapMenu(_ sender: UIButton) {
+        searchDelegate?.menuButtonSelected()
     }
 }

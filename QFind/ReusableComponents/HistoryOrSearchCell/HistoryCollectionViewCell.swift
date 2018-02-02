@@ -13,6 +13,7 @@ class HistoryCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var historyThumbnail: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,13 +29,20 @@ class HistoryCollectionViewCell: UICollectionViewCell {
             // Fallback on earlier versions
         }
     }
-    func setRTLSupportForHistory()
-    {
-        
-        
-        
-        
-    }
+
     @IBAction func didTapFavoriteButton(_ sender: UIButton) {
+    }
+    func searchResultData(searchResultCellValues: SearchResult){
+        self.titleLabel.text = searchResultCellValues.service_provider_name
+        self.subLabel.text = searchResultCellValues.service_provider_address
+        let imageArray = searchResultCellValues.image
+        self.historyThumbnail.kf.setImage(with: URL(string: imageArray![0] as! String))
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.titleLabel.text = ""
+        self.subLabel.text = ""
+        self.historyThumbnail.image = nil
+        
     }
 }

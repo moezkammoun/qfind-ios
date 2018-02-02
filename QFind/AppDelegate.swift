@@ -121,12 +121,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 switch response.result {
                 case .success(let data):
                     if let token = data.accessToken{
-                        print(token)
-                       
                            tokenDefault.set(token, forKey: "accessTokenString")
                     }
-                    print(data.accessToken!)
-                    
                 case .failure(let error):
                     print(error)
                 }

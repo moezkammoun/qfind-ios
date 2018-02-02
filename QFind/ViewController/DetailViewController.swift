@@ -8,13 +8,15 @@
 
 import UIKit
 import MessageUI
-class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewControllerDelegate,UITableViewDelegate,UITableViewDataSource {
+class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewControllerDelegate,UITableViewDelegate,UITableViewDataSource {
 
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
     
+    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var detailTableView: UITableView!
     
+    @IBOutlet weak var backImgaeView: UIImageView!
     @IBOutlet weak var detailLoadingView: LoadingView!
     @IBOutlet weak var titleLabel: UILabel!
     var phnNumber = 0
@@ -47,6 +49,19 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
     func setLocalizedVariables()
     {
        // self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            if let _img = backImgaeView.image{
+                backImgaeView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.downMirrored)
+                
+                
+            }
+        }
+        else{
+            if let _img = backImgaeView.image {
+                backImgaeView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
+            }
+        }
+       
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -86,10 +101,10 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         let activityViewController : UIActivityViewController = UIActivityViewController(
             activityItems: [firstActivityItem, secondActivityItem, image], applicationActivities: nil)
         
-        // This lines is for the popover you need to show in iPad
+       
         activityViewController.popoverPresentationController?.sourceView = (sender )
         
-        // This line remove the arrow of the popover to show in iPad
+       
         activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.up
         activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
         
@@ -112,6 +127,16 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : DetailTableViewCell = tableView.dequeueReusableCell(withIdentifier: "detailCellId", for:indexPath) as! DetailTableViewCell
+         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            if let _img = cell.forwardImageView.image {
+                cell.forwardImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.downMirrored)
+            }
+        }
+         else{
+            if let _img = cell.forwardImageView.image {
+                cell.forwardImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
+            }
+        }
         if (indexPath.row == 5)
         {
             cell.separatorView.isHidden = true
@@ -222,4 +247,7 @@ class DetailViewController: UIViewController,BottomProtocol,MFMailComposeViewCon
         self.dismiss(animated: false, completion: nil)
     }
     
+    @IBAction func didTapMenu(_ sender: UIButton) {
+        self.showSidebar()
+    }
 }

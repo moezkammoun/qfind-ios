@@ -8,7 +8,8 @@
 import UIKit
 
 class DetailTableViewCell: UITableViewCell {
-
+    @IBOutlet weak var forwardImageView: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
