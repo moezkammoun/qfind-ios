@@ -9,7 +9,7 @@
 import Alamofire
 import UIKit
 
-class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol {
+class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol {
 
     @IBOutlet weak var englishButton: UIButton!
     @IBOutlet weak var arabicButton: UIButton!
@@ -18,6 +18,8 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     @IBOutlet weak var settingsBottomBar: BottomBarView!
     @IBOutlet weak var selectLanguageLabel: UILabel!
     
+    @IBOutlet weak var settingsView: UIView!
+    @IBOutlet weak var backImageView: UIImageView!
     @IBOutlet weak var settingsLabel: UILabel!
     @IBOutlet weak var settingsLoadingView: LoadingView!
     var controller = PredicateSearchViewController()
@@ -25,6 +27,7 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     @IBOutlet weak var englishButtonLabel: UILabel!
     var predicateSearchKey = String()
     var predicateSearchArray : [PredicateSearch]? = []
+    var predicateTableHeight : Int?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,6 +43,13 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            predicateTableHeight = 85
+        }
+        else{
+            predicateTableHeight = 50
+        }
         setLocalizedVariablesForSettings()
         settingsBottomBar.favoriteview.backgroundColor = UIColor.white
         settingsBottomBar.historyView.backgroundColor = UIColor.white
@@ -71,10 +81,16 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
             if layoutDirection == .leftToRight {
                 
                 settingsSearchBar.searchText.textAlignment = .left
+                if let _img = backImageView.image{
+                    backImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.downMirrored)
+                }
             }
             else{
                 
                 settingsSearchBar.searchText.textAlignment = .right
+                if let _img = backImageView.image {
+                    backImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
+                }
             }
         } else {
             // Fallback on earlier versions
@@ -89,6 +105,7 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
         self.selectLanguageLabel.text = NSLocalizedString("Select_language", comment: "Select_language Label in the Settings page")
         self.englishButtonLabel.text = NSLocalizedString("ENGLISH", comment: "ENGLISH BUTTON LABEL in the Settings page")
          self.arabicButtonLabel.text = NSLocalizedString("Arabic", comment: "Arabic button label in the Settings page")
+          self.settingsSearchBar.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
         
     }
     @IBAction func didTapEnglish(_ sender: UIButton) {
@@ -107,7 +124,8 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
             languageKey = 1
             if #available(iOS 9.0, *) {
                 UIView.appearance().semanticContentAttribute = .forceLeftToRight
-                 self.dismiss(animated: false, completion: nil)
+                self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+               
             } else {
                 // Fallback on earlier versions
             }
@@ -123,13 +141,14 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
             languageKey = 2
             if #available(iOS 9.0, *) {
                                 UIView.appearance().semanticContentAttribute = .forceRightToLeft
-                self.dismiss(animated: false, completion: nil)
+                self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+                
                             } else {
                                 // Fallback on earlier versions
                             }
     }
     else {
-   // LocalizationLanguage.setAppleLAnguageTo(lang: "en")
+   
             let alert = UIAlertController(title: "Alert", message: "Sorry. current language is Arabic", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -159,10 +178,26 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
      //MARK:Searchbar
     func searchButtonPressed() {
         controller.view.removeFromSuperview()
-        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
-        
-        historyVC.pageNameString = PageName.searchResult
-        self.present(historyVC, animated: false, completion: nil)
+         let trimmedText = settingsSearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedText == ""
+        {
+            
+            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+            
+            historyVC.pageNameString = PageName.searchResult
+            historyVC.searchType = 4
+            historyVC.searchKey = trimmedText
+            self.present(historyVC, animated: false, completion: nil)
+       
+        }
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         
@@ -178,17 +213,14 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
         
         if ((predicateSearchKey.count) >= 2)
         {
-            
-            
-            controller.view.tag = 1
-            
             controller.predicateProtocol = self
-            self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: self.settingsSearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+            self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: self.settingsSearchBar.searchInnerView.frame.width, height: 0)
             addChildViewController(controller)
             view.addSubview((controller.view)!)
             controller.didMove(toParentViewController: self)
             
-            
+            let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
+            self.settingsView.addGestureRecognizer(tapGestRecognizer)
             getPredicateSearchFromSettings()
             
             
@@ -198,7 +230,15 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
         }
         return true
     }
-    
+    @objc func dismissPopupView(sender: UITapGestureRecognizer)
+    {
+        controller.view.removeFromSuperview()
+        
+    }
+    func menuButtonSelected() {
+       self.showSidebar()
+        
+    }
     //MARK:TableView
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
         return (predicateSearchArray?.count)!
@@ -216,7 +256,8 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
           let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
         historyVC.pageNameString = PageName.searchResult
-        historyVC.predicateSearchdict = predicatedict
+        historyVC.searchType = predicatedict.search_type
+        historyVC.searchKey = predicatedict.search_name
         self.present(historyVC, animated: false, completion: nil)
     }
     
@@ -225,13 +266,13 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
     }
     func getPredicateSearchFromSettings()
     {
-        
+         let trimmedSearchKey = self.predicateSearchKey.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             
             Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
-                                                              "search_key": predicateSearchKey , "language" :languageKey]))
+                                                              "search_key": trimmedSearchKey , "language" :languageKey]))
                 .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
                     switch response.result {
                         
@@ -239,8 +280,12 @@ class SettingsViewController: MirroringViewController,SearchBarProtocol,BottomPr
                         
                         self.predicateSearchArray = data.predicateSearchData
                         self.controller.predicateSearchTable.reloadData()
-                        self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: self.settingsSearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
-                        
+                        if ((self.predicateSearchArray?.count == 1) && (self.predicateSearchArray![0].item_id == nil))
+                        {
+                            self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: 0, height: 0)
+                        }else{
+                        self.controller.view.frame = CGRect(x: self.settingsSearchBar.searchInnerView.frame.origin.x, y:self.settingsSearchBar.searchInnerView.frame.origin.y+self.settingsSearchBar.searchInnerView.frame.height+20, width: self.settingsSearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                        }
                         
                     case .failure(let error):
                         self.settingsLoadingView.isHidden = false

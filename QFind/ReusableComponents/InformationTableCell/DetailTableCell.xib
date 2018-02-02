@@ -104,6 +104,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="forwardImageView" destination="zyL-BF-x72" id="7k7-zy-bYg"/>
                 <outlet property="separatorView" destination="tb0-Cg-awx" id="3Ks-PB-SD1"/>
             </connections>
             <point key="canvasLocation" x="2" y="-55"/>

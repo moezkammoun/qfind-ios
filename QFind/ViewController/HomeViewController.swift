@@ -9,10 +9,12 @@
 import Alamofire
 import UIKit
 
-class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDelegate,predicateTableviewProtocol {
+class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDelegate,predicateTableviewProtocol {
     @IBOutlet weak var findByCategoryButton: UIButton!
     @IBOutlet weak var findByCategoryLabel: UILabel!
+    @IBOutlet weak var sideMenuButton: UIButton!
     @IBOutlet weak var qfindDayLabel: UILabel!
+    @IBOutlet weak var scrollSubView: UIView!
     
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var searchView: UIView!
@@ -27,24 +29,26 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     var bannerArray = NSArray()
     var controller = PredicateSearchViewController()
     var predicateSearchArray : [PredicateSearch]? = []
-    // let keyboardSize = 50
     var predicateSearchKey = String()
+     var predicateTableHeight : Int?
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUILayout()
-        
-        
-        
-        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            predicateTableHeight = 85
+        }
+        else{
+            predicateTableHeight = 50
+        }
         setRTLSupport()
         setSlideShow()
         setLocalizedStrings()
         searchText.text = ""
-        
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -58,7 +62,6 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
             if layoutDirection == .leftToRight {
                 slideShow.arabic = false
                 searchText.textAlignment = .left
-               
             }
             else{
                 slideShow.arabic = true
@@ -80,8 +83,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         slideShow.transitionType = KASlideShowTransitionType.slide // Choose a transition type (fade or slide)
         slideShow.imagesContentMode = .scaleAspectFill // Choose a content mode for images to display
         slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
-        slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next directly on the image (Tap or Swipe)
-        /*************Set this value when langue is changed in settings*****/
+        slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next
         slideShow.start()
     }
     func setUILayout()
@@ -104,8 +106,6 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         pageControl.currentPage = Int(slideShow.currentIndex)
         pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
 
-        
-        
         self.findByCategoryButton.layer.masksToBounds = false;
         self.findByCategoryButton.layer.shadowOffset = CGSize(width: -1, height: 15)
         self.findByCategoryButton.layer.shadowRadius = 12;
@@ -171,7 +171,7 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     @objc func pageChanged() {
        
     }
-   
+    //MARK: SearchBar
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
         
@@ -184,13 +184,13 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         
         if ((predicateSearchKey.count) >= 2)
         {
-            controller.view.tag = 1
-            
             controller.predicateProtocol = self
-            self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+            self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: 0, height: 0)
             addChildViewController(controller)
             view.addSubview((controller.view)!)
             controller.didMove(toParentViewController: self)
+            let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
+            self.scrollSubView.addGestureRecognizer(tapGestRecognizer)
             getPredicateSearchFromServer()
         }
         else{
@@ -198,7 +198,11 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         }
         return true
     }
-    
+    @objc func dismissPopupView(sender: UITapGestureRecognizer)
+    {
+            controller.view.removeFromSuperview()
+        
+    }
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
         if let countValue = predicateSearchArray?.count
         {
@@ -227,7 +231,8 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         controller.view.removeFromSuperview()
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         historyVC.pageNameString = PageName.searchResult
-        historyVC.predicateSearchdict = predicatedict
+        historyVC.searchType = predicatedict.search_type
+        historyVC.searchKey = predicatedict.search_name
         self.present(historyVC, animated: false, completion: nil)
     }
     
@@ -238,20 +243,18 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
         self.present(categoryVC, animated: false, completion: nil)
     }
     @IBAction func didTapMenu(_ sender: UIButton) {
-        controller.view.removeFromSuperview()
-        let settingsVc : SettingsViewController = storyboard?.instantiateViewController(withIdentifier: "settingsId") as! SettingsViewController
-        self.present(settingsVc, animated: false, completion: nil)
+      self.showSidebar()
         
     }
     func getPredicateSearchFromServer()
     {
         
-        
+         let trimmedSearchKey = self.predicateSearchKey.trimmingCharacters(in: .whitespacesAndNewlines)
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             
             Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
-                                                              "search_key": predicateSearchKey , "language" :languageKey]))
+                                                              "search_key": trimmedSearchKey , "language" :languageKey]))
                 .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
                     switch response.result {
                         
@@ -263,11 +266,14 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
                         {
                             if countValue > 3
                             {
-                               self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: 150)
+                                self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: (CGFloat(self.predicateTableHeight!*3)))
                             }
-                            else{
-                                self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
-                            }
+                            else if ((self.predicateSearchArray?.count == 1) && (self.predicateSearchArray![0].item_id == nil))
+                                {
+                                    self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: 0, height: 0)
+                                }else{
+                               self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                                }
                         }
                         
                         
@@ -285,9 +291,25 @@ class HomeViewController: UIViewController,UITextFieldDelegate, KASlideShowDeleg
     
     @IBAction func didTapHomeSearch(_ sender: UIButton) {
         controller.view.removeFromSuperview()
-        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+        let trimmedText = searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedText == ""
+        {
+            
+            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+            historyVC.searchType = 4
+            historyVC.searchKey = trimmedText
+            historyVC.pageNameString = PageName.searchResult
+            self.present(historyVC, animated: false, completion: nil)
+        }
         
-        historyVC.pageNameString = PageName.searchResult
-        self.present(historyVC, animated: false, completion: nil)
     }
+
 }

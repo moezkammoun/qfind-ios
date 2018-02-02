@@ -65,7 +65,7 @@ class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITabl
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     
 
 }

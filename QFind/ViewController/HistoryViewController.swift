@@ -14,7 +14,7 @@ enum PageName{
     case favorite
 }
 
-class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
+class HistoryViewController: RootViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
 
 
    
@@ -22,10 +22,12 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     @IBOutlet weak var historyCollectionView: UICollectionView!
     @IBOutlet weak var historySearchBar: SearchBarView!
     
-    @IBOutlet weak var backButton: UIButton!
+    
+    @IBOutlet weak var backButtonImageView: UIImageView!
     @IBOutlet weak var historyLabel: UILabel!
     @IBOutlet weak var historyLoadingView: LoadingView!
     @IBOutlet weak var historyBottomBar: BottomBarView!
+    @IBOutlet weak var historyView: UIView!
     
     var controller = PredicateSearchViewController()
     
@@ -35,8 +37,11 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     var predicateSearchArray : [PredicateSearch]? = []
     var previousPage : PageName?
     var searchResultArray: [SearchResult]? = []
-    var predicateSearchdict : PredicateSearch?
+    //var predicateSearchdict : PredicateSearch?
+    var searchType : Int?
+    var searchKey : String?
     var favoriteArray : NSMutableArray?
+    var predicateTableHeight : Int?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,12 +51,25 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            predicateTableHeight = 85
+        }
+        else{
+            predicateTableHeight = 50
+        }
        setLocalizedVariable()
         
         
         if (pageNameString == PageName.searchResult)
         {
-            getSearchResultFromServer(searchPredicateData: predicateSearchdict!)
+            guard let searchItemType = self.searchType else{
+                return
+            }
+            guard let searchItemKey = self.searchKey else{
+                return
+            }
+            getSearchResultFromServer(searchType: searchItemType, searchKey: searchItemKey)
         }
         
     }
@@ -75,10 +93,16 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
             if layoutDirection == .leftToRight {
                 
                 historySearchBar.searchText.textAlignment = .left
+                if let _img = backButtonImageView.image{
+                    backButtonImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.downMirrored)
+                }
             }
             else{
                 
                 historySearchBar.searchText.textAlignment = .right
+                if let _img = backButtonImageView.image {
+                    backButtonImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
+                }
             }
         } else {
             // Fallback on earlier versions
@@ -90,7 +114,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     func setLocalizedVariable()
     {
         
-       
+         self.historySearchBar.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
         switch pageNameString {
         case .history?:
              self.historyLabel.text = NSLocalizedString("HISTORY", comment: "HISTORY Label in the history page")
@@ -345,11 +369,29 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     //MARK:Searchbar
     func searchButtonPressed() {
         controller.view.removeFromSuperview()
-        previousPage = pageNameString
-        pageNameString = PageName.searchResult
-        setLocalizedVariable()
-        getSearchResultFromServer(searchPredicateData: predicateSearchdict!)
-        controller.predicateSearchTable.reloadData()
+         let trimmedText = historySearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if historySearchBar.searchText.text == ""
+        {
+            
+            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            previousPage = pageNameString
+            pageNameString = PageName.searchResult
+            setLocalizedVariable()
+            
+            guard let searchItemKey = trimmedText else{
+                return
+            }
+            getSearchResultFromServer(searchType: 4, searchKey: searchItemKey)
+        
+        }
+       // controller.predicateSearchTable.reloadData()
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
       
@@ -363,17 +405,14 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         
         if ((predicateSearchKey.count) >= 2)
         {
-            
-
-            controller.view.tag = 1
-            
             controller.predicateProtocol = self
-            self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+            self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: 0)
             addChildViewController(controller)
             view.addSubview((controller.view)!)
             controller.didMove(toParentViewController: self)
             
-          
+            let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
+            self.historyView.addGestureRecognizer(tapGestRecognizer)
             getPredicateSearchFromServer()
             
           
@@ -383,9 +422,18 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         }
         return true
     }
+    @objc func dismissPopupView(sender: UITapGestureRecognizer)
+    {
+        controller.view.removeFromSuperview()
+        
+    }
+    func menuButtonSelected() {
+        self.showSidebar()
+    }
     //MARK:TableView
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
         return (predicateSearchArray?.count)!
+        
     }
    
     func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -395,14 +443,21 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
-        predicateSearchdict = predicateSearchArray![indexPath.row]
-        historySearchBar.searchText.text = predicateSearchdict?.search_name
+        let predicateSearchdict = predicateSearchArray![indexPath.row]
+        historySearchBar.searchText.text = predicateSearchdict.search_name
         controller.view.removeFromSuperview()
         setBottomBarSearchBackground()
         previousPage = pageNameString
         pageNameString = PageName.searchResult
         setLocalizedVariable()
-        getSearchResultFromServer(searchPredicateData: predicateSearchdict!)
+        guard let searchItemType = predicateSearchdict.search_type else{
+            return
+        }
+        guard let searchItemKey = predicateSearchdict.search_name else{
+            return
+        }
+         getSearchResultFromServer(searchType: searchItemType, searchKey: searchItemKey)
+        
         controller.predicateSearchTable.reloadData()
         
     }
@@ -437,13 +492,13 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
     }
     func getPredicateSearchFromServer()
     {
-        
-        
+        let trimmedSearchKey = self.predicateSearchKey.trimmingCharacters(in: .whitespacesAndNewlines)
+       
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             
             Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
-                                                              "search_key": predicateSearchKey , "language" :languageKey]))
+                                                              "search_key":  trimmedSearchKey , "language" :languageKey]))
                 .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
                     switch response.result {
                         
@@ -451,8 +506,12 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
                        
                         self.predicateSearchArray = data.predicateSearchData
                         self.controller.predicateSearchTable.reloadData()
-                        self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
-                        
+                        if ((self.predicateSearchArray?.count == 1) && (self.predicateSearchArray![0].item_id == nil))
+                        {
+                            self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: 0, height: 0)
+                        }else{
+                        self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                        }
                         
                     case .failure(let error):
                         self.historyLoadingView.isHidden = false
@@ -464,7 +523,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
             
         }
     }
-    func getSearchResultFromServer(searchPredicateData: PredicateSearch)
+    func getSearchResultFromServer(searchType: Int, searchKey: String)
     {
         historyLoadingView.isHidden = false
         historyLoadingView.showLoading()
@@ -472,7 +531,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             Alamofire.request(QFindRouter.getSearchResult(["token": tokenString,
-                                                              "search_key": searchPredicateData.search_name! , "language" :languageKey , "search_type": searchPredicateData.search_type!]))
+                                                              "search_key": searchKey , "language" :languageKey , "search_type": searchType]))
                 .responseObject { (response: DataResponse<SearchResultData>) -> Void in
                     switch response.result {
                     case .success(let data):
@@ -484,6 +543,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
                             self.historyLoadingView.noDataView.isHidden = false
                              self.historyCollectionView.reloadData()
                             self.historyLoadingView.showNoDataView()
+                            self.historyLoadingView.noDataLabel.text = "No Results Found"
                         }
                         else{
                             
@@ -499,6 +559,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
                         self.historyLoadingView.stopLoading()
                         self.historyCollectionView.reloadData()
                          self.historyLoadingView.showNoDataView()
+                        self.historyLoadingView.noDataLabel.text = "No Results Found"
                         self.historyLoadingView.noDataView.isHidden = false
                     }
                     
@@ -506,7 +567,7 @@ class HistoryViewController: UIViewController,UICollectionViewDelegate,UICollect
             
         }
     }
-
+    
     
 
 }

@@ -89,6 +89,9 @@
                         </constraint>
                     </constraints>
                     <state key="normal" image="hamburger-white"/>
+                    <connections>
+                        <action selector="didTapMenu:" destination="-1" eventType="touchUpInside" id="Xyy-vA-c7B"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

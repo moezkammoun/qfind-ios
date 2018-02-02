@@ -124,6 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                            tokenDefault.set(token, forKey: "accessTokenString")
                     }
                 case .failure(let error):
+                    print(error)
                 }
                 
         }

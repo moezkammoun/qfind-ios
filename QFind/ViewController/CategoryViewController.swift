@@ -15,7 +15,7 @@ enum PageNameInCategory{
     case informationPage
     
 }
-class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol,predicateTableviewProtocol {
+class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol,predicateTableviewProtocol {
     
     @IBOutlet weak var bottomBar: BottomBarView!
     
@@ -23,11 +23,15 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     
+    @IBOutlet weak var backImageView: UIImageView!
     @IBOutlet weak var categoryTitle: UILabel!
     @IBOutlet weak var searchBarView: SearchBarView!
     @IBOutlet weak var slideShow: KASlideShow!
+    @IBOutlet weak var categoryView: UIView!
+    
+    
      var controller = PredicateSearchViewController()
-     //var tapGesture = UITapGestureRecognizer()
+    
      var categoryPageNameString : PageNameInCategory?
     var dummyString = String()
      var bannerArray = NSArray()
@@ -37,6 +41,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     var subCategoryTitle : String?
     var categoryIdVar : Int?
     var predicateSearchKey = String()
+    var predicateTableHeight : Int?
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -44,11 +49,20 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         registerNib()
         setUpUi()
         categoryPageNameString = PageNameInCategory.category
-        getCategoriesFromServer()
-        setLocalizedVariables()
+        
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            predicateTableHeight = 85
+        }
+        else{
+            predicateTableHeight = 50
+        }
+        getCategoriesFromServer()
+        setLocalizedVariables()
         setRTLSupport()
         setImageSlideShow()
         searchBarView.searchText.text = ""
@@ -80,12 +94,19 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
                 slideShow.arabic = false
                 searchBarView.searchText.textAlignment = .left
                 
-                
+                if let _img = backImageView.image{
+                    backImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.downMirrored)
+                }
                 
             }
             else{
                 slideShow.arabic = true
                  searchBarView.searchText.textAlignment = .right
+                
+                if let _img = backImageView.image {
+                    backImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
+                }
+                
             }
         } else {
             // Fallback on earlier versions
@@ -98,6 +119,7 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     {
         
          self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+         self.searchBarView.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
 
     }
     func registerNib()
@@ -261,10 +283,25 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     // MARK: Searchbar
     func searchButtonPressed() {
         controller.view.removeFromSuperview()
-        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
-        
-        historyVC.pageNameString = PageName.searchResult
-        self.present(historyVC, animated: false, completion: nil)
+        let trimmedText = searchBarView.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedText == ""
+        {
+            
+            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            
+            // show the alert
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+            
+            historyVC.pageNameString = PageName.searchResult
+            historyVC.searchType = 4
+            historyVC.searchKey = trimmedText
+            self.present(historyVC, animated: false, completion: nil)
+        }
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         
@@ -277,13 +314,14 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         
             if ((predicateSearchKey.count) >= 2)
             {
-                    controller.view.tag = 1
-                    
+                    controller.view.isHidden = false
                     controller.predicateProtocol = self
-                     self.controller.view.frame = CGRect(x: self.searchBarView.searchInnerView.frame.origin.x, y:self.searchBarView.searchInnerView.frame.origin.y+self.searchBarView.searchInnerView.frame.height+20, width: self.searchBarView.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+                     self.controller.view.frame = CGRect(x: self.searchBarView.searchInnerView.frame.origin.x, y:self.searchBarView.searchInnerView.frame.origin.y+self.searchBarView.searchInnerView.frame.height+20, width: 0, height: 0)
                     addChildViewController(controller)
                     view.addSubview((controller.view)!)
                     controller.didMove(toParentViewController: self)
+                let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
+                self.categoryView.addGestureRecognizer(tapGestRecognizer)
                     getPredicateSearchFromServer()
                 
                 
@@ -297,12 +335,13 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
        
         return true
     }
-
-    @objc func removeSubview()
+    @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
-        //controller.view.removeFromSuperview()
-      //  controller.view.tag = 0
+        controller.view.removeFromSuperview()
         
+    }
+    func menuButtonSelected() {
+        self.showSidebar()
     }
     // MARK: Tableview
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
@@ -322,8 +361,8 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
         historyVC.pageNameString = PageName.searchResult
-        
-        historyVC.predicateSearchdict = predicatedict
+        historyVC.searchType = predicatedict.search_type
+        historyVC.searchKey = predicatedict.search_name
         self.present(historyVC, animated: false, completion: nil)
     }
     override func didReceiveMemoryWarning() {
@@ -419,16 +458,22 @@ class CategoryViewController: UIViewController,KASlideShowDelegate,UICollectionV
     }
     func getPredicateSearchFromServer()
     {
+        let trimmedSearchKey = self.predicateSearchKey.trimmingCharacters(in: .whitespacesAndNewlines)
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
            Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
-                                                              "search_key": predicateSearchKey , "language" :languageKey]))
+                                                              "search_key": trimmedSearchKey , "language" :languageKey]))
                     .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
                         switch response.result {
                         case .success(let data):
                             self.predicateSearchArray = data.predicateSearchData
                             self.controller.predicateSearchTable.reloadData()
-                            self.controller.view.frame = CGRect(x: self.searchBarView.searchInnerView.frame.origin.x, y:self.searchBarView.searchInnerView.frame.origin.y+self.searchBarView.searchInnerView.frame.height+20, width: self.searchBarView.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*50))
+                            if ((self.predicateSearchArray?.count == 1) && (self.predicateSearchArray![0].item_id == nil))
+                            {
+                                 self.controller.view.frame = CGRect(x: self.searchBarView.searchInnerView.frame.origin.x, y:self.searchBarView.searchInnerView.frame.origin.y+self.searchBarView.searchInnerView.frame.height+20, width: 0, height: 0)
+                            }else{
+                                self.controller.view.frame = CGRect(x: self.searchBarView.searchInnerView.frame.origin.x, y:self.searchBarView.searchInnerView.frame.origin.y+self.searchBarView.searchInnerView.frame.height+20, width: self.searchBarView.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                            }
                             
                             
                         case .failure(let error):
