@@ -107,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func getAccessTokenFromServer()
     {
+        
         if ((LocalizationLanguage.currentAppleLanguage()) == "en"){
             languageKey = 1
         }
@@ -122,6 +123,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 case .success(let data):
                     if let token = data.accessToken{
                            tokenDefault.set(token, forKey: "accessTokenString")
+                        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                        let initialViewController : HomeViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "homeId") as! HomeViewController
+                        self.window = UIWindow(frame: UIScreen.main.bounds)
+                        self.window?.rootViewController = initialViewController
+                        self.window?.makeKeyAndVisible()
+                        
                     }
                 case .failure(let error):
                     print(error)
@@ -130,5 +137,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     }
+    
 }
 

@@ -159,11 +159,18 @@
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4ma-l0-ixp" customClass="KASlideShow">
                                                 <rect key="frame" x="0.0" y="96.999999999999986" width="414" height="228.66666666666663"/>
+                                                <subviews>
+                                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="hcY-eN-eFb">
+                                                        <rect key="frame" x="197" y="104" width="20" height="20"/>
+                                                    </activityIndicatorView>
+                                                </subviews>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
+                                                    <constraint firstItem="hcY-eN-eFb" firstAttribute="centerY" secondItem="4ma-l0-ixp" secondAttribute="centerY" id="0x2-5I-zLb"/>
                                                     <constraint firstAttribute="width" secondItem="4ma-l0-ixp" secondAttribute="height" multiplier="172:95" id="erp-Xo-eal">
                                                         <variation key="heightClass=regular-widthClass=regular" constant="0.5"/>
                                                     </constraint>
+                                                    <constraint firstItem="hcY-eN-eFb" firstAttribute="centerX" secondItem="4ma-l0-ixp" secondAttribute="centerX" id="k0s-Dy-X7B"/>
                                                 </constraints>
                                             </view>
                                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="S22-8L-ihs">
@@ -268,6 +275,7 @@
                         <outlet property="findByCategoryButton" destination="9o5-Xk-pRt" id="cAa-Jd-r8f"/>
                         <outlet property="findByCategoryLabel" destination="Pgp-kc-d0j" id="s3p-9Y-ArL"/>
                         <outlet property="homeLoadingView" destination="1aE-tq-RP5" id="XVN-HG-UKB"/>
+                        <outlet property="logoImageView" destination="nwD-si-L3w" id="Dnv-Fc-DSw"/>
                         <outlet property="orLabel" destination="1On-zl-FLe" id="pMy-4a-IQl"/>
                         <outlet property="pageControl" destination="S22-8L-ihs" id="6dv-Ra-Wdr"/>
                         <outlet property="qfindDayLabel" destination="VjY-ef-c3g" id="gM4-85-BdN"/>
@@ -276,6 +284,7 @@
                         <outlet property="searchView" destination="qSa-0t-AEa" id="Aqk-gt-FYe"/>
                         <outlet property="sideMenuButton" destination="MAk-f8-sDl" id="LR0-At-R2u"/>
                         <outlet property="slideShow" destination="4ma-l0-ixp" id="bb8-2Z-3gl"/>
+                        <outlet property="sliderLoading" destination="hcY-eN-eFb" id="lOD-b2-iR5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -322,9 +331,16 @@
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V1C-LI-2Bx" customClass="KASlideShow">
                                         <rect key="frame" x="0.0" y="124" width="414" height="210"/>
-                                        <color key="backgroundColor" red="0.92540901899337769" green="0.92554211616516113" blue="0.92537993192672729" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <subviews>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0Vz-6e-hhg">
+                                                <rect key="frame" x="197" y="95" width="20" height="20"/>
+                                            </activityIndicatorView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="V1C-LI-2Bx" secondAttribute="height" multiplier="229:116" id="0Yl-B2-iBm"/>
+                                            <constraint firstItem="0Vz-6e-hhg" firstAttribute="centerX" secondItem="V1C-LI-2Bx" secondAttribute="centerX" id="e6K-Yy-tWu"/>
+                                            <constraint firstItem="0Vz-6e-hhg" firstAttribute="centerY" secondItem="V1C-LI-2Bx" secondAttribute="centerY" id="vz8-ab-STU"/>
                                         </constraints>
                                     </view>
                                     <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="8wm-IT-k1n">
@@ -443,6 +459,7 @@
                         <outlet property="bottomBar" destination="YUw-6E-5gt" id="dDJ-PJ-uub"/>
                         <outlet property="categoryCollectionView" destination="Uld-AQ-t4H" id="Zdl-jK-IE9"/>
                         <outlet property="categoryLoadingView" destination="LFO-HV-ygA" id="Ztv-jx-Xsm"/>
+                        <outlet property="categorySliderLoader" destination="0Vz-6e-hhg" id="cdJ-cD-waP"/>
                         <outlet property="categoryTitle" destination="NcC-Td-Sl6" id="lKb-wQ-6fo"/>
                         <outlet property="categoryView" destination="4a0-Jv-JZE" id="36M-5G-KlO"/>
                         <outlet property="pageControl" destination="8wm-IT-k1n" id="ihe-qn-Hj5"/>

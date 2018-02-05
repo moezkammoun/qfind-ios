@@ -23,8 +23,9 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         
         self.titleLabel.text = categoryValues.categories_name
         if let imageUrl = categoryValues.categories_imge{
-        
+        thumbnailView.kf.indicatorType = .activity
             thumbnailView.kf.setImage(with: URL(string: imageUrl))
+            
         }
         
     }

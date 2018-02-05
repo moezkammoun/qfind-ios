@@ -15,7 +15,7 @@ enum QFindRouter: URLRequestConvertible {
     case getSubCategory([String :Any])
     case getPredicateSearch([String: Any])
     case getSearchResult([String: Any])
-//    case SendMessageToTarget(String, [String: Any])
+    case getQFindOfTheDay([String: Any])
 //    case Strikes(String)
 //    case UpdateUserProfile(String)
     
@@ -31,8 +31,8 @@ enum QFindRouter: URLRequestConvertible {
             return .get
         case .getSearchResult:
             return .get
-//        case .SendMessageToTarget:
-//            return .post
+        case .getQFindOfTheDay:
+            return .get
 //        case .Strikes:
 //            return .get
 //        case .UpdateUserProfile:
@@ -54,8 +54,8 @@ enum QFindRouter: URLRequestConvertible {
             return "api/search"
         case .getSearchResult( _):
             return "api/search-result"
-//        case .SendMessageToTarget(let userId, _):
-//            return "/message/\(userId)"
+        case .getQFindOfTheDay( _):
+           return "api/q-find"
 //        case .Strikes(let userId):
 //            return "/strikes/\(userId)"
 //        case .UpdateUserProfile(let userId):
@@ -94,9 +94,9 @@ enum QFindRouter: URLRequestConvertible {
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,with: parameters)
         case .getSearchResult(let parameters):
            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,with: parameters)
-//        case .SendMessageToTarget( _, let parameters):
-//            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest,
-//                                                              with: parameters)
+        case .getQFindOfTheDay( let parameters):
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,
+                                                              with: parameters)
 //        case .Strikes( _):
 //            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest)
 //        case .UpdateUserProfile( _):

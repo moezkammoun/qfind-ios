@@ -7,6 +7,7 @@
 //
 
 import Alamofire
+import Kingfisher
 import UIKit
 
 enum PageNameInCategory{
@@ -22,6 +23,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     @IBOutlet weak var categoryLoadingView: LoadingView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var categoryCollectionView: UICollectionView!
+    @IBOutlet weak var categorySliderLoader: UIActivityIndicatorView!
     
     @IBOutlet weak var backImageView: UIImageView!
     @IBOutlet weak var categoryTitle: UILabel!
@@ -34,7 +36,6 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     
      var categoryPageNameString : PageNameInCategory?
     var dummyString = String()
-     var bannerArray = NSArray()
     var categoryDataArray : [Category]? = []
     var subCategoryDataArray : [SubCategory]? = []
     var predicateSearchArray : [PredicateSearch]? = []
@@ -42,6 +43,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     var categoryIdVar : Int?
     var predicateSearchKey = String()
     var predicateTableHeight : Int?
+    var categoryQFindArray = NSMutableArray()
+    var arrayCount : Int? = 0
+    var tapGestRecognizer = UITapGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -54,6 +58,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        
+        categorySliderLoader.isHidden = false
+        categorySliderLoader.startAnimating()
         if (UIDevice.current.userInterfaceIdiom == .pad)
         {
             predicateTableHeight = 85
@@ -64,7 +71,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         getCategoriesFromServer()
         setLocalizedVariables()
         setRTLSupport()
-        setImageSlideShow()
+        sliderSetUp()
         searchBarView.searchText.text = ""
         bottomBar.favoriteview.backgroundColor = UIColor.white
         bottomBar.historyView.backgroundColor = UIColor.white
@@ -88,9 +95,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func setRTLSupport()
     {
         if #available(iOS 9.0, *) {
-            let attribute = view.semanticContentAttribute
-            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
-            if layoutDirection == .leftToRight {
+           // let attribute = view.semanticContentAttribute
+           // let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+           if ((LocalizationLanguage.currentAppleLanguage()) == "en")  {
                 slideShow.arabic = false
                 searchBarView.searchText.textAlignment = .left
                 
@@ -129,28 +136,52 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         
         
     }
-    func setImageSlideShow()
+    func sliderSetUp()
     {
-        
-        
-       bannerArray = ["banner", "findByCategoryBG", "car_service","cloth_stores"]
-        
-        pageControl.numberOfPages = bannerArray.count
-        pageControl.currentPage = Int(slideShow.currentIndex)
-        pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
-
-        
-        
+        let sliderImagesArray = sliderImagesDefault.value(forKey: "sliderimages")
+        if (sliderImagesArray == nil)
+        {
+            getQFindOfTheDayFromServer()
+        }
+        else{
+            let date = Date()
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day], from: date)
+            let currentDay = components.day
+            let currentMonth = components.month
+            let currentYear = components.year
+            let previoisDay : Int = sliderImagesDefault.value(forKey: "sliderDay") as! Int
+            let previoisMonth : Int = sliderImagesDefault.value(forKey: "sliderMonth") as! Int
+            let previoisYear : Int = sliderImagesDefault.value(forKey: "sliderYear") as! Int
+            
+            if ((previoisYear < currentYear!) || ((previoisMonth < currentMonth!) && (previoisYear == currentYear)) || (( previoisDay < currentDay!) && (previoisMonth == currentMonth))){
+                getQFindOfTheDayFromServer()
+                
+            }
+            else{
+                getImage()
+            }
+            
+        }
+    }
+    func setImageSlideShow(imageArray : NSArray)
+    {
+       
+        categorySliderLoader.stopAnimating()
+        categorySliderLoader.isHidden = true
         //KASlideshow
         slideShow.delegate = self
-        slideShow.delay = 1 // Delay between transitions
-        slideShow.transitionDuration = 1.5 // Transition duration
-        slideShow.transitionType = KASlideShowTransitionType.slide // Choose a transition type (fade or slide)
-        slideShow.imagesContentMode = .scaleAspectFill // Choose a content mode for images to display
-        slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
-        slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next directly on the image (Tap or Swipe)
-        /*************Set this value when langue is changed in settings*****/
+        slideShow.delay = 1
+        slideShow.transitionDuration = 1.5
+        slideShow.transitionType = KASlideShowTransitionType.slide
+        slideShow.imagesContentMode = .scaleAspectFit
+        slideShow.images = imageArray as! NSMutableArray
+        slideShow.add(KASlideShowGestureType.swipe)
         slideShow.start()
+        
+        pageControl.numberOfPages = imageArray.count
+        pageControl.currentPage = Int(slideShow.currentIndex)
+        pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
     }
     //KASlideShow delegate
     
@@ -320,7 +351,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     addChildViewController(controller)
                     view.addSubview((controller.view)!)
                     controller.didMove(toParentViewController: self)
-                let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
+                tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
                 self.categoryView.addGestureRecognizer(tapGestRecognizer)
                     getPredicateSearchFromServer()
                 
@@ -338,6 +369,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
         controller.view.removeFromSuperview()
+        categoryView.removeGestureRecognizer(tapGestRecognizer)
         
     }
     func menuButtonSelected() {
@@ -358,6 +390,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         let predicatedict = predicateSearchArray![indexPath.row]
         searchBarView.searchText.text = predicatedict.search_name
         controller.view.removeFromSuperview()
+        categoryView.removeGestureRecognizer(tapGestRecognizer)
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
         historyVC.pageNameString = PageName.searchResult
@@ -486,5 +519,90 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             
         }
     }
+    func getQFindOfTheDayFromServer()
+    {
+     
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            
+            Alamofire.request(QFindRouter.getQFindOfTheDay(["token": tokenString]))
+                .responseObject { (response: DataResponse<QfindOfTheDayData>) -> Void in
+                    switch response.result {
+                        
+                    case .success(let data):
+                        
+                        let qFindDict = data.qfindOfTheDayData
+                        self.imageDownloader(imgArray: (qFindDict?.image)!)
+                        
+                        
+                        
+                        if ((data.response == "error") || (data.code != "200")){
+                           
+                        }
+                        else{
+                            
+                           
+                        }
+                    case .failure(let error):
+                        print("error")
+                       
+                    }
+                    
+            }
+            
+        }
+    }
+    func imageDownloader(imgArray : NSArray){
+        
+        while self.categoryQFindArray.count < imgArray.count {
+            self.categoryQFindArray.add("")
+        }
+       
+        for var i in (0..<imgArray.count)
+        {
+            let imageUrl = URL(string: imgArray[i] as! String)
+            KingfisherManager.shared.retrieveImage(with: imageUrl!, options: nil, progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                if let image = image {
+                    self.arrayCount = self.arrayCount! + 1
+                    self.categoryQFindArray[i] = image
+                   
+                    if (self.arrayCount == imgArray.count)
+                    {
+                        
+                        let sliderData = SliderImagesModel(sliderImages: self.categoryQFindArray)
+                        let encodedData = NSKeyedArchiver.archivedData(withRootObject: sliderData)
+                        sliderImagesDefault.set(encodedData, forKey: "sliderimages")
+                        
+                        let date = Date()
+                        let calendar = Calendar.current
+                        let components = calendar.dateComponents([.year, .month, .day], from: date)
+                        
+                        sliderImagesDefault.set(components.day, forKey: "sliderDay")
+                        sliderImagesDefault.set(components.month, forKey: "sliderMonth")
+                        sliderImagesDefault.set(components.year, forKey: "sliderYear")
+                        
+                        self.getImage()
+                        
+                        
+                    }
+                    //your completion logic
+                    //...
+                } else {
+                    // Error
+                }
+            })
+        }
+        
+        
+    }
+    func getImage()
+    {
+        let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
+        let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
+        self.categoryQFindArray = decodedTeams.sliderImages
+        setImageSlideShow(imageArray: self.categoryQFindArray)
+    }
+    
 
 }
