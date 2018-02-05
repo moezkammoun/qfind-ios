@@ -198,6 +198,40 @@ struct SearchResult: ResponseObjectSerializable, ResponseCollectionSerializable 
 
     }
 }
+struct QfindOfTheDayData: ResponseObjectSerializable {
+    var qfindOfTheDayData: QFindOfTheDay?
+    var code:  String? = nil
+    var response: String? = nil
+   
+   
+    
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        if let representationData = representation as? [String: Any] {
+            self.code = representationData["code"] as? String
+            self.response = representationData["response"] as? String
+        }
+        print(representation)
+        print(representation["result"])
+        if let data = representation["result"] {
+            self.qfindOfTheDayData = QFindOfTheDay.init(response: response, representation: data as AnyObject)
+        }
+    }
+}
+
+struct QFindOfTheDay: ResponseObjectSerializable {
+    var id: Int? = nil
+    var image: NSArray? = nil
+
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        if let representation = representation as? [String: Any] {
+            self.id = representation["id"] as? Int
+            self.image = representation["image"] as? NSArray
+            
+            
+            
+        }
+    }
+}
 
 
 //struct Badge: ResponseObjectSerializable, ResponseCollectionSerializable {

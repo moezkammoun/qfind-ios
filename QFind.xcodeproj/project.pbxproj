@@ -25,6 +25,7 @@
 		B88A2DCD2008D7D000BF1B8A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */; };
 		B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89227F8200E2F3F00677F54 /* DetailViewController.swift */; };
 		B89F67412017556C006D3EFA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B89F67432017556C006D3EFA /* Localizable.strings */; };
+		B8A3390B202828A1003BF43C /* SliderImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A3390A202828A1003BF43C /* SliderImagesModel.swift */; };
 		B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */; };
 		B8B7627F2021B447004F90F9 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B7627E2021B447004F90F9 /* SidebarView.swift */; };
 		B8B762812021B46E004F90F9 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B762802021B46E004F90F9 /* RootViewController.swift */; };
@@ -100,6 +101,7 @@
 		B89F673920171535006D3EFA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		B89F67422017556C006D3EFA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B89F67442017565A006D3EFA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B8A3390A202828A1003BF43C /* SliderImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderImagesModel.swift; sourceTree = "<group>"; };
 		B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
 		B8B7627E2021B447004F90F9 /* SidebarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		B8B762802021B46E004F90F9 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -281,6 +283,7 @@
 			isa = PBXGroup;
 			children = (
 				B8C4AC502019E79D004DEFF6 /* ModelClass.swift */,
+				B8A3390A202828A1003BF43C /* SliderImagesModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -598,6 +601,7 @@
 				B858B4BD20164E5A00C4812D /* LocalizationLanguage.swift in Sources */,
 				B8C4D7D7200CC09F00E8D448 /* CategoryViewController.swift in Sources */,
 				B8E4D2932011C90F00074C37 /* PredicateSearchViewController.swift in Sources */,
+				B8A3390B202828A1003BF43C /* SliderImagesModel.swift in Sources */,
 				B8D20D582010B0F3008DDDE8 /* HistoryCollectionViewCell.swift in Sources */,
 				B8C4AC572019F343004DEFF6 /* QFindRequest.swift in Sources */,
 				B858B4B1201606A400C4812D /* SettingsViewController.swift in Sources */,

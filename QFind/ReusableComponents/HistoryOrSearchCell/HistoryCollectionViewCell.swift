@@ -36,6 +36,7 @@ class HistoryCollectionViewCell: UICollectionViewCell {
         self.titleLabel.text = searchResultCellValues.service_provider_name
         self.subLabel.text = searchResultCellValues.service_provider_address
         let imageArray = searchResultCellValues.image
+        self.historyThumbnail.kf.indicatorType = .activity
         self.historyThumbnail.kf.setImage(with: URL(string: imageArray![0] as! String))
     }
     override func prepareForReuse() {

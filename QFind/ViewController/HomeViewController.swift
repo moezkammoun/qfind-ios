@@ -7,15 +7,22 @@
 //
 
 import Alamofire
+import Kingfisher
 import UIKit
 
+let sliderImagesDefault = UserDefaults.standard
+
 class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDelegate,predicateTableviewProtocol {
+    
+    static let sharedHome = HomeViewController()
     @IBOutlet weak var findByCategoryButton: UIButton!
     @IBOutlet weak var findByCategoryLabel: UILabel!
     @IBOutlet weak var sideMenuButton: UIButton!
     @IBOutlet weak var qfindDayLabel: UILabel!
     @IBOutlet weak var scrollSubView: UIView!
+    @IBOutlet weak var sliderLoading: UIActivityIndicatorView!
     
+    @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var searchText: UITextField!
@@ -26,18 +33,33 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     
     @IBOutlet weak var aspectRationHome: NSLayoutConstraint!
-    var bannerArray = NSArray()
+    
     var controller = PredicateSearchViewController()
     var predicateSearchArray : [PredicateSearch]? = []
     var predicateSearchKey = String()
      var predicateTableHeight : Int?
+    var qFindDict : QFindOfTheDay?
+    var qFindArray = NSMutableArray()
+    var qfindImageDict = NSMutableDictionary()
+    var countValue : Int?
+    var arrayCount : Int? = 0
     override func viewDidLoad() {
         super.viewDidLoad()
 
+       // setRTLSupport()
+       
+        
+       // setLocalizedStrings()
         setUILayout()
+        
+       
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        sliderLoading.isHidden = false
+        sliderLoading.startAnimating()
+        
         if (UIDevice.current.userInterfaceIdiom == .pad)
         {
             predicateTableHeight = 85
@@ -45,10 +67,12 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         else{
             predicateTableHeight = 50
         }
+        
         setRTLSupport()
-        setSlideShow()
         setLocalizedStrings()
         searchText.text = ""
+
+        setHomeSliderImages()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -58,8 +82,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     {
         if #available(iOS 9.0, *) {
             let attribute = view.semanticContentAttribute
-            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
-            if layoutDirection == .leftToRight {
+           // let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
                 slideShow.arabic = false
                 searchText.textAlignment = .left
             }
@@ -73,27 +97,37 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
        
         
     }
-    func setSlideShow()
+    func setSlideShow(imgArray : NSArray)
     {
+       
+        sliderLoading.stopAnimating()
+        sliderLoading.isHidden = true
+       
+        self.homeLoadingView.stopLoading()
+         self.homeLoadingView.isHidden = true
         
-        //KASlideshow
-        slideShow.delegate = self
-        slideShow.delay = 1 // Delay between transitions
-        slideShow.transitionDuration = 1.5 // Transition duration
-        slideShow.transitionType = KASlideShowTransitionType.slide // Choose a transition type (fade or slide)
-        slideShow.imagesContentMode = .scaleAspectFill // Choose a content mode for images to display
-        slideShow.addImages(fromResources:bannerArray as! [Any]) // Add images from resources
-        slideShow.add(KASlideShowGestureType.swipe) // Gesture to go previous/next
-        slideShow.start()
+            //KASlideshow
+            slideShow.delegate = self
+            slideShow.delay = 1
+            slideShow.transitionDuration = 1.5
+            slideShow.transitionType = KASlideShowTransitionType.slide
+            slideShow.imagesContentMode = .scaleAspectFit
+            slideShow.images = imgArray as! NSMutableArray
+            slideShow.add(KASlideShowGestureType.swipe)
+            slideShow.start()
+            pageControl.numberOfPages = imgArray.count
+            pageControl.currentPage = Int(slideShow.currentIndex)
+            pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
+        
     }
     func setUILayout()
     {
         
-        homeLoadingView.isHidden = true
-       // homeLoadingView.showLoading()
-       // homeLoadingView.showNoDataView()
+        homeLoadingView.isHidden = false
+        homeLoadingView.showLoading()
+        
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
-        bannerArray = ["banner", "findByCategoryBG", "car_service","cloth_stores"]
+        
         searchView.layer.cornerRadius = 7.5
         searchView.layer.borderWidth = 2.0
         searchView.layer.borderColor = UIColor.lightGray.cgColor
@@ -102,15 +136,17 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         searchText.delegate = self
-        pageControl.numberOfPages = bannerArray.count
-        pageControl.currentPage = Int(slideShow.currentIndex)
-        pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
+        
 
         self.findByCategoryButton.layer.masksToBounds = false;
         self.findByCategoryButton.layer.shadowOffset = CGSize(width: -1, height: 15)
         self.findByCategoryButton.layer.shadowRadius = 12;
         self.findByCategoryButton.layer.shadowOpacity = 0.5;
-
+        
+        
+        
+        
+       
         
     }
     func setLocalizedStrings()
@@ -120,6 +156,35 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         self.findByCategoryLabel.text = NSLocalizedString("FIND_BY_CATEGORY", comment: "FIND_BY_CATEGORY Label in the home page")
         self.orLabel.text = NSLocalizedString("OR", comment: "OR Label in the home page")
+    }
+    func setHomeSliderImages()
+    {
+        let sliderImagesArray = sliderImagesDefault.value(forKey: "sliderimages")
+        if (sliderImagesArray == nil)
+        {
+            getQFindOfTheDayFromServer()
+        }
+        else{
+            let date = Date()
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month, .day], from: date)
+            let currentDay = components.day
+            let currentMonth = components.month
+            let currentYear = components.year
+            let previoisDay : Int = sliderImagesDefault.value(forKey: "sliderDay") as! Int
+            let previoisMonth : Int = sliderImagesDefault.value(forKey: "sliderMonth") as! Int
+            let previoisYear : Int = sliderImagesDefault.value(forKey: "sliderYear") as! Int
+            
+            if ((previoisYear < currentYear!) || ((previoisMonth < currentMonth!) && (previoisYear == currentYear)) || (( previoisDay < currentDay!) && (previoisMonth == currentMonth))){
+                getQFindOfTheDayFromServer()
+                
+            }
+            else{
+                getImage()
+            }
+            
+        }
+
     }
     @objc func keyboardWillShow(notification: NSNotification) {
        
@@ -150,9 +215,6 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     //KASlideShow delegate
     
     func kaSlideShowWillShowNext(_ slideshow: KASlideShow) {
-       
-      
-       
     }
     
     func kaSlideShowWillShowPrevious(_ slideshow: KASlideShow) {
@@ -161,7 +223,6 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     func kaSlideShowDidShowNext(_ slideshow: KASlideShow) {
         pageControl.currentPage = Int(slideShow.currentIndex)
-      
     }
     
     func kaSlideShowDidShowPrevious(_ slideshow: KASlideShow) {
@@ -238,6 +299,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     @IBAction func didTapFindCategory(_ sender: UIButton) {
         controller.view.removeFromSuperview()
+        slideShow.stop()
         let categoryVC : CategoryViewController = storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
         
         self.present(categoryVC, animated: false, completion: nil)
@@ -310,6 +372,93 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             self.present(historyVC, animated: false, completion: nil)
         }
         
+    }
+    func getQFindOfTheDayFromServer()
+    {
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            
+                Alamofire.request(QFindRouter.getQFindOfTheDay(["token": tokenString]))
+                    .responseObject { (response: DataResponse<QfindOfTheDayData>) -> Void in
+                        switch response.result {
+                            
+                        case .success(let data):
+                            
+                            self.qFindDict = data.qfindOfTheDayData
+                            let urlString = URL(string: self.qFindDict?.image![0] as! String)
+                            self.imageDownloader(imgArray: (self.qFindDict?.image)!)
+                            
+                            if ((data.response == "error") || (data.code != "200")){
+                                self.homeLoadingView.stopLoading()
+                                self.homeLoadingView.showNoDataView()
+                            }
+                            else{
+                                
+                                self.homeLoadingView.isHidden = true
+                                self.homeLoadingView.stopLoading()
+                            }
+                        case .failure(let error):
+                            self.homeLoadingView.isHidden = false
+                            self.homeLoadingView.stopLoading()
+                            self.homeLoadingView.noDataView.isHidden = false
+                        }
+                        
+                }
+            
+        }
+    }
+    
+    
+    func imageDownloader(imgArray : NSArray){
+        
+        while self.qFindArray.count < imgArray.count {
+            self.qFindArray.add("")
+        }
+        
+
+        for var i in (0..<imgArray.count)
+        {
+            let slideiImageUrl = URL(string: imgArray[i] as! String)
+            KingfisherManager.shared.retrieveImage(with: slideiImageUrl!, options: nil, progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                if let image = image {
+                    self.arrayCount = self.arrayCount! + 1
+
+                    self.qFindArray[i] = image
+
+                    if (self.arrayCount == imgArray.count)
+                    {
+                       
+                        let sliderData = SliderImagesModel(sliderImages: self.qFindArray)
+                        let encodedData = NSKeyedArchiver.archivedData(withRootObject: sliderData)
+                        sliderImagesDefault.set(encodedData, forKey: "sliderimages")
+                        
+                        let date = Date()
+                        let calendar = Calendar.current
+                        let components = calendar.dateComponents([.year, .month, .day], from: date)
+                        
+                        sliderImagesDefault.set(components.day, forKey: "sliderDay")
+                         sliderImagesDefault.set(components.month, forKey: "sliderMonth")
+                        sliderImagesDefault.set(components.year, forKey: "sliderYear")
+                       
+                        self.getImage()
+                    
+                        
+                    }
+                   
+                } else {
+                    
+                }
+            })
+        }
+ 
+   
+    }
+ func getImage(){
+    let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
+    let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
+    self.qFindArray = decodedTeams.sliderImages
+    setSlideShow(imgArray: self.qFindArray)
     }
 
 }
