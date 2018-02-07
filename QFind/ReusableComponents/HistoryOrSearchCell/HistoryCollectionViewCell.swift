@@ -32,9 +32,9 @@ class HistoryCollectionViewCell: UICollectionViewCell {
 
     @IBAction func didTapFavoriteButton(_ sender: UIButton) {
     }
-    func searchResultData(searchResultCellValues: SearchResult){
+    func searchResultData(searchResultCellValues: ServiceProvider){
         self.titleLabel.text = searchResultCellValues.service_provider_name
-        self.subLabel.text = searchResultCellValues.service_provider_address
+        self.subLabel.text = searchResultCellValues.service_provider_location
         let imageArray = searchResultCellValues.image
         self.historyThumbnail.kf.indicatorType = .activity
         self.historyThumbnail.kf.setImage(with: URL(string: imageArray![0] as! String))

@@ -105,6 +105,8 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="forwardImageView" destination="zyL-BF-x72" id="7k7-zy-bYg"/>
+                <outlet property="informationImageView" destination="aJq-0c-rD6" id="v9N-s9-afd"/>
+                <outlet property="informationText" destination="sG6-u1-h5Q" id="AlF-F8-Dvm"/>
                 <outlet property="separatorView" destination="tb0-Cg-awx" id="3Ks-PB-SD1"/>
             </connections>
             <point key="canvasLocation" x="2" y="-55"/>

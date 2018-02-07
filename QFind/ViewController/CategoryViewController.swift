@@ -13,6 +13,7 @@ import UIKit
 enum PageNameInCategory{
     case category
     case subcategory
+    case serviceProvider
     case informationPage
     
 }
@@ -46,6 +47,10 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     var categoryQFindArray = NSMutableArray()
     var arrayCount : Int? = 0
     var tapGestRecognizer = UITapGestureRecognizer()
+    var serviceProviderArray: [ServiceProvider]? = []
+    var haveSubCategory : Bool? = nil
+    var subCategoryName: String? = nil
+    let networkReachability = NetworkReachabilityManager()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -53,6 +58,20 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         registerNib()
         setUpUi()
         categoryPageNameString = PageNameInCategory.category
+        
+        if  (networkReachability?.isReachable)!{
+            getCategoriesFromServer()
+        }
+        else{
+            self.categoryLoadingView.stopLoading()
+             self.categoryLoadingView.isHidden = true
+            
+            //self.categoryLoadingView.noDataView.isHidden = false
+            let alert = UIAlertController(title: "Network", message: "No Network Available", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+           
+        }
         
         
     }
@@ -68,7 +87,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         else{
             predicateTableHeight = 50
         }
-        getCategoriesFromServer()
+       
         setLocalizedVariables()
         setRTLSupport()
         sliderSetUp()
@@ -94,9 +113,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     }
     func setRTLSupport()
     {
-        if #available(iOS 9.0, *) {
-           // let attribute = view.semanticContentAttribute
-           // let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+       
            if ((LocalizationLanguage.currentAppleLanguage()) == "en")  {
                 slideShow.arabic = false
                 searchBarView.searchText.textAlignment = .left
@@ -115,9 +132,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 }
                 
             }
-        } else {
-            // Fallback on earlier versions
-        }
+       
         
         
        
@@ -125,7 +140,13 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func setLocalizedVariables()
     {
         
-         self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+        switch categoryPageNameString {
+        case .category?:
+            self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+        default:
+            break
+        }
+        
          self.searchBarView.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
 
     }
@@ -216,14 +237,30 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     // MARK: CollectionView
  
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (categoryPageNameString == PageNameInCategory.category)
-        {
+        if ((categoryPageNameString == PageNameInCategory.category) && ((categoryDataArray!.count) > 0) ){
+            guard categoryDataArray![0].categories_name != nil else{
+                return 0
+            }
             return (categoryDataArray?.count)!
         }
-        else{
+        else if ((categoryPageNameString == PageNameInCategory.subcategory) && ((subCategoryDataArray!.count) > 0) ){
+            guard subCategoryDataArray![0].sub_categories_name != nil else{
+                return 0
+            }
             return (subCategoryDataArray?.count)!
         }
-        
+        else if ((categoryPageNameString == PageNameInCategory.serviceProvider) && ((serviceProviderArray!.count) > 0) ){
+            guard serviceProviderArray![0].service_provider_name != nil else{
+                return 0
+            }
+            guard serviceProviderArray![0].service_provider_address != nil else{
+                return 0
+            }
+            return (serviceProviderArray?.count)!
+        }
+        else{
+            return 0
+        }
         
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -236,11 +273,20 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             let categoryDictionary = categoryDataArray![indexPath.row]
             cell.setCategoryCellValues(categoryValues: categoryDictionary)
         }
-        else{
+        else if (categoryPageNameString == PageNameInCategory.subcategory){
+            //cell.titleCenterConstraint.constant = 7
+            cell.titleCenterConstraint.constant = 0
+            cell.subTitleLabel.isHidden = true
+            categoryTitle.text = subCategoryName
+            let subCategoryDictionary = subCategoryDataArray![indexPath.row]
+            
+            cell.setSubCategoryCellValues(subCategoryValues: subCategoryDictionary)
+        }
+        else if(categoryPageNameString == PageNameInCategory.serviceProvider){
             cell.titleCenterConstraint.constant = 7
             cell.subTitleLabel.isHidden = false
-            let subCategoryDictionary = subCategoryDataArray![indexPath.row]
-            cell.setSubCategoryCellValues(subCategoryValues: subCategoryDictionary)
+            let serviceProviderDict = serviceProviderArray![indexPath.row]
+            cell.setServiceProviderCellValues(serviceProviderValues: serviceProviderDict)
         }
         cell.layer.shadowColor = UIColor.lightGray.cgColor
         cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
@@ -258,23 +304,60 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         controller.view.removeFromSuperview()
         searchBarView.searchText.text = ""
-        if categoryPageNameString == PageNameInCategory.category
-        {
-            categoryPageNameString = PageNameInCategory.subcategory
-            let categoryDict = categoryDataArray![indexPath.row]
-            categoryIdVar = categoryDict.categories_id
-            categoryTitle.text = categoryDict.categories_name?.uppercased()
-            categoryLoadingView.activityIndicator.startAnimating()
-            getSubcategoriesFromServer()
-           
+        if  (networkReachability?.isReachable)!{
+            if categoryPageNameString == PageNameInCategory.category
+            {
+                let categoryDict = categoryDataArray![indexPath.row]
+                categoryIdVar = categoryDict.categories_id
+                if(categoryDict.have_subcategories == true)
+                {
+                    haveSubCategory = true
+                    categoryPageNameString = PageNameInCategory.subcategory
+                    subCategoryName = categoryDict.categories_name?.uppercased()
+                    categoryTitle.text = categoryDict.categories_name?.uppercased()
+                    categoryLoadingView.activityIndicator.startAnimating()
+                    getSubcategoriesFromServer()
+                } else {
+                    haveSubCategory = false
+                    categoryPageNameString = PageNameInCategory.serviceProvider
+                    
+                    categoryTitle.text = categoryDict.categories_name?.uppercased()
+                    categoryLoadingView.activityIndicator.startAnimating()
+                    getServiceProviderFromServer(categoryId: categoryIdVar!)
+                }
+                
+                
+            }
+            else if(categoryPageNameString == PageNameInCategory.subcategory) {
+                categoryPageNameString = PageNameInCategory.serviceProvider
+                let subCategoryDict = subCategoryDataArray![indexPath.row]
+                categoryTitle.text = subCategoryDict.sub_categories_name?.uppercased()
+                let subcategoryIdVar = subCategoryDict.sub_categories_id
+                categoryLoadingView.activityIndicator.startAnimating()
+                getServiceProviderFromServer(categoryId: subcategoryIdVar!)
+            }
+            else {
+                //categoryPageNameString = PageNameInCategory.informationPage
+                let servicePrividerDict = serviceProviderArray![indexPath.row]
+                let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
+                controller.view.removeFromSuperview()
+                
+                informationVC.serviceProviderArrayDict = servicePrividerDict
+                self.present(informationVC, animated: false, completion: nil)
+            }
+            
         }
-        else {
-            categoryPageNameString = PageNameInCategory.informationPage
-            let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
-            controller.view.removeFromSuperview()
-            self.present(informationVC, animated: false, completion: nil)
+        else{
+            self.categoryLoadingView.stopLoading()
+            self.categoryLoadingView.isHidden = true
+            
+            //self.categoryLoadingView.noDataView.isHidden = false
+            let alert = UIAlertController(title: "Network", message: "No Network Available", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            
         }
-        
+       
         
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -358,6 +441,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 
             }
                             else{
+                categoryView.removeGestureRecognizer(tapGestRecognizer)
                                 controller.view.removeFromSuperview()
                             }
 
@@ -368,8 +452,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     }
     @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
-        controller.view.removeFromSuperview()
         categoryView.removeGestureRecognizer(tapGestRecognizer)
+        controller.view.removeFromSuperview()
+        
         
     }
     func menuButtonSelected() {
@@ -389,8 +474,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
         let predicatedict = predicateSearchArray![indexPath.row]
         searchBarView.searchText.text = predicatedict.search_name
+         categoryView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
-        categoryView.removeGestureRecognizer(tapGestRecognizer)
+       
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
         
         historyVC.pageNameString = PageName.searchResult
@@ -413,6 +499,18 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             //self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
            
         }
+        else if(categoryPageNameString == PageNameInCategory.serviceProvider){
+            if haveSubCategory == true{
+                categoryPageNameString = PageNameInCategory.subcategory
+                categoryCollectionView.reloadData()
+            }
+            else{
+                categoryPageNameString = PageNameInCategory.category
+                self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
+                
+                categoryCollectionView.reloadData()
+            }
+        }
         else{
             categoryPageNameString = PageNameInCategory.category
             self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
@@ -424,7 +522,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     // MARK: Service calls
     func getCategoriesFromServer()
     {
-       
+        if(networkReachability?.isReachable == true){
             if let tokenString = tokenDefault.value(forKey: "accessTokenString")
             {
             Alamofire.request(QFindRouter.getCategory(["token": tokenString,
@@ -445,7 +543,19 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     }
                     
                 }
+            }}
+        
+            else{
+                self.categoryLoadingView.stopLoading()
+                self.categoryLoadingView.isHidden = true
+                
+                //self.categoryLoadingView.noDataView.isHidden = false
+                let alert = UIAlertController(title: "Network", message: "No Network Available", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                
             }
+       
     }
     func getSubcategoriesFromServer()
     {
@@ -519,6 +629,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             
         }
     }
+    //MARK: QFindOfTHeDayAPI
     func getQFindOfTheDayFromServer()
     {
      
@@ -603,6 +714,50 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         self.categoryQFindArray = decodedTeams.sliderImages
         setImageSlideShow(imageArray: self.categoryQFindArray)
     }
-    
+    //MARK: ServiceProviderAPI
+    func getServiceProviderFromServer(categoryId: Int)
+    {
+        categoryLoadingView.isHidden = false
+        categoryLoadingView.showLoading()
+        
+        if let tokenString = tokenDefault.value(forKey: "accessTokenString")
+        {
+            Alamofire.request(QFindRouter.getServiceProvider(["token": tokenString,
+                                                              "language" :languageKey , "category": categoryId, "limit": 10,"offset": "fsdf"]))
+                .responseObject { (response: DataResponse<ServiceProviderData>) -> Void in
+                    switch response.result {
+                    case .success(let data):
+                        
+                        self.serviceProviderArray = data.serviceProviderData
+                      
+                        if ((data.response == "error") || (data.code != "200")){
+                            self.categoryLoadingView.stopLoading()
+                            self.categoryLoadingView.noDataView.isHidden = false
+                            self.categoryCollectionView.reloadData()
+                            self.categoryLoadingView.showNoDataView()
+                            self.categoryLoadingView.noDataLabel.text = "No Results Found"
+                        }
+                        else{
+                            
+                            self.categoryLoadingView.isHidden = true
+                            self.categoryLoadingView.stopLoading()
+                            
+                            self.categoryCollectionView.reloadData()
+                        }
+                        
+                        
+                    case .failure(let error):
+                        self.categoryLoadingView.isHidden = false
+                        self.categoryLoadingView.stopLoading()
+                        self.categoryCollectionView.reloadData()
+                        self.categoryLoadingView.showNoDataView()
+                        self.categoryLoadingView.noDataLabel.text = "No Results Found"
+                        self.categoryLoadingView.noDataView.isHidden = false
+                    }
+                    
+            }
+            
+        }
+    }
 
 }

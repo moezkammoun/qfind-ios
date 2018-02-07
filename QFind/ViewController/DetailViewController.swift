@@ -6,8 +6,10 @@
 //  Copyright © 2018 QFind. All rights reserved.
 //
 
-import UIKit
+import Alamofire
 import MessageUI
+import UIKit
+
 class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewControllerDelegate,UITableViewDelegate,UITableViewDataSource {
 
     
@@ -19,13 +21,20 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     @IBOutlet weak var backImgaeView: UIImageView!
     @IBOutlet weak var detailLoadingView: LoadingView!
     @IBOutlet weak var titleLabel: UILabel!
-    var phnNumber = 0
     
+    @IBOutlet var viewForwebView: UIView!
+    
+    @IBOutlet var detailWebView: UIWebView!
+    var serviceProviderArrayDict: ServiceProvider?
+    var informationDetails = [String : String]()
+    var informationArray = NSMutableArray()
     override func viewDidLoad() {
         super.viewDidLoad()
 
         initialSetUp()
-       
+        titleLabel.text = serviceProviderArrayDict?.service_provider_name
+        
+        setInformationData()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
@@ -122,8 +131,9 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         
         self.present(activityViewController, animated: true, completion: nil)
     }
+    //MARK: Tableview
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return informationArray.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : DetailTableViewCell = tableView.dequeueReusableCell(withIdentifier: "detailCellId", for:indexPath) as! DetailTableViewCell
@@ -141,6 +151,11 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         {
             cell.separatorView.isHidden = true
         }
+        let informationDict = informationArray[indexPath.row] as! [String: String]
+        cell.setInformationCellValues(informationCellDict: informationDict)
+       
+       // cell.setInformationCellValues(informationCellDict: informationDetails)
+        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -154,56 +169,71 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.row == 0)
+         let informationDict = informationArray[indexPath.row] as! [String: String]
+        if (informationDict["key"] == "service_provider_mobile_number")
         {
-            if let url = URL(string: "tel://\(phnNumber)"), UIApplication.shared.canOpenURL(url) {
+            let phnNumber = informationDict["value"]
+          
+
+            if let url = URL(string: "tel://\(Int(phnNumber!)!)"), UIApplication.shared.canOpenURL(url) {
                 if #available(iOS 10, *) {
                     UIApplication.shared.open(url)
                 } else {
                     UIApplication.shared.openURL(url)
                 }
             }
+            
+            
+        
         }
-        else if (indexPath.row == 1)
+        else if (informationDict["key"] == "service_provider_website")
         {
-            let websiteUrlString = "http://www.techotopia.com/"
-            if let websiteUrl = NSURL(string: websiteUrlString) {
+            let websiteUrlString = informationDict["value"]
+            if let websiteUrl = URL(string: websiteUrlString!) {
                 // show alert to choose app
                 if UIApplication.shared.canOpenURL(websiteUrl as URL) {
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(websiteUrl as URL, options: [:], completionHandler: nil)
+                    viewForwebView.frame = self.view.frame
+                    self.view.addSubview(viewForwebView)
+                    let requestObj = URLRequest(url: websiteUrl)
+                    
+                    detailWebView.loadRequest(requestObj)
+                    
+                }
+            }
+        }
+        else if (informationDict["key"] == "service_provider_location")
+        {
+            
+                if ((serviceProviderArrayDict?.service_provider_map_location) != nil){
+                    
+                    let locationArray = serviceProviderArrayDict?.service_provider_map_location?.components(separatedBy: ",")
+                   
+                    let latitude = locationArray![0]
+                    let longitude =  locationArray![1]
+                    
+                    if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+                        if #available(iOS 10.0, *) {
+                            UIApplication.shared.open(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!, options: [:], completionHandler: nil)
+                        } else {
+                            UIApplication.shared.openURL(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!)
+                        }
                     } else {
-                        UIApplication.shared.openURL(websiteUrl as URL)
+                        let locationUrl = URL(string: "https://maps.google.com/?q=@\(latitude),\(longitude)")!
+                        viewForwebView.frame = self.view.frame
+                        self.view.addSubview(viewForwebView)
+                        let requestObj = URLRequest(url: locationUrl)
+                        detailWebView.loadRequest(requestObj)
+
                     }
                 }
-            }
-        }
-        else if (indexPath.row == 2)
-        {
-            //Working in Swift new versions.
-            let latitude = 10.0158685
-            let longitude =  76.3418586
+
             
-            if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!, options: [:], completionHandler: nil)
-                } else {
-                    UIApplication.shared.openURL(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!)
-                }
-            } else {
-                print("Can't use comgooglemaps://");
-                
-                if (UIApplication.shared.canOpenURL(URL(string:"https://maps.google.com")! ))
-                {
-                    UIApplication.shared.openURL(URL(string:
-                        "https://maps.google.com/?q=@\(latitude),\(longitude)")!)
-                }
-            }
+            
         }
     
-    else if (indexPath.row == 4)
+    else if (informationDict["key"] == "service_provider_mail_account")
     {
-        let email = "vidyar851@gmail.com"
+        let email = informationDict["value"]
         if let url = URL(string: "mailto:\(email)") {
             if (UIApplication.shared.canOpenURL(url))
             {
@@ -221,10 +251,10 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             }
         }//
     }
-         else if (indexPath.row == 5)
+         else if (informationDict["key"] == "service_provider_facebook_page")
         {
             
-            let facebookUrl = URL(string: "fb://profile/vidyarajan.rajan.5")
+            let facebookUrl = URL(string: informationDict["value"]!)
             if( UIApplication.shared.canOpenURL(facebookUrl!))
             {
                 if #available(iOS 10.0, *) {
@@ -236,8 +266,121 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 }
             }
             else{
-                let facebookUrlString = URL(string: "http://www.facebook.com/vidyarajan.rajan.5")
-                UIApplication.shared.openURL(facebookUrlString!)
+                viewForwebView.frame = self.view.frame
+                self.view.addSubview(viewForwebView)
+               // let facebookUrlString = URL(string: "http://www.facebook.com/vidyarajan.rajan.5")
+                let facebookUrlString = URL(string: informationDict["value"]!)
+                let requestObj = URLRequest(url: facebookUrlString!)
+                detailWebView.loadRequest(requestObj)
+                
+            }
+        }
+        else if (informationDict["key"] == "service_provider_linkdin_page")
+        {
+            let webURL = URL(string: informationDict["value"]!)!
+            
+            let appURL = URL(string: "linkedin://profile/yourName-yourLastName-yourID")!
+            
+            if UIApplication.shared.canOpenURL(appURL) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appURL)
+                }
+            } else {
+                
+                 //UIApplication.shared.openURL(webURL)
+                viewForwebView.frame = self.view.frame
+                self.view.addSubview(viewForwebView)
+                
+                let requestObj = URLRequest(url: webURL)
+                detailWebView.loadRequest(requestObj)
+            }
+       
+        }
+        else if (informationDict["key"] == "service_provider_instagram_page")
+        {
+            var instagramHooks = "instagram://user?username=johndoe"
+            let webUrl = URL(string: "http://instagram.com/")
+            var instagramUrl = URL(string: instagramHooks)
+            if UIApplication.shared.canOpenURL(instagramUrl!) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(instagramUrl!, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(instagramUrl!)
+                }
+                
+            } else {
+                
+                //UIApplication.shared.openURL(webUrl!)
+                viewForwebView.frame = self.view.frame
+                self.view.addSubview(viewForwebView)
+                
+                let requestObj = URLRequest(url: webUrl!)
+                detailWebView.loadRequest(requestObj)
+               
+            }
+        }
+        else if (informationDict["key"] == "service_provider_twitter_page")
+        {
+            let screenName =  "betkowskii"
+            let appURL = URL(string: "twitter://user?screen_name=\(screenName)")!
+            let webURL = URL(string: "https://twitter.com/\(screenName)")!
+            
+            if UIApplication.shared.canOpenURL(appURL) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appURL)
+                }
+            } else {
+                //UIApplication.shared.openURL(webURL)
+                viewForwebView.frame = self.view.frame
+                self.view.addSubview(viewForwebView)
+                
+                let requestObj = URLRequest(url: webURL)
+                detailWebView.loadRequest(requestObj)
+            }
+        }
+        else if (informationDict["key"] == "service_provider_snapchat_page")
+        {
+            
+            let appURL = URL(string: "snapchat://app")
+            let webURL = URL(string: "https://www.snapchat.com/add/username")
+            
+            if UIApplication.shared.canOpenURL(appURL!) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appURL!, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appURL!)
+                }
+            } else {
+               // UIApplication.shared.openURL(webURL!)
+                viewForwebView.frame = self.view.frame
+                self.view.addSubview(viewForwebView)
+                
+                let requestObj = URLRequest(url: webURL!)
+                detailWebView.loadRequest(requestObj)
+            }
+        }
+        else if (informationDict["key"] == "service_provider_googleplus_page")
+        {
+            let appURL = URL(string: "gplus://plus.google.com/+WpguruTv")
+            let webURL = URL(string: "http://http://plus.google.com/+WpguruTv")
+            
+            if UIApplication.shared.canOpenURL(appURL!) {
+                if #available(iOS 10.0, *) {
+                    UIApplication.shared.open(appURL!, options: [:], completionHandler: nil)
+                } else {
+                    UIApplication.shared.openURL(appURL!)
+                }
+            } else {
+               // UIApplication.shared.openURL(webURL!)
+                viewForwebView.frame = self.view.frame
+                self.view.addSubview(viewForwebView)
+                
+                let requestObj = URLRequest(url: webURL!)
+                detailWebView.loadRequest(requestObj)
             }
         }
         
@@ -250,4 +393,73 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     @IBAction func didTapMenu(_ sender: UIButton) {
         self.showSidebar()
     }
+   func setInformationData()
+   {
+    
+    if ((serviceProviderArrayDict?.service_provider_mobile_number) != nil){
+        
+        informationDetails = ["key" : "service_provider_mobile_number","value" :(serviceProviderArrayDict?.service_provider_mobile_number)! ,"imageName": "phone"]
+        informationArray.add(informationDetails)
+    }
+    if ((serviceProviderArrayDict?.service_provider_website) != nil){
+       
+        informationDetails = [ "key" : "service_provider_website","value" :(serviceProviderArrayDict?.service_provider_website)!,"imageName": "website" ]
+        informationArray.add(informationDetails)
+    }
+    if ((serviceProviderArrayDict?.service_provider_location) != nil){
+       
+        informationDetails = [ "key" : "service_provider_location","value" :(serviceProviderArrayDict?.service_provider_location)!,"imageName": "location"  ]
+        informationArray.add(informationDetails)
+    }
+    if ((serviceProviderArrayDict?.service_provider_opening_time) != nil){
+       
+        informationDetails = [ "key" : "service_provider_opening_time","value" :(serviceProviderArrayDict?.service_provider_opening_time)!,"imageName": "time" ]
+        informationArray.add(informationDetails)
+    }
+    if (((serviceProviderArrayDict?.service_provider_mail_account) != nil) && ((serviceProviderArrayDict?.service_provider_mail_account) != "")){
+        
+        informationDetails = [ "key" : "service_provider_mail_account","value"  :(serviceProviderArrayDict?.service_provider_mail_account)!,"imageName": "email" ]
+         informationArray.add(informationDetails)
+    }
+    if (((serviceProviderArrayDict?.service_provider_facebook_page) != nil) && ((serviceProviderArrayDict?.service_provider_facebook_page) != "")){
+      
+        informationDetails = [ "key" : "service_provider_facebook_page","value" :(serviceProviderArrayDict?.service_provider_facebook_page)! ,"imageName": ""]
+        informationArray.add(informationDetails)
+    }
+
+    if (((serviceProviderArrayDict?.service_provider_linkdin_page) != nil) && ((serviceProviderArrayDict?.service_provider_linkdin_page) != "")){
+       
+        informationDetails = [ "key" : "service_provider_linkdin_page", "value":(serviceProviderArrayDict?.service_provider_linkdin_page)! ,"imageName": ""]
+        informationArray.add(informationDetails)
+    }
+    if (((serviceProviderArrayDict?.service_provider_instagram_page) != nil) && ((serviceProviderArrayDict?.service_provider_instagram_page) != "")){
+        
+        informationDetails = [ "key" : "service_provider_instagram_page", "value" :(serviceProviderArrayDict?.service_provider_instagram_page)!,"imageName": "" ]
+        informationArray.add(informationDetails)
+    }
+    if (((serviceProviderArrayDict?.service_provider_twitter_page) != nil) && ((serviceProviderArrayDict?.service_provider_twitter_page) != "")){
+        
+        informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(serviceProviderArrayDict?.service_provider_twitter_page)!,"imageName": "" ]
+        informationArray.add(informationDetails)
+    }
+    
+    if (((serviceProviderArrayDict?.service_provider_snapchat_page) != nil) && ((serviceProviderArrayDict?.service_provider_snapchat_page) != "")){
+       
+    informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(serviceProviderArrayDict?.service_provider_snapchat_page)!,"imageName": "" ]
+    informationArray.add(informationDetails)
+    }
+    if (((serviceProviderArrayDict?.service_provider_googleplus_page) != nil) && ((serviceProviderArrayDict?.service_provider_googleplus_page) != "")){
+        
+    informationDetails = [ "key" : "service_provider_googleplus_page", "value" :(serviceProviderArrayDict?.service_provider_googleplus_page)!,"imageName": "" ]
+    informationArray.add(informationDetails)
+    }
+    
+    detailTableView.reloadData()
+    
+    }
+    @IBAction func didTapWebViewClose(_ sender: UIButton) {
+        detailWebView.loadRequest(URLRequest.init(url: URL.init(string: "about:blank")!))
+        viewForwebView.removeFromSuperview()
+    }
+    
 }

@@ -10,6 +10,9 @@ import UIKit
 class DetailTableViewCell: UITableViewCell {
     @IBOutlet weak var forwardImageView: UIImageView!
     
+    @IBOutlet weak var informationImageView: UIImageView!
+    @IBOutlet weak var informationText: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -20,6 +23,11 @@ class DetailTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    func setInformationCellValues(informationCellDict : [String: String])
+    {
+       informationText.text = informationCellDict["value"]
+        informationImageView.image = UIImage(named: informationCellDict["imageName"]!)
     }
 
 }

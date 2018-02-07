@@ -33,8 +33,19 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     {
         
         self.titleLabel.text = subCategoryValues.sub_categories_name
-        self.subTitleLabel.text = subCategoryValues.sub_categories_description
+       // self.subTitleLabel.text = subCategoryValues.sub_categories_description
         if let imageUrl = subCategoryValues.sub_categories_imge{
+            
+            thumbnailView.kf.setImage(with: URL(string: imageUrl))
+        }
+        
+    }
+    func setServiceProviderCellValues(serviceProviderValues : ServiceProvider)
+    {
+        
+        self.titleLabel.text = serviceProviderValues.service_provider_name
+         self.subTitleLabel.text = serviceProviderValues.service_provider_location
+        if let imageUrl = serviceProviderValues.service_provider_logo{
             
             thumbnailView.kf.setImage(with: URL(string: imageUrl))
         }
