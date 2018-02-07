@@ -16,8 +16,8 @@ enum QFindRouter: URLRequestConvertible {
     case getPredicateSearch([String: Any])
     case getSearchResult([String: Any])
     case getQFindOfTheDay([String: Any])
-//    case Strikes(String)
-//    case UpdateUserProfile(String)
+    case getServiceProvider([String: Any])
+
     
     var method: Alamofire.HTTPMethod {
         switch self {
@@ -33,10 +33,9 @@ enum QFindRouter: URLRequestConvertible {
             return .get
         case .getQFindOfTheDay:
             return .get
-//        case .Strikes:
-//            return .get
-//        case .UpdateUserProfile:
-//            return .put
+        case .getServiceProvider:
+            return .get
+
         }
     }
     
@@ -56,10 +55,9 @@ enum QFindRouter: URLRequestConvertible {
             return "api/search-result"
         case .getQFindOfTheDay( _):
            return "api/q-find"
-//        case .Strikes(let userId):
-//            return "/strikes/\(userId)"
-//        case .UpdateUserProfile(let userId):
-//            return "/user/\(userId)"
+        case .getServiceProvider( _):
+            return "api/get-service-provider"
+
         }
     }
     
@@ -97,10 +95,9 @@ enum QFindRouter: URLRequestConvertible {
         case .getQFindOfTheDay( let parameters):
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,
                                                               with: parameters)
-//        case .Strikes( _):
-//            return try! Alamofire.JSONEncoding.default.encode(mutableURLRequest)
-//        case .UpdateUserProfile( _):
-//            return mutableURLRequest
+        case .getServiceProvider(let parameters):
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
+
         }
     }
     

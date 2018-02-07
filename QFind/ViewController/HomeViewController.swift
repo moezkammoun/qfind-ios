@@ -43,6 +43,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     var qfindImageDict = NSMutableDictionary()
     var countValue : Int?
     var arrayCount : Int? = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -354,6 +355,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     @IBAction func didTapHomeSearch(_ sender: UIButton) {
         controller.view.removeFromSuperview()
         let trimmedText = searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let networkManager = NetworkReachabilityManager()
+        if(networkManager?.isReachable == true){
         if trimmedText == ""
         {
             
@@ -370,6 +373,13 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             historyVC.searchKey = trimmedText
             historyVC.pageNameString = PageName.searchResult
             self.present(historyVC, animated: false, completion: nil)
+        }
+        }
+        else{
+            let alert = UIAlertController(title: "Network", message: "No Network Available", preferredStyle: UIAlertControllerStyle.alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
         
     }

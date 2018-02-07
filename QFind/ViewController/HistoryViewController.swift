@@ -36,12 +36,13 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     var predicateSearchKey = String()
     var predicateSearchArray : [PredicateSearch]? = []
     var previousPage : PageName?
-    var searchResultArray: [SearchResult]? = []
+    var searchResultArray: [ServiceProvider]? = []
     //var predicateSearchdict : PredicateSearch?
     var searchType : Int?
     var searchKey : String?
     var favoriteArray : NSMutableArray?
     var predicateTableHeight : Int?
+    var tapGestRecognizer = UITapGestureRecognizer()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -303,11 +304,18 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             return CGSize.zero
             break
         }
-        
-       
-        
     }
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if (pageNameString == PageName.searchResult){
+        let servicePrividerDict = searchResultArray![indexPath.row]
+        let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
+             self.historyView.removeGestureRecognizer(tapGestRecognizer)
+        controller.view.removeFromSuperview()
+        
+        informationVC.serviceProviderArrayDict = servicePrividerDict
+        self.present(informationVC, animated: false, completion: nil)
+        }
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -368,6 +376,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     }
     //MARK:Searchbar
     func searchButtonPressed() {
+         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
          let trimmedText = historySearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         if historySearchBar.searchText.text == ""
@@ -411,19 +420,21 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             view.addSubview((controller.view)!)
             controller.didMove(toParentViewController: self)
             
-            let tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
+             tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
             self.historyView.addGestureRecognizer(tapGestRecognizer)
             getPredicateSearchFromServer()
             
           
         }
         else{
+            self.historyView.removeGestureRecognizer(tapGestRecognizer)
             controller.view.removeFromSuperview()
         }
         return true
     }
     @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
+         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
         
     }
@@ -445,6 +456,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
         let predicateSearchdict = predicateSearchArray![indexPath.row]
         historySearchBar.searchText.text = predicateSearchdict.search_name
+         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
         setBottomBarSearchBackground()
         previousPage = pageNameString
