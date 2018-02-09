@@ -18,6 +18,7 @@ enum PageNameInCategory{
     
 }
 class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,BottomProtocol,SearchBarProtocol,predicateTableviewProtocol {
+   
     
     @IBOutlet weak var bottomBar: BottomBarView!
     
@@ -312,17 +313,25 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 if(categoryDict.have_subcategories == true)
                 {
                     haveSubCategory = true
+                    categoryLoadingView.isHidden = false
+                    categoryLoadingView.showLoading()
                     categoryPageNameString = PageNameInCategory.subcategory
                     subCategoryName = categoryDict.categories_name?.uppercased()
                     categoryTitle.text = categoryDict.categories_name?.uppercased()
-                    categoryLoadingView.activityIndicator.startAnimating()
+                   
+                    
                     getSubcategoriesFromServer()
                 } else {
                     haveSubCategory = false
                     categoryPageNameString = PageNameInCategory.serviceProvider
                     
                     categoryTitle.text = categoryDict.categories_name?.uppercased()
-                    categoryLoadingView.activityIndicator.startAnimating()
+                    categoryLoadingView.isHidden = false
+                    
+                    //categoryLoadingView.activityIndicator.isHidden = false
+                    categoryLoadingView.showLoading()
+                   // categoryLoadingView.activityIndicator.startAnimating()
+                    
                     getServiceProviderFromServer(categoryId: categoryIdVar!)
                 }
                 
@@ -333,7 +342,11 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 let subCategoryDict = subCategoryDataArray![indexPath.row]
                 categoryTitle.text = subCategoryDict.sub_categories_name?.uppercased()
                 let subcategoryIdVar = subCategoryDict.sub_categories_id
-                categoryLoadingView.activityIndicator.startAnimating()
+                categoryLoadingView.isHidden = false
+                //categoryLoadingView.activityIndicator.isHidden = false
+                categoryLoadingView.showLoading()
+                
+               // categoryLoadingView.activityIndicator.startAnimating()
                 getServiceProviderFromServer(categoryId: subcategoryIdVar!)
             }
             else {
@@ -493,6 +506,8 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     }
 
     @IBAction func didTapBack(_ sender: UIButton) {
+        categoryLoadingView.isHidden = true
+        
         if categoryPageNameString == PageNameInCategory.category{
             self.dismiss(animated: false, completion: nil)
             
@@ -532,7 +547,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     case .success(let data):
                         
                         self.categoryDataArray = data.categoryData
-                        
+                       
                         self.categoryCollectionView.reloadData()
                         self.categoryLoadingView.isHidden = true
                         self.categoryLoadingView.stopLoading()
@@ -574,6 +589,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     case .success(let data):
                         
                         self.subCategoryDataArray = data.subCategoryData
+                        
                         DispatchQueue.main.async {
                             self.categoryCollectionView.reloadData()
                         }
@@ -585,9 +601,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                             self.categoryLoadingView.showNoDataView()
                         }
                          else{
-                           
+                           self.categoryLoadingView.stopLoading()
                             self.categoryLoadingView.isHidden = true
-                            self.categoryLoadingView.stopLoading()
+                            
                         }
                     case .failure(let error):
                         self.categoryLoadingView.isHidden = false
@@ -741,7 +757,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                             
                             self.categoryLoadingView.isHidden = true
                             self.categoryLoadingView.stopLoading()
-                            
+                          
                             self.categoryCollectionView.reloadData()
                         }
                         

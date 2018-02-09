@@ -57,11 +57,11 @@ class LoadingView: UIView {
     func showLoading()
     {
         
-        self.isHidden = false
+       // self.isHidden = false
         self.noDataLabel.isHidden = true
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
-        self.isHidden = false
+       // self.isHidden = false
         
     }
     
@@ -69,21 +69,22 @@ class LoadingView: UIView {
     {
         self.isNoDataDisplayed = true
         activityIndicator.stopAnimating()
-        self.isHidden = true
+      //  self.isHidden = true
         
     }
     
     func showNoDataView(){
         self.isNoDataDisplayed = true
-        self.isHidden = false
+        //self.isHidden = false
         self.noDataView.isHidden = false
+        self.noDataView.backgroundColor = UIColor(red: 243/255, green: 241/255, blue: 238/255, alpha: 1)
         self.activityIndicator.stopAnimating()
         self.activityIndicator.isHidden = true
         self.noDataLabel.isHidden = false
     }
     func hideNoDataView(){
         self.isNoDataDisplayed = false
-        self.isHidden = true
+        //self.isHidden = true
         self.noDataView.isHidden = true
         //self.activityIndicatorControl.stopAnimating()
         self.noDataLabel.isHidden = true

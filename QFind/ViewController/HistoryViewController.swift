@@ -7,6 +7,7 @@
 //
 
 import Alamofire
+import CoreData
 import UIKit
 enum PageName{
     case history
@@ -14,7 +15,7 @@ enum PageName{
     case favorite
 }
 
-class HistoryViewController: RootViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
+class HistoryViewController: RootViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol,HistoryCellProtocol{
 
 
    
@@ -37,18 +38,24 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     var predicateSearchArray : [PredicateSearch]? = []
     var previousPage : PageName?
     var searchResultArray: [ServiceProvider]? = []
-    //var predicateSearchdict : PredicateSearch?
+    
+    var favoriteServiceProvider : ServiceProvider?
     var searchType : Int?
     var searchKey : String?
-    var favoriteArray : NSMutableArray?
+    
     var predicateTableHeight : Int?
     var tapGestRecognizer = UITapGestureRecognizer()
+    var favoritesArray:[NSManagedObject]?
+    var favoriteDictionary = NSMutableDictionary()
+   
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUi()
         setRTLSupportForHistory()
         registerCell()
+
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
@@ -71,6 +78,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 return
             }
             getSearchResultFromServer(searchType: searchItemType, searchKey: searchItemKey)
+        }
+        else if (pageNameString == PageName.favorite){
+            fetchDataFromCoreData()
         }
         
     }
@@ -137,49 +147,33 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         historyCollectionView?.register(nib, forCellWithReuseIdentifier: "historyCellId")
     }
     //MARK: CollectionView
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch pageNameString{
-        case .history?:
-            return 3
-        case .favorite?:
-            return 3
-        case .searchResult?:
-            return (searchResultArray?.count)!
-        default:
-            return 0
-            
-        }
-    }
-     func numberOfSections(in collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         switch pageNameString{
         case .history?:
             historyLoadingView.isHidden = true
             return 3
             
-           
+            
             
         case .favorite?:
-           // if (favoriteArray?.count != 0){
-             historyLoadingView.isHidden = true
+            if (favoritesArray?.count != 0){
+                historyLoadingView.isHidden = true
                 return 1
-               
-           
-//            }
-//            else{
-//                return 0
-//            }
-        
+             }else{
+                return 0
+                }
+            
         case .searchResult?:
             if (searchResultArray!.count > 0)
             {
                 if((searchResultArray![0].service_provider_name) != nil && (searchResultArray![0].service_provider_address) != nil)
-            {
-                return 1
-            }
-        
-            else{
-                return 0
-            }
+                {
+                    return 1
+                }
+                    
+                else{
+                    return 0
+                }
             }
             else
             {
@@ -187,9 +181,23 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             }
         default:
             return 0
-    }
+        }
         
     }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        switch pageNameString{
+        case .history?:
+            return 3
+        case .favorite?:
+            return (favoritesArray?.count)!
+        case .searchResult?:
+            return (searchResultArray?.count)!
+        default:
+            return 0
+            
+        }
+    }
+    
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
          let cell : HistoryCollectionViewCell = historyCollectionView.dequeueReusableCell(withReuseIdentifier: "historyCellId", for: indexPath) as! HistoryCollectionViewCell
         
@@ -199,9 +207,16 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             cell.titleLabel.text = "Four Season Hotel"
             cell.subLabel.text = "qwerty uiop"
         case .favorite?:
+            cell.historyDelegate = self
             cell.favoriteButton.isHidden = false
-            cell.titleLabel.text = "Four Season Hotel"
-            cell.subLabel.text = "qwerty uiop"
+            let favoriteDict = favoritesArray![indexPath.row]
+            let id = favoriteDict.value(forKey: "id")
+            let name = favoriteDict.value(forKey: "name")
+            let shortDescription = favoriteDict.value(forKey: "shortdescription")
+            let img = favoriteDict.value(forKey: "imgurl")
+            cell.favDict = favoriteDict
+            cell.setFavoriteData(favoriteId: id as! Int, favoriteName: name as! String, subTitle: shortDescription as! String, imgUrl: img as! String)
+           
         case .searchResult?:
             cell.favoriteButton.isHidden = true
             let searchResultDict = searchResultArray![indexPath.row]
@@ -315,6 +330,43 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         informationVC.serviceProviderArrayDict = servicePrividerDict
         self.present(informationVC, animated: false, completion: nil)
         }
+        else if (pageNameString == PageName.favorite){
+           
+            let favoriteServiceDict = favoritesArray![indexPath.row]
+            let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
+            self.historyView.removeGestureRecognizer(tapGestRecognizer)
+            controller.view.removeFromSuperview()
+            setFavoriteDictionary(favDict: favoriteServiceDict)
+           
+            informationVC.favoriteDictinary = favoriteDictionary
+            informationVC.fromFavorite = true
+            self.present(informationVC, animated: false, completion: nil)
+          
+        }
+    }
+    func setFavoriteDictionary(favDict: NSManagedObject){
+        favoriteDictionary.setValue(favDict.value(forKey: "address"), forKey: "address")
+        favoriteDictionary.setValue(favDict.value(forKey: "category"), forKey: "category")
+         favoriteDictionary.setValue(favDict.value(forKey: "email"), forKey: "email")
+         favoriteDictionary.setValue(favDict.value(forKey: "facebookpage"), forKey: "facebookpage")
+        favoriteDictionary.setValue(favDict.value(forKey: "googlepluspage"), forKey: "googlepluspage")
+        favoriteDictionary.setValue(favDict.value(forKey: "id"), forKey: "id")
+         favoriteDictionary.setValue(favDict.value(forKey: "imgurl"), forKey: "imgurl")
+        favoriteDictionary.setValue(favDict.value(forKey: "instagrampage"), forKey: "instagrampage")
+        favoriteDictionary.setValue(favDict.value(forKey: "linkedinpage"), forKey: "linkedinpage")
+        
+        favoriteDictionary.setValue(favDict.value(forKey: "maplocation"), forKey: "maplocation")
+        
+        favoriteDictionary.setValue(favDict.value(forKey: "mobile"), forKey: "mobile")
+        
+        favoriteDictionary.setValue(favDict.value(forKey: "name"), forKey: "name")
+        favoriteDictionary.setValue(favDict.value(forKey: "openingtime"), forKey: "openingtime")
+        favoriteDictionary.setValue(favDict.value(forKey: "shortdescription"), forKey: "shortdescription")
+        favoriteDictionary.setValue(favDict.value(forKey: "snapchatpage"), forKey: "snapchatpage")
+          favoriteDictionary.setValue(favDict.value(forKey: "twitterpage"), forKey: "twitterpage")
+          favoriteDictionary.setValue(favDict.value(forKey: "website"), forKey: "website")
+      
+        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -328,11 +380,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         if (pageNameString != PageName.favorite)
         {
             pageNameString = PageName.favorite
+            fetchDataFromCoreData()
             setLocalizedVariable()
             historyCollectionView.reloadData()
-            
-            
+          
         }
+        
         
         
     }
@@ -580,6 +633,50 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         }
     }
     
+    func fetchDataFromCoreData() {
+        
+        guard let appDelegate =
+            UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        var managedContext : NSManagedObjectContext?
+        if #available(iOS 10.0, *) {
+            managedContext =
+                appDelegate.persistentContainer.viewContext
+        } else {
+            
+            managedContext = appDelegate.managedObjectContext
+        }
+        let favoritesFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "FavoriteEntity")
     
+        do {
+            favoritesArray = try managedContext?.fetch(favoritesFetchRequest)
+            
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+       if (favoritesArray?.count != 0){
+         self.historyLoadingView.isHidden = true
+         self.historyLoadingView.stopLoading()
+        
+        }
+       else{
+        self.historyLoadingView.isHidden = false
+        self.historyLoadingView.stopLoading()
+        self.historyLoadingView.showNoDataView()
+        self.historyLoadingView.noDataLabel.text = "No Favorites Found"
+        self.historyLoadingView.noDataView.isHidden = false
+        
+        }
+         historyCollectionView.reloadData()
+        
+        
+        
+    }
+    
+    //MARK: History page delegate for favorite
+    func favouriteStarPressed() {
+       fetchDataFromCoreData()
+    }
 
 }
