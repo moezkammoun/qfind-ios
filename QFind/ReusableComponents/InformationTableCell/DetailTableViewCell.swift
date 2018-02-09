@@ -26,8 +26,20 @@ class DetailTableViewCell: UITableViewCell {
     }
     func setInformationCellValues(informationCellDict : [String: String])
     {
-       informationText.text = informationCellDict["value"]
+      
         informationImageView.image = UIImage(named: informationCellDict["imageName"]!)
+        if (informationCellDict["key"] == "service_provider_website"){
+            
+            let websiteFullUrl = informationCellDict["value"]
+            let websiteShortUrl = websiteFullUrl?.replacingOccurrences(of: "https://", with: "", options: NSString.CompareOptions.literal, range:nil)
+            informationText.text = websiteShortUrl
+        }
+        else{
+             informationText.text = informationCellDict["value"]
+        }
+        
+        
+      
     }
 
 }
