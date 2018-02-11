@@ -198,7 +198,7 @@
                                                     <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="35"/>
                                                 </variation>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1aE-tq-RP5" customClass="LoadingView" customModule="QFind" customModuleProvider="target">
+                                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1aE-tq-RP5" customClass="LoadingView" customModule="QFind" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="619"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
@@ -1112,6 +1112,7 @@
                         <outlet property="detailTableView" destination="6an-Qn-kuT" id="NtE-LE-293"/>
                         <outlet property="detailWebView" destination="jVm-iq-Xbb" id="bL4-db-ibP"/>
                         <outlet property="favoriteButton" destination="Zr7-hM-wIc" id="ahm-UR-TKI"/>
+                        <outlet property="locationLabel" destination="cmz-hX-nBh" id="o01-2A-Vsk"/>
                         <outlet property="titleLabel" destination="U7Q-eK-alp" id="wut-0H-XeZ"/>
                         <outlet property="viewForwebView" destination="Dyo-sV-knc" id="46z-VN-hZ5"/>
                     </connections>
@@ -1156,7 +1157,7 @@
                     </constraints>
                 </view>
             </objects>
-            <point key="canvasLocation" x="1502.8985507246377" y="-462.22826086956525"/>
+            <point key="canvasLocation" x="1468" y="197"/>
         </scene>
     </scenes>
     <resources>

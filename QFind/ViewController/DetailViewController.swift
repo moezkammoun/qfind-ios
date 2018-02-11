@@ -16,6 +16,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
     
+    @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var detailTableView: UITableView!
     
@@ -61,14 +62,18 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         
         informationArray = NSMutableArray()
         if (fromFavorite == true){
-            guard let titleText = favoriteDictinary.value(forKey: "name") else{
-                return
+            if  (favoriteDictinary.value(forKey: "name") != nil) {
+                titleLabel.text = favoriteDictinary.value(forKey: "name") as! String
             }
-            titleLabel.text = titleText as! String
+            if  (favoriteDictinary.value(forKey: "shortdescription") != nil) {
+                titleLabel.text = favoriteDictinary.value(forKey: "shortdescription") as! String
+            }
+           
             setFavoriteInformationData()
         }
         else{
              titleLabel.text = serviceProviderArrayDict?.service_provider_name
+            locationLabel.text = serviceProviderArrayDict?.service_provider_location
             setInformationData()
         }
     }
@@ -218,7 +223,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 }
             }
         }
-        else if (informationDict["key"] == "service_provider_location")
+        else if (informationDict["key"] == "service_provider_address")
         {
             
                 if ((serviceProviderArrayDict?.service_provider_map_location) != nil){
@@ -429,14 +434,15 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         informationDetails = ["key" : "service_provider_mobile_number","value" :(serviceProviderArrayDict?.service_provider_mobile_number)! ,"imageName": "phone"]
         informationArray.add(informationDetails)
     }
+    
     if ((serviceProviderArrayDict?.service_provider_website) != nil){
         
         informationDetails = [ "key" : "service_provider_website","value" :(serviceProviderArrayDict?.service_provider_website)!,"imageName": "website" ]
         informationArray.add(informationDetails)
     }
-    if ((serviceProviderArrayDict?.service_provider_location) != nil){
+    if ((serviceProviderArrayDict?.service_provider_address) != nil){
         
-        informationDetails = [ "key" : "service_provider_location","value" :(serviceProviderArrayDict?.service_provider_location)!,"imageName": "location"  ]
+        informationDetails = [ "key" : "service_provider_address","value" :(serviceProviderArrayDict?.service_provider_address)!,"imageName": "location"  ]
         informationArray.add(informationDetails)
     }
     if ((serviceProviderArrayDict?.service_provider_opening_time) != nil){
@@ -500,9 +506,9 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_website","value" :(favoriteDictinary.value(forKey: "website"))! as! String,"imageName": "website" ]
             informationArray.add(informationDetails)
         }
-        if ((favoriteDictinary.value(forKey: "shortdescription")) != nil){
+        if ((favoriteDictinary.value(forKey: "address")) != nil){
             
-            informationDetails = [ "key" : "service_provider_location","value" :(favoriteDictinary.value(forKey: "shortdescription"))! as! String,"imageName": "location"  ]
+            informationDetails = [ "key" : "service_provider_address","value" :(favoriteDictinary.value(forKey: "address"))! as! String,"imageName": "location"  ]
             informationArray.add(informationDetails)
         }
         if ((favoriteDictinary.value(forKey: "openingtime")) != nil){
@@ -557,6 +563,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     }
     @IBAction func didTapFavorite(_ sender: UIButton) {
         
+      
+        
         
          let managedContext = getContext()
         if (fromFavorite == true){
@@ -587,6 +595,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                     
                                 do {
                                     try managedContext.save()
+                                     self.view.hideAllToasts()
+                                    self.view.makeToast("Removed from Favorite")
                                 } catch {
                                     print("error")
                                 }
@@ -594,7 +604,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 }
                 else{
                     favoriteButton.setImage(UIImage(named: "favorite-white"), for: .normal)
-                    
+                     self.view.hideAllToasts()
+                    self.view.makeToast("Added to Favorite")
                 }
                 
             
@@ -611,6 +622,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
                 for fetResult in favFetchResults{
                     managedContext.delete(fetResult)
+                    self.view.hideAllToasts()
+                     self.view.makeToast("Removed from Favorite")
                 }
                 
                 do {
@@ -706,7 +719,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
         do {
             try managedContext.save()
-            //people.append(person)
+            self.view.hideAllToasts()
+            self.view.makeToast("Added To Favorite")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
@@ -799,7 +813,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
        
         do {
             try managedContext.save()
-            //people.append(person)
+             self.view.hideAllToasts()
+            self.view.makeToast("Added To Favorite")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }

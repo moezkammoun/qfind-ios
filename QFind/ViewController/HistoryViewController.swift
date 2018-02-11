@@ -15,7 +15,7 @@ enum PageName{
     case favorite
 }
 
-class HistoryViewController: RootViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol,HistoryCellProtocol{
+class HistoryViewController: RootViewController,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,SearchBarProtocol,BottomProtocol,predicateTableviewProtocol{
 
 
    
@@ -207,14 +207,18 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             cell.titleLabel.text = "Four Season Hotel"
             cell.subLabel.text = "qwerty uiop"
         case .favorite?:
-            cell.historyDelegate = self
+            cell.favBtnTapAction = {
+                () in
+                
+                self.deleteFavorite(currentIndex: indexPath)
+                
+            }
             cell.favoriteButton.isHidden = false
             let favoriteDict = favoritesArray![indexPath.row]
             let id = favoriteDict.value(forKey: "id")
             let name = favoriteDict.value(forKey: "name")
             let shortDescription = favoriteDict.value(forKey: "shortdescription")
             let img = favoriteDict.value(forKey: "imgurl")
-            cell.favDict = favoriteDict
             cell.setFavoriteData(favoriteId: id as! Int, favoriteName: name as! String, subTitle: shortDescription as! String, imgUrl: img as! String)
            
         case .searchResult?:
@@ -674,9 +678,47 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         
     }
     
-    //MARK: History page delegate for favorite
-    func favouriteStarPressed() {
-       fetchDataFromCoreData()
+   
+    func deleteFavorite(currentIndex: IndexPath){
+        var refreshAlert = UIAlertController(title: "Item will be deleted from favorites", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+        refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+            guard let appDelegate =
+                UIApplication.shared.delegate as? AppDelegate else {
+                    return
+            }
+            var managedContext : NSManagedObjectContext?
+            if #available(iOS 10.0, *) {
+                managedContext =
+                    appDelegate.persistentContainer.viewContext
+                
+            } else {
+                // Fallback on earlier versions
+                managedContext = appDelegate.managedObjectContext
+                
+            }
+            managedContext?.delete(self.favoritesArray![currentIndex.row])
+            do {
+                try managedContext?.save()
+                self.favoritesArray?.remove(at: currentIndex.row)
+            } catch let error as NSError  {
+                print("Could not save \(error), \(error.userInfo)")
+            }
+            if (self.favoritesArray?.count == 0){
+                self.historyLoadingView.isHidden = false
+                self.historyLoadingView.stopLoading()
+                self.historyLoadingView.showNoDataView()
+                self.historyLoadingView.noDataLabel.text = "No Favorites Found"
+                self.historyLoadingView.noDataView.isHidden = false
+            }
+            self.historyCollectionView.reloadData()
+        }))
+        //cancel action
+        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+            refreshAlert .dismiss(animated: true, completion: nil)
+        }))
+        self.present(refreshAlert, animated: true, completion: nil)
+        
+        
     }
 
 }
