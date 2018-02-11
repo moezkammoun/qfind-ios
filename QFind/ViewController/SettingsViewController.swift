@@ -110,7 +110,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     }
     @IBAction func didTapEnglish(_ sender: UIButton) {
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-
+            
             let alert = UIAlertController(title: "Alert", message: "Sorry. current language is English", preferredStyle: UIAlertControllerStyle.alert)
             
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -120,40 +120,79 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             
         }
         else {
-            LocalizationLanguage.setAppleLAnguageTo(lang: "en")
-            languageKey = 1
-            if #available(iOS 9.0, *) {
-                UIView.appearance().semanticContentAttribute = .forceLeftToRight
-                self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
-               
-            } else {
-                // Fallback on earlier versions
-            }
-            
+            var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language. ", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+                LocalizationLanguage.setAppleLAnguageTo(lang: "en")
+                languageKey = 1
+                if #available(iOS 9.0, *) {
+                    UIView.appearance().semanticContentAttribute = .forceLeftToRight
+                    self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+                    
+                } else {
+                    // Fallback on earlier versions
+                }
+            }))
+            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+                refreshAlert .dismiss(animated: true, completion: nil)
+            }))
+            present(refreshAlert, animated: true, completion: nil)
+           
         }
        
-
     }
     
     @IBAction func didTapArabic(_ sender: UIButton) {
+      
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-        LocalizationLanguage.setAppleLAnguageTo(lang: "ar")
-            languageKey = 2
-            if #available(iOS 9.0, *) {
-                                UIView.appearance().semanticContentAttribute = .forceRightToLeft
-                self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+            var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+              
+                LocalizationLanguage.setAppleLAnguageTo(lang: "ar")
+                languageKey = 2
+                if #available(iOS 9.0, *) {
+                    UIView.appearance().semanticContentAttribute = .forceRightToLeft
+                    self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+                    
+                } else {
+                    // Fallback on earlier versions
+                }
+            }))
+            
+            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
                 
-                            } else {
-                                // Fallback on earlier versions
-                            }
-    }
-    else {
-   
+                refreshAlert .dismiss(animated: true, completion: nil)
+            }))
+            present(refreshAlert, animated: true, completion: nil)
+          
+            
+        }
+        else {
+            
             let alert = UIAlertController(title: "Alert", message: "Sorry. current language is Arabic", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+        }
+        
+        
+        
+
     }
-       
+    func showAlertToUSer()
+    {
+        var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+        
+        refreshAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
+            self.navigationController?.popToRootViewController(animated: true)
+        }))
+        
+        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+            
+            refreshAlert .dismiss(animated: true, completion: nil)
+            
+            
+        }))
+        
+        present(refreshAlert, animated: true, completion: nil)
     }
     func favouriteButtonPressed() {
         settingsBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)

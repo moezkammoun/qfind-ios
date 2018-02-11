@@ -104,9 +104,6 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         sliderLoading.stopAnimating()
         sliderLoading.isHidden = true
        
-        self.homeLoadingView.stopLoading()
-         self.homeLoadingView.isHidden = true
-        
             //KASlideshow
             slideShow.delegate = self
             slideShow.delay = 1
@@ -123,10 +120,6 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     func setUILayout()
     {
-        
-        homeLoadingView.isHidden = false
-        homeLoadingView.showLoading()
-        
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
         
         searchView.layer.cornerRadius = 7.5
@@ -342,9 +335,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                         
                         
                     case .failure(let error):
-                        self.homeLoadingView.isHidden = false
-                        self.homeLoadingView.stopLoading()
-                        self.homeLoadingView.noDataView.isHidden = false
+                        print("error")
+                      
                     }
                     
             }
@@ -387,7 +379,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     {
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
-            
+           
                 Alamofire.request(QFindRouter.getQFindOfTheDay(["token": tokenString]))
                     .responseObject { (response: DataResponse<QfindOfTheDayData>) -> Void in
                         switch response.result {
@@ -395,25 +387,24 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                         case .success(let data):
                             
                             self.qFindDict = data.qfindOfTheDayData
-                            let urlString = URL(string: self.qFindDict?.image![0] as! String)
+                           
                             self.imageDownloader(imgArray: (self.qFindDict?.image)!)
                             
                             if ((data.response == "error") || (data.code != "200")){
-                                self.homeLoadingView.stopLoading()
-                                self.homeLoadingView.showNoDataView()
+                                
                             }
                             else{
                                 
-                                self.homeLoadingView.isHidden = true
-                                self.homeLoadingView.stopLoading()
+                               
                             }
                         case .failure(let error):
-                            self.homeLoadingView.isHidden = false
-                            self.homeLoadingView.stopLoading()
-                            self.homeLoadingView.noDataView.isHidden = false
+                            print(error)
+                          
                         }
                         
                 }
+            
+        }else{
             
         }
     }
@@ -468,6 +459,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
     let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
     self.qFindArray = decodedTeams.sliderImages
+    print(self.qFindArray)
     setSlideShow(imgArray: self.qFindArray)
     }
 
