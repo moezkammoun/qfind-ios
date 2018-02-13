@@ -23,6 +23,7 @@
 		B88A2DB32008C3A000BF1B8A /* QFindTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DB22008C3A000BF1B8A /* QFindTests.swift */; };
 		B88A2DBE2008C3A000BF1B8A /* QFindUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DBD2008C3A000BF1B8A /* QFindUITests.swift */; };
 		B88A2DCD2008D7D000BF1B8A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */; };
+		B88C1B542031533200BBD820 /* HistoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88C1B532031533200BBD820 /* HistoryEntity.swift */; };
 		B89227F9200E2F3F00677F54 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89227F8200E2F3F00677F54 /* DetailViewController.swift */; };
 		B89F67412017556C006D3EFA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B89F67432017556C006D3EFA /* Localizable.strings */; };
 		B8A3390B202828A1003BF43C /* SliderImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A3390A202828A1003BF43C /* SliderImagesModel.swift */; };
@@ -98,6 +99,7 @@
 		B88A2DBD2008C3A000BF1B8A /* QFindUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QFindUITests.swift; sourceTree = "<group>"; };
 		B88A2DBF2008C3A000BF1B8A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B88A2DCC2008D7D000BF1B8A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		B88C1B532031533200BBD820 /* HistoryEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryEntity.swift; sourceTree = "<group>"; };
 		B89227F8200E2F3F00677F54 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		B89F673920171535006D3EFA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		B89F67422017556C006D3EFA /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -248,8 +250,8 @@
 				B8C4D7D6200CC09F00E8D448 /* CategoryViewController.swift */,
 				B89227F8200E2F3F00677F54 /* DetailViewController.swift */,
 				B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */,
-				B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */,
 				B858B4B0201606A400C4812D /* SettingsViewController.swift */,
+				B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -292,6 +294,7 @@
 		B8C4AC4F2019E780004DEFF6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B88C1B532031533200BBD820 /* HistoryEntity.swift */,
 				B8C4AC502019E79D004DEFF6 /* ModelClass.swift */,
 				B8A3390A202828A1003BF43C /* SliderImagesModel.swift */,
 			);
@@ -629,6 +632,7 @@
 				B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */,
 				B8B762812021B46E004F90F9 /* RootViewController.swift in Sources */,
 				B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */,
+				B88C1B542031533200BBD820 /* HistoryEntity.swift in Sources */,
 				B88A2D9B2008C3A000BF1B8A /* AppDelegate.swift in Sources */,
 				B88A2DCD2008D7D000BF1B8A /* HomeViewController.swift in Sources */,
 				B8C4AC4B2019D509004DEFF6 /* DetailTableViewCell.swift in Sources */,
