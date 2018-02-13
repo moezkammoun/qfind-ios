@@ -49,6 +49,20 @@ class HistoryCollectionViewCell: UICollectionViewCell {
         self.historyThumbnail.kf.indicatorType = .activity
         self.historyThumbnail.kf.setImage(with: URL(string: imgUrl))
     }
+//    func setHistoryData(historyInfo: HistoryEntity){
+//        self.titleLabel.text = historyInfo.name
+//        self.subLabel.text = historyInfo.shortdescription
+//        
+//        self.historyThumbnail.kf.indicatorType = .activity
+//        self.historyThumbnail.kf.setImage(with: URL(string: historyInfo.imgurl!))
+//    }
+    func setHistoryData(historyInfo: HistoryEntity){
+        self.titleLabel.text = historyInfo.name
+        self.subLabel.text = historyInfo.shortdescription
+        
+        self.historyThumbnail.kf.indicatorType = .activity
+        self.historyThumbnail.kf.setImage(with: URL(string: historyInfo.imgurl!))
+    }
     override func prepareForReuse() {
         super.prepareForReuse()
         self.titleLabel.text = ""
