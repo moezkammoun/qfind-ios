@@ -459,8 +459,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
     let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
     self.qFindArray = decodedTeams.sliderImages
-    print(self.qFindArray)
     setSlideShow(imgArray: self.qFindArray)
     }
+    
 
 }

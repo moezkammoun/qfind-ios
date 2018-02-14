@@ -10,6 +10,8 @@
 		253D3DD4730755453772277E /* Pods_QFind.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95DEF7B06F24A040E13F4D59 /* Pods_QFind.framework */; };
 		B826DCA1203424C0005BAF76 /* CustomFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B826DC9F203424C0005BAF76 /* CustomFooterView.swift */; };
 		B826DCA2203424C0005BAF76 /* CustomFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B826DCA0203424C0005BAF76 /* CustomFooterView.xib */; };
+		B826DCAA20343C69005BAF76 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B826DCA920343C69005BAF76 /* WebViewController.swift */; };
+		B826DCB020344C97005BAF76 /* GE_SS_Unique_Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B826DCAF20344C97005BAF76 /* GE_SS_Unique_Bold.otf */; };
 		B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4AC2015EE1800C4812D /* LoadingView.swift */; };
 		B858B4AF2015EE2B00C4812D /* LoadingViewXib.xib in Resources */ = {isa = PBXBuildFile; fileRef = B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */; };
 		B858B4B1201606A400C4812D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4B0201606A400C4812D /* SettingsViewController.swift */; };
@@ -81,6 +83,8 @@
 		A94D60E9E3F99FD715BAD73B /* Pods-QFind.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QFind.release.xcconfig"; path = "Pods/Target Support Files/Pods-QFind/Pods-QFind.release.xcconfig"; sourceTree = "<group>"; };
 		B826DC9F203424C0005BAF76 /* CustomFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFooterView.swift; sourceTree = "<group>"; };
 		B826DCA0203424C0005BAF76 /* CustomFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomFooterView.xib; sourceTree = "<group>"; };
+		B826DCA920343C69005BAF76 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		B826DCAF20344C97005BAF76 /* GE_SS_Unique_Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GE_SS_Unique_Bold.otf; sourceTree = "<group>"; };
 		B858B4AC2015EE1800C4812D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingViewXib.xib; sourceTree = "<group>"; };
 		B858B4B0201606A400C4812D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -265,6 +269,7 @@
 				B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */,
 				B858B4B0201606A400C4812D /* SettingsViewController.swift */,
 				B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */,
+				B826DCA920343C69005BAF76 /* WebViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -381,6 +386,7 @@
 		B8D3B826200C686C0032C78B /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				B826DCAF20344C97005BAF76 /* GE_SS_Unique_Bold.otf */,
 				B87BBFEF2011E31900A026FB /* GE_SS_Unique_Light.otf */,
 				B8C4D7D4200CC07100E8D448 /* Lato-Light.ttf */,
 				B8D3B827200C686C0032C78B /* Lato-Bold.ttf */,
@@ -529,6 +535,7 @@
 			files = (
 				B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */,
 				B88A2DA82008C3A000BF1B8A /* LaunchScreen.storyboard in Resources */,
+				B826DCB020344C97005BAF76 /* GE_SS_Unique_Bold.otf in Resources */,
 				B8C4D7DA200CC3FF00E8D448 /* CategoryCell.xib in Resources */,
 				B89F67412017556C006D3EFA /* Localizable.strings in Resources */,
 				B8D20D4E20107ACC008DDDE8 /* HistoryOrSearchCell.xib in Resources */,
@@ -638,6 +645,7 @@
 				B8D20D4A20107A37008DDDE8 /* HistoryViewController.swift in Sources */,
 				B8B7627F2021B447004F90F9 /* SidebarView.swift in Sources */,
 				B8C4AC592019F9D8004DEFF6 /* APIClient.swift in Sources */,
+				B826DCAA20343C69005BAF76 /* WebViewController.swift in Sources */,
 				B8C4AC532019E7D5004DEFF6 /* QFindRouter.swift in Sources */,
 				B8C4AC512019E79D004DEFF6 /* ModelClass.swift in Sources */,
 				B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */,
