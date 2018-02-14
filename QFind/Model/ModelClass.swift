@@ -212,8 +212,7 @@ struct QfindOfTheDayData: ResponseObjectSerializable {
             self.code = representationData["code"] as? String
             self.response = representationData["response"] as? String
         }
-        print(representation)
-        print(representation["result"])
+      
         if let data = representation["result"] {
             self.qfindOfTheDayData = QFindOfTheDay.init(response: response, representation: data as AnyObject)
         }

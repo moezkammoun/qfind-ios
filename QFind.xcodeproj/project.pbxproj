@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		253D3DD4730755453772277E /* Pods_QFind.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95DEF7B06F24A040E13F4D59 /* Pods_QFind.framework */; };
+		B826DCA1203424C0005BAF76 /* CustomFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B826DC9F203424C0005BAF76 /* CustomFooterView.swift */; };
+		B826DCA2203424C0005BAF76 /* CustomFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B826DCA0203424C0005BAF76 /* CustomFooterView.xib */; };
 		B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4AC2015EE1800C4812D /* LoadingView.swift */; };
 		B858B4AF2015EE2B00C4812D /* LoadingViewXib.xib in Resources */ = {isa = PBXBuildFile; fileRef = B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */; };
 		B858B4B1201606A400C4812D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4B0201606A400C4812D /* SettingsViewController.swift */; };
@@ -77,6 +79,8 @@
 		5E6C9D3A23B697489734286F /* Pods-QFind.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QFind.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QFind/Pods-QFind.debug.xcconfig"; sourceTree = "<group>"; };
 		95DEF7B06F24A040E13F4D59 /* Pods_QFind.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QFind.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A94D60E9E3F99FD715BAD73B /* Pods-QFind.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QFind.release.xcconfig"; path = "Pods/Target Support Files/Pods-QFind/Pods-QFind.release.xcconfig"; sourceTree = "<group>"; };
+		B826DC9F203424C0005BAF76 /* CustomFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFooterView.swift; sourceTree = "<group>"; };
+		B826DCA0203424C0005BAF76 /* CustomFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomFooterView.xib; sourceTree = "<group>"; };
 		B858B4AC2015EE1800C4812D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingViewXib.xib; sourceTree = "<group>"; };
 		B858B4B0201606A400C4812D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -169,6 +173,15 @@
 				A94D60E9E3F99FD715BAD73B /* Pods-QFind.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		B826DC9E203424C0005BAF76 /* RefreshControl */ = {
+			isa = PBXGroup;
+			children = (
+				B826DC9F203424C0005BAF76 /* CustomFooterView.swift */,
+				B826DCA0203424C0005BAF76 /* CustomFooterView.xib */,
+			);
+			path = RefreshControl;
 			sourceTree = "<group>";
 		};
 		B858B4A92015EC9B00C4812D /* LoaderView */ = {
@@ -314,6 +327,7 @@
 		B8C4D7D8200CC3E100E8D448 /* ReusableComponents */ = {
 			isa = PBXGroup;
 			children = (
+				B826DC9E203424C0005BAF76 /* RefreshControl */,
 				B8BA01C8202F491C00C5B1FA /* Toast */,
 				B8C4AC442019D475004DEFF6 /* InformationTableCell */,
 				B8C657A9201861EF000C23A9 /* RTLSupportFiles */,
@@ -523,6 +537,7 @@
 				B8D3B82A200C686D0032C78B /* Lato-Regular.ttf in Resources */,
 				B8C4D7E1200CD42000E8D448 /* BottomBar.xib in Resources */,
 				B858B4AF2015EE2B00C4812D /* LoadingViewXib.xib in Resources */,
+				B826DCA2203424C0005BAF76 /* CustomFooterView.xib in Resources */,
 				B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */,
 				B88A2DA02008C3A000BF1B8A /* Main.storyboard in Resources */,
 				B87BBFF02011E31900A026FB /* GE_SS_Unique_Light.otf in Resources */,
@@ -632,6 +647,7 @@
 				B8D5AC90200DBB48004F0BE1 /* SearchBarView.swift in Sources */,
 				B8B762812021B46E004F90F9 /* RootViewController.swift in Sources */,
 				B8C4D7D1200C8DCC00E8D448 /* KASlideShow.m in Sources */,
+				B826DCA1203424C0005BAF76 /* CustomFooterView.swift in Sources */,
 				B88C1B542031533200BBD820 /* HistoryEntity.swift in Sources */,
 				B88A2D9B2008C3A000BF1B8A /* AppDelegate.swift in Sources */,
 				B88A2DCD2008D7D000BF1B8A /* HomeViewController.swift in Sources */,
