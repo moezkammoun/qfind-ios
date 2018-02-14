@@ -48,10 +48,18 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     var categoryQFindArray = NSMutableArray()
     var arrayCount : Int? = 0
     var tapGestRecognizer = UITapGestureRecognizer()
-    var serviceProviderArray: [ServiceProvider]? = []
+    var serviceProviderArray = [ServiceProvider]()
     var haveSubCategory : Bool? = nil
     var subCategoryName: String? = nil
     let networkReachability = NetworkReachabilityManager()
+    var serviceProviderFullArray = NSMutableArray()
+    var serviceProvideId: Int? = 0
+    var offsetValue: Int? = 1
+    
+    //RefreshControl
+     var footerView:CustomFooterView?
+    var isLoading:Bool = false
+    let footerViewReuseIdentifier = "RefreshFooterView"
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -67,6 +75,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             self.categoryLoadingView.stopLoading()
              self.categoryLoadingView.isHidden = true
             
+            
             //self.categoryLoadingView.noDataView.isHidden = false
             let alert = UIAlertController(title: "Network", message: "No Network Available", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -74,8 +83,17 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
            
         }
         
+        //Refreshcontrol
+        
+        self.categoryCollectionView.register(UINib(nibName: "CustomFooterView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: footerViewReuseIdentifier)
+        
+        
+        
+        
+        
         
     }
+   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
         
@@ -250,14 +268,14 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             }
             return (subCategoryDataArray?.count)!
         }
-        else if ((categoryPageNameString == PageNameInCategory.serviceProvider) && ((serviceProviderArray!.count) > 0) ){
-            guard serviceProviderArray![0].service_provider_name != nil else{
+        else if ((categoryPageNameString == PageNameInCategory.serviceProvider) && ((serviceProviderArray.count) > 0) ){
+            guard serviceProviderArray[0].service_provider_name != nil else{
                 return 0
             }
-            guard serviceProviderArray![0].service_provider_address != nil else{
+            guard serviceProviderArray[0].service_provider_address != nil else{
                 return 0
             }
-            return (serviceProviderArray?.count)!
+            return (serviceProviderArray.count)
         }
         else{
             return 0
@@ -275,7 +293,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             cell.setCategoryCellValues(categoryValues: categoryDictionary)
         }
         else if (categoryPageNameString == PageNameInCategory.subcategory){
-            //cell.titleCenterConstraint.constant = 7
+          
             cell.titleCenterConstraint.constant = 0
             cell.subTitleLabel.isHidden = true
             categoryTitle.text = subCategoryName
@@ -286,8 +304,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         else if(categoryPageNameString == PageNameInCategory.serviceProvider){
             cell.titleCenterConstraint.constant = 7
             cell.subTitleLabel.isHidden = false
-            let serviceProviderDict = serviceProviderArray![indexPath.row]
+            let serviceProviderDict = serviceProviderArray[indexPath.row]
             cell.setServiceProviderCellValues(serviceProviderValues: serviceProviderDict)
+            
         }
         cell.layer.shadowColor = UIColor.lightGray.cgColor
         cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
@@ -322,36 +341,38 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     
                     getSubcategoriesFromServer()
                 } else {
+                    categoryLoadingView.showLoading()
                     haveSubCategory = false
                     categoryPageNameString = PageNameInCategory.serviceProvider
-                    
+                    offsetValue = 1
+                    serviceProviderArray = [ServiceProvider]()
+                    serviceProvideId = categoryIdVar
                     categoryTitle.text = categoryDict.categories_name?.uppercased()
                     categoryLoadingView.isHidden = false
-                    
-                    //categoryLoadingView.activityIndicator.isHidden = false
                     categoryLoadingView.showLoading()
-                   // categoryLoadingView.activityIndicator.startAnimating()
-                    
-                    getServiceProviderFromServer(categoryId: categoryIdVar!)
+                    getServiceProviderFromServer(categoryId: categoryIdVar!, offsetValue: 1)
                 }
                 
                 
             }
             else if(categoryPageNameString == PageNameInCategory.subcategory) {
+                
                 categoryPageNameString = PageNameInCategory.serviceProvider
+                offsetValue = 1
+                serviceProviderArray = [ServiceProvider]()
                 let subCategoryDict = subCategoryDataArray![indexPath.row]
                 categoryTitle.text = subCategoryDict.sub_categories_name?.uppercased()
                 let subcategoryIdVar = subCategoryDict.sub_categories_id
-                categoryLoadingView.isHidden = false
-                //categoryLoadingView.activityIndicator.isHidden = false
-                categoryLoadingView.showLoading()
+                serviceProvideId = categoryIdVar
                 
-               // categoryLoadingView.activityIndicator.startAnimating()
-                getServiceProviderFromServer(categoryId: subcategoryIdVar!)
+                
+               
+               
+                getServiceProviderFromServer(categoryId: subcategoryIdVar!, offsetValue: 1)
             }
             else {
-                //categoryPageNameString = PageNameInCategory.informationPage
-                let servicePrividerDict = serviceProviderArray![indexPath.row]
+                
+                let servicePrividerDict = serviceProviderArray[indexPath.row]
                 let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
                 controller.view.removeFromSuperview()
                 
@@ -381,8 +402,43 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         }
         else{
             return CGSize(width: categoryCollectionView.frame.width/2-17, height: heightValue*7)
+            
         }
         
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        if(categoryPageNameString == PageNameInCategory.serviceProvider){
+            if isLoading {
+                return CGSize.zero
+            }
+            return CGSize(width: collectionView.bounds.size.width, height: 55)
+        }
+        else{
+            return CGSize.zero
+        }
+        
+    }
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        if kind == UICollectionElementKindSectionFooter {
+            let aFooterView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerViewReuseIdentifier, for: indexPath) as! CustomFooterView
+            self.footerView = aFooterView
+            self.footerView?.backgroundColor = UIColor.clear
+            return aFooterView
+        }
+        else {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: footerViewReuseIdentifier, for: indexPath)
+            return headerView
+        }
+    }
+    func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        if elementKind == UICollectionElementKindSectionFooter {
+            self.footerView?.prepareInitialAnimation()
+        }
+    }
+    func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+        if elementKind == UICollectionElementKindSectionFooter {
+            self.footerView?.stopAnimate()
+        }
     }
  // MARK: Bottombar
     func favouriteButtonPressed() {
@@ -658,20 +714,22 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                         
                     case .success(let data):
                         
-                        let qFindDict = data.qfindOfTheDayData
-                        self.imageDownloader(imgArray: (qFindDict?.image)!)
+                       
                         
                         
                         
                         if ((data.response == "error") || (data.code != "200")){
-                           
+                            self.categorySliderLoader.stopAnimating()
                         }
                         else{
-                            
+                             self.categorySliderLoader.stopAnimating()
+                            self.categorySliderLoader.isHidden = true
+                            let qFindDict = data.qfindOfTheDayData
+                            self.imageDownloader(imgArray: (qFindDict?.image)!)
                            
                         }
                     case .failure(let error):
-                        print("error")
+                         self.categorySliderLoader.stopAnimating()
                        
                     }
                     
@@ -731,49 +789,105 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         setImageSlideShow(imageArray: self.categoryQFindArray)
     }
     //MARK: ServiceProviderAPI
-    func getServiceProviderFromServer(categoryId: Int)
+    func getServiceProviderFromServer(categoryId: Int,offsetValue: Int)
     {
-        categoryLoadingView.isHidden = false
-        categoryLoadingView.showLoading()
+         if (offsetValue < 2){
+            categoryLoadingView.isHidden = false
+            categoryLoadingView.showLoading()
+        
+        }
         
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             Alamofire.request(QFindRouter.getServiceProvider(["token": tokenString,
-                                                              "language" :languageKey , "category": categoryId, "limit": 10,"offset": "fsdf"]))
+                                                              "language" :languageKey , "category": categoryId, "limit": 10,"offset": offsetValue]))
                 .responseObject { (response: DataResponse<ServiceProviderData>) -> Void in
                     switch response.result {
                     case .success(let data):
-                        
-                        self.serviceProviderArray = data.serviceProviderData
-                      
+                        self.isLoading  = false
                         if ((data.response == "error") || (data.code != "200")){
-                            self.categoryLoadingView.stopLoading()
-                            self.categoryLoadingView.noDataView.isHidden = false
                             self.categoryCollectionView.reloadData()
+                            self.isLoading = false
+                            if (offsetValue < 2){
+                            self.categoryLoadingView.noDataView.isHidden = false
                             self.categoryLoadingView.showNoDataView()
                             self.categoryLoadingView.noDataLabel.text = "No Results Found"
+                            }
                         }
                         else{
                             
                             self.categoryLoadingView.isHidden = true
                             self.categoryLoadingView.stopLoading()
-                          
+                            for serviceProviderDict in data.serviceProviderData!{
+                                self.serviceProviderArray.append(serviceProviderDict)
+                            }
                             self.categoryCollectionView.reloadData()
                         }
                         
                         
                     case .failure(let error):
-                        self.categoryLoadingView.isHidden = false
                         self.categoryLoadingView.stopLoading()
+                        self.categoryLoadingView.isHidden = true
                         self.categoryCollectionView.reloadData()
-                        self.categoryLoadingView.showNoDataView()
-                        self.categoryLoadingView.noDataLabel.text = "No Results Found"
-                        self.categoryLoadingView.noDataView.isHidden = false
+                        self.isLoading = false
+                         if (offsetValue < 2){
+                            self.categoryLoadingView.isHidden = false
+                            self.categoryLoadingView.showNoDataView()
+                            self.categoryLoadingView.noDataLabel.text = "No Results Found"
+                            self.categoryLoadingView.noDataView.isHidden = false
+                       
+                        }
                     }
                     
             }
             
         }
+    }
+    //Refreshcontrol
+    
+    //compute the scroll value and play witht the threshold to get desired effect
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if(categoryPageNameString == PageNameInCategory.serviceProvider){
+            let threshold   = 100.0 ;
+            let contentOffset = scrollView.contentOffset.y;
+            let contentHeight = scrollView.contentSize.height;
+            let diffHeight = contentHeight - contentOffset;
+            let frameHeight = scrollView.bounds.size.height;
+            var triggerThreshold  = Float((diffHeight - frameHeight))/Float(threshold);
+            triggerThreshold   =  min(triggerThreshold, 0.0)
+            let pullRatio  = min(fabs(triggerThreshold),1.0);
+            self.footerView?.setTransform(inTransform: CGAffineTransform.identity, scaleFactor: CGFloat(pullRatio))
+            if pullRatio >= 1 {
+                self.footerView?.animateFinal()
+            }
+         
+       
+        }
+    }
+    
+    //compute the offset and call the load method
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if(categoryPageNameString == PageNameInCategory.serviceProvider){
+            let contentOffset = scrollView.contentOffset.y;
+            let contentHeight = scrollView.contentSize.height;
+            let diffHeight = contentHeight - contentOffset;
+            let frameHeight = scrollView.bounds.size.height;
+            let pullHeight  = fabs(diffHeight - frameHeight);
+            let pullHeightValue  = floor(pullHeight)
+            if pullHeightValue == 0.0
+            {
+                if (self.footerView?.isAnimatingFinal)! {
+
+                    self.isLoading = true
+                    self.footerView?.startAnimate()
+                    offsetValue = offsetValue!+1
+                    
+                    self.getServiceProviderFromServer(categoryId: serviceProvideId!, offsetValue: offsetValue!)
+                  
+                }
+            }
+        }
+        
     }
 
 }
