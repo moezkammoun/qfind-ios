@@ -12,7 +12,7 @@ class RootViewController: UIViewController {
 
     var sidebarView: SidebarView!
     var blackScreen: UIView!
-    
+    var webViewController = WebViewController()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -131,7 +131,7 @@ class RootViewController: UIViewController {
         }
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -140,7 +140,7 @@ class RootViewController: UIViewController {
 }
 
 extension RootViewController: SidebarViewDelegate {
-     func sidebarDidSelectRow(row: Row) {
+    func sidebarDidSelectRow(row: Row) {
         blackScreen.isHidden = true
         blackScreen.frame = self.view.bounds
         if ((LocalizationLanguage.currentAppleLanguage()) == "en")
@@ -158,18 +158,86 @@ extension RootViewController: SidebarViewDelegate {
                            height: self.sidebarView.frame.height)
             }
         }
-       
+        
         switch row {
         case .menu:
-           break
+            break
         case .aboutus:
-            print("Messages")
+            let aboutUrlString: String?
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                aboutUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/1/1"
+            }
+            else {
+                aboutUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/1/2"
+            }
+            if let aboutUrl = URL(string: aboutUrlString!) {
+                // show alert to choose app
+                if UIApplication.shared.canOpenURL(aboutUrl as URL) {
+                    
+                    let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
+                    webViewVc.webViewUrl = aboutUrl
+                    self.present(webViewVc, animated: false, completion: nil)
+                    
+                }
+            }
+           
         case .howToBecomeQfinder:
-            print("Contact")
+            let qfindUrlString: String?
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+               qfindUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/2/1"
+            }
+            else {
+               qfindUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/2/2"
+            }
+            if let qfindertUrl = URL(string: qfindUrlString!) {
+                // show alert to choose app
+                if UIApplication.shared.canOpenURL(qfindertUrl as URL) {
+                    
+                    let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
+                    webViewVc.webViewUrl = qfindertUrl
+                    self.present(webViewVc, animated: false, completion: nil)
+                    
+                }
+            }
+            
         case .termsAndConditions:
-            print("Settings")
+            var termsUrlString: String?
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                termsUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/3/1"
+            }
+            else {
+                termsUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/3/2"
+            }
+            if let termsAndConditionUrl = URL(string: termsUrlString!) {
+                // show alert to choose app
+                if UIApplication.shared.canOpenURL(termsAndConditionUrl as URL) {
+                    
+                    let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
+                    webViewVc.webViewUrl = termsAndConditionUrl
+                    self.present(webViewVc, animated: false, completion: nil)
+                    
+                }
+            }
+            
         case .contactUs:
-            print("History")
+            var contactUrlString: String?
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                contactUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/4/1"
+            }
+            else {
+                contactUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/4/2"
+            }
+            if let contactUrl = URL(string: contactUrlString! ) {
+                // show alert to choose app
+                if UIApplication.shared.canOpenURL(contactUrl as URL) {
+                    
+                    let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
+                    webViewVc.webViewUrl = contactUrl
+                    self.present(webViewVc, animated: false, completion: nil)
+                    
+                }
+            }
+           
         case .settings:
             let settingsVc = self.storyboard?.instantiateViewController(withIdentifier: "settingsId")
             self.present(settingsVc!, animated: false, completion: nil)
@@ -177,6 +245,7 @@ extension RootViewController: SidebarViewDelegate {
             break
         }
     }
+
 
 }
 

@@ -50,7 +50,7 @@ class SidebarView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         self.clipsToBounds=true
         
-        titleArr = ["Menu", "About us", "How to become Qfinder", "Terms & Conditions",
+        titleArr = ["Menu", "About us", "How to became a qfinder", "Terms and conditions",
                     "Contact us", "Settings"]
         
         setupViews()
