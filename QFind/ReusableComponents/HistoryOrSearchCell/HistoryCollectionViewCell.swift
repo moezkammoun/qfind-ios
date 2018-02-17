@@ -41,33 +41,36 @@ class HistoryCollectionViewCell: UICollectionViewCell {
         self.subLabel.text = searchResultCellValues.service_provider_location
         self.historyThumbnail.kf.indicatorType = .activity
         self.historyThumbnail.kf.setImage(with: URL(string: searchResultCellValues.service_provider_logo! ))
-    }
+        if (historyThumbnail.image == nil) {
+            historyThumbnail.image = UIImage(named: "placeholder")
+        }}
     func setFavoriteData(favoriteId: Int, favoriteName: String, subTitle : String, imgUrl : String){
         self.titleLabel.text = favoriteName
         self.subLabel.text = subTitle
        
         self.historyThumbnail.kf.indicatorType = .activity
         self.historyThumbnail.kf.setImage(with: URL(string: imgUrl))
+        if (historyThumbnail.image == nil) {
+            historyThumbnail.image = UIImage(named: "placeholder")
+        }
     }
-//    func setHistoryData(historyInfo: HistoryEntity){
-//        self.titleLabel.text = historyInfo.name
-//        self.subLabel.text = historyInfo.shortdescription
-//        
-//        self.historyThumbnail.kf.indicatorType = .activity
-//        self.historyThumbnail.kf.setImage(with: URL(string: historyInfo.imgurl!))
-//    }
+
     func setHistoryData(historyInfo: HistoryEntity){
         self.titleLabel.text = historyInfo.name
         self.subLabel.text = historyInfo.shortdescription
         
         self.historyThumbnail.kf.indicatorType = .activity
+        
         self.historyThumbnail.kf.setImage(with: URL(string: historyInfo.imgurl!))
+        if (historyThumbnail.image == nil) {
+            historyThumbnail.image = UIImage(named: "placeholder")
+        }
     }
     override func prepareForReuse() {
         super.prepareForReuse()
         self.titleLabel.text = ""
         self.subLabel.text = ""
-        self.historyThumbnail.image = nil
+        self.historyThumbnail.image = UIImage(named: "placeholder")
         
     }
    

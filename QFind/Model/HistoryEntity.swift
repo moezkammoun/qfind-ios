@@ -14,11 +14,9 @@ class HistoryEntity: NSManagedObject {
     @NSManaged var category: String?
     @NSManaged var email: String?
     @NSManaged var facebookpage: String?
-    @NSManaged var googlepluspage: String?
     @NSManaged var id: Int32
     @NSManaged var imgurl: String?
     @NSManaged var instagrampage: String?
-    @NSManaged var linkedinpage: String?
     @NSManaged var maplocation: String?
     @NSManaged var mobile: String?
     @NSManaged var name: String?

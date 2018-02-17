@@ -11,7 +11,7 @@ import CoreData
 import MessageUI
 import UIKit
 
-class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewControllerDelegate,UITableViewDelegate,UITableViewDataSource {
+class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewControllerDelegate,UITableViewDelegate,UITableViewDataSource,UIWebViewDelegate {
     
     
     @IBOutlet weak var detailBottomBar: BottomBarView!
@@ -20,6 +20,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var detailTableView: UITableView!
     
+    @IBOutlet weak var detailWebLoadingView: LoadingView!
     @IBOutlet weak var backImgaeView: UIImageView!
     @IBOutlet weak var detailLoadingView: LoadingView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -36,6 +37,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     var favoriteDeleted : Bool? = false
     var favoriteDictinary = NSMutableDictionary()
     var historyDict: HistoryEntity?
+    let networkReachability = NetworkReachabilityManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -47,7 +49,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         else if(fromFavorite == false){
             fetchHistoryInfo()
         }
-        
+        detailWebView.delegate = self
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -58,6 +60,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         detailBottomBar.homeView.backgroundColor = UIColor.white
         
         initialSetUp()
+        setFontForInformationPage()
         
     }
     func initialSetUp()
@@ -128,11 +131,18 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     }
     
     func favouriteButtonPressed() {
-        detailBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+       // if  (networkReachability?.isReachable)!{
+            detailBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+            let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+            
+            historyVC.pageNameString = PageName.favorite
+            self.present(historyVC, animated: false, completion: nil)
+//        }
+//        else {
+//            self.view.hideAllToasts()
+//            self.view.makeToast("Check your internet connections")
+//        }
         
-        historyVC.pageNameString = PageName.favorite
-        self.present(historyVC, animated: false, completion: nil)
     }
     func homebuttonPressed() {
         
@@ -140,41 +150,55 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
     func historyButtonPressed() {
-        detailBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+      //  if  (networkReachability?.isReachable)!{
+            detailBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
+            let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+            
+            historyVC.pageNameString = PageName.history
+            self.present(historyVC, animated: false, completion: nil)
+//        }
+//        else {
+//            self.view.hideAllToasts()
+//            self.view.makeToast("Check your internet connections")
+//        }
         
-        historyVC.pageNameString = PageName.history
-        self.present(historyVC, animated: false, completion: nil)
     }
     @IBAction func didTapShare(_ sender: UIButton) {
-        let firstActivityItem = "Text you want"
-        let secondActivityItem : NSURL = NSURL(string: "http//:urlyouwant")!
-        // If you want to put an image
-        let image : UIImage = UIImage(named: "banner-1")!
-        
-        let activityViewController : UIActivityViewController = UIActivityViewController(
-            activityItems: [firstActivityItem, secondActivityItem, image], applicationActivities: nil)
-        
-        
-        activityViewController.popoverPresentationController?.sourceView = (sender )
-        
-        
-        activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.up
-        activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
-        
-        // Anything you want to exclude
-        activityViewController.excludedActivityTypes = [
-            UIActivityType.postToWeibo,
-            UIActivityType.print,
-            UIActivityType.assignToContact,
-            UIActivityType.saveToCameraRoll,
-            UIActivityType.addToReadingList,
-            UIActivityType.postToFlickr,
-            UIActivityType.postToVimeo,
-            UIActivityType.postToTencentWeibo
-        ]
-        
-        self.present(activityViewController, animated: true, completion: nil)
+        if  (networkReachability?.isReachable)!{
+            let firstActivityItem = "Text you want"
+            let secondActivityItem : NSURL = NSURL(string: "http//:urlyouwant")!
+            // If you want to put an image
+            let image : UIImage = UIImage(named: "banner-1")!
+            
+            let activityViewController : UIActivityViewController = UIActivityViewController(
+                activityItems: [firstActivityItem, secondActivityItem, image], applicationActivities: nil)
+            
+            
+            activityViewController.popoverPresentationController?.sourceView = (sender )
+            
+            
+            activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.up
+            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+            
+            // Anything you want to exclude
+            activityViewController.excludedActivityTypes = [
+                UIActivityType.postToWeibo,
+                UIActivityType.print,
+                UIActivityType.assignToContact,
+                UIActivityType.saveToCameraRoll,
+                UIActivityType.addToReadingList,
+                UIActivityType.postToFlickr,
+                UIActivityType.postToVimeo,
+                UIActivityType.postToTencentWeibo
+            ]
+            
+            self.present(activityViewController, animated: true, completion: nil)
+        }
+        else {
+            self.view.hideAllToasts()
+            self.view.makeToast("Check your internet connections")
+        }
+       
     }
     //MARK: Tableview
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -233,123 +257,130 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         else if (informationDict["key"] == "service_provider_website")
         {
-            let websiteUrlString = informationDict["value"]
-            if let websiteUrl = URL(string: websiteUrlString!) {
-                // show alert to choose app
-                if UIApplication.shared.canOpenURL(websiteUrl as URL) {
-                    viewForwebView.frame = self.view.frame
-                    self.view.addSubview(viewForwebView)
-                    let requestObj = URLRequest(url: websiteUrl)
-                    
-                    detailWebView.loadRequest(requestObj)
-                    
+            if  (networkReachability?.isReachable)!{
+                detailWebLoadingView.isHidden = false
+                detailWebLoadingView.showLoading()
+                let websiteUrlString = informationDict["value"]
+                if let websiteUrl = URL(string: websiteUrlString!) {
+                    // show alert to choose app
+                    if UIApplication.shared.canOpenURL(websiteUrl as URL) {
+                        viewForwebView.frame = self.view.frame
+                        self.view.addSubview(viewForwebView)
+                        let requestObj = URLRequest(url: websiteUrl)
+                        
+                        detailWebView.loadRequest(requestObj)
+                        
+                    }
                 }
+            }
+            else {
+                self.view.hideAllToasts()
+                self.view.makeToast("Check your internet connections")
             }
         }
         else if (informationDict["key"] == "service_provider_address")
         {
-            
-            if ((serviceProviderArrayDict?.service_provider_map_location) != nil){
-                
-                let locationArray = serviceProviderArrayDict?.service_provider_map_location?.components(separatedBy: ",")
-                
-                let latitude = locationArray![0]
-                let longitude =  locationArray![1]
-                
-                if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!, options: [:], completionHandler: nil)
-                    } else {
-                        UIApplication.shared.openURL(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!)
-                    }
-                } else {
-                    let locationUrl = URL(string: "https://maps.google.com/?q=@\(latitude),\(longitude)")!
-                    viewForwebView.frame = self.view.frame
-                    self.view.addSubview(viewForwebView)
-                    let requestObj = URLRequest(url: locationUrl)
-                    detailWebView.loadRequest(requestObj)
+             if  (networkReachability?.isReachable)!{
+                detailWebLoadingView.isHidden = false
+                detailWebLoadingView.showLoading()
+                if ((serviceProviderArrayDict?.service_provider_map_location) != nil){
                     
+                    let locationArray = serviceProviderArrayDict?.service_provider_map_location?.components(separatedBy: ",")
+                    
+                    let latitude = locationArray![0]
+                    let longitude =  locationArray![1]
+                    
+                    if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+                        if #available(iOS 10.0, *) {
+                            UIApplication.shared.open(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!, options: [:], completionHandler: nil)
+                        } else {
+                            UIApplication.shared.openURL(URL(string:"comgooglemaps://?center=\(latitude),\(longitude)&zoom=14&views=traffic&q=\(latitude),\(longitude)")!)
+                        }
+                    } else {
+                        let locationUrl = URL(string: "https://maps.google.com/?q=@\(latitude),\(longitude)")!
+                        viewForwebView.frame = self.view.frame
+                        self.view.addSubview(viewForwebView)
+                        let requestObj = URLRequest(url: locationUrl)
+                        detailWebView.loadRequest(requestObj)
+                        
+                    }
                 }
             }
-            
-            
+             else {
+                self.view.hideAllToasts()
+                self.view.makeToast("Check your internet connections")
+            }
             
         }
             
         else if (informationDict["key"] == "service_provider_mail_account")
         {
-            guard let email = informationDict["value"] else{
-                return
-            }
-            
-            if let url = URL(string: "mailto:\(email)") {
-                if (UIApplication.shared.canOpenURL(url))
-                {
-                    if #available(iOS 10.0, *) {
-                        UIApplication.shared.open(url)
-                    } else {
-                        UIApplication.shared.openURL(url)
+            if  (networkReachability?.isReachable)!{
+                
+                guard let email = informationDict["value"] else{
+                    return
+                }
+                
+                if let url = URL(string: "mailto:\(email)") {
+                    if (UIApplication.shared.canOpenURL(url))
+                    {
+                        detailWebLoadingView.isHidden = false
+                        detailWebLoadingView.showLoading()
+                        if #available(iOS 10.0, *) {
+                            UIApplication.shared.open(url)
+                        } else {
+                            UIApplication.shared.openURL(url)
+                        }
+                    }
+                    else{
+                        
                     }
                 }
-                else{
-                    //let urlString = URL(string: "inbox-gmail://")
-                    // UIApplication.shared.openURL(urlString!)
-                    
-                    
-                }
-            }//
+            }
+            else {
+                self.view.hideAllToasts()
+                self.view.makeToast("Check your internet connections")
+            }
         }
         else if (informationDict["key"] == "service_provider_facebook_page")
         {
-            guard let urlString = informationDict["value"] else{
-                return
-            }
-            let facebookUrl = URL(string: urlString)
-            if( UIApplication.shared.canOpenURL(facebookUrl!))
-            {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(facebookUrl!, options: [:], completionHandler: nil)
-                } else {
-                    
-                    UIApplication.shared.openURL(facebookUrl!)
+             if  (networkReachability?.isReachable)!{
+                guard let urlString = informationDict["value"] else{
+                    return
+                }
+                let facebookUrl = URL(string: urlString)
+                if( UIApplication.shared.canOpenURL(facebookUrl!))
+                {detailWebLoadingView.isHidden = false
+                    detailWebLoadingView.showLoading()
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(facebookUrl!, options: [:], completionHandler: nil)
+                    } else {
+                        
+                        UIApplication.shared.openURL(facebookUrl!)
+                        
+                    }
+                }
+                else{
+                    viewForwebView.frame = self.view.frame
+                    self.view.addSubview(viewForwebView)
+                    // let facebookUrlString = URL(string: "http://www.facebook.com/vidyarajan.rajan.5")
+                    let facebookUrlString = URL(string: informationDict["value"]!)
+                    let requestObj = URLRequest(url: facebookUrlString!)
+                    detailWebView.loadRequest(requestObj)
                     
                 }
             }
-            else{
-                viewForwebView.frame = self.view.frame
-                self.view.addSubview(viewForwebView)
-                // let facebookUrlString = URL(string: "http://www.facebook.com/vidyarajan.rajan.5")
-                let facebookUrlString = URL(string: informationDict["value"]!)
-                let requestObj = URLRequest(url: facebookUrlString!)
-                detailWebView.loadRequest(requestObj)
-                
+             else{
+                self.view.hideAllToasts()
+                self.view.makeToast("Check your internet connections")
             }
         }
-        else if (informationDict["key"] == "service_provider_linkdin_page")
-        {
-            let webURL = URL(string: informationDict["value"]!)!
-            
-            let appURL = URL(string: "linkedin://profile/yourName-yourLastName-yourID")!
-            
-            if UIApplication.shared.canOpenURL(appURL) {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-                } else {
-                    UIApplication.shared.openURL(appURL)
-                }
-            } else {
-                
-                //UIApplication.shared.openURL(webURL)
-                viewForwebView.frame = self.view.frame
-                self.view.addSubview(viewForwebView)
-                
-                let requestObj = URLRequest(url: webURL)
-                detailWebView.loadRequest(requestObj)
-            }
-            
-        }
+       
         else if (informationDict["key"] == "service_provider_instagram_page")
         {
+            if  (networkReachability?.isReachable)!{
+                detailWebLoadingView.isHidden = false
+                detailWebLoadingView.showLoading()
             var instagramHooks = "instagram://user?username=johndoe"
             let webUrl = URL(string: "http://instagram.com/")
             var instagramUrl = URL(string: instagramHooks)
@@ -370,69 +401,71 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 detailWebView.loadRequest(requestObj)
                 
             }
+            }
+            else{
+                self.view.hideAllToasts()
+                self.view.makeToast("Check your internet connections")
+            }
         }
         else if (informationDict["key"] == "service_provider_twitter_page")
         {
-            let screenName =  "betkowskii"
-            let appURL = URL(string: "twitter://user?screen_name=\(screenName)")!
-            let webURL = URL(string: "https://twitter.com/\(screenName)")!
-            
-            if UIApplication.shared.canOpenURL(appURL) {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
-                } else {
-                    UIApplication.shared.openURL(appURL)
-                }
-            } else {
-                //UIApplication.shared.openURL(webURL)
-                viewForwebView.frame = self.view.frame
-                self.view.addSubview(viewForwebView)
+            if  (networkReachability?.isReachable)!{
+                detailWebLoadingView.isHidden = false
+                detailWebLoadingView.showLoading()
+                let screenName =  "betkowskii"
+                let appURL = URL(string: "twitter://user?screen_name=\(screenName)")!
+                let webURL = URL(string: "https://twitter.com/\(screenName)")!
                 
-                let requestObj = URLRequest(url: webURL)
-                detailWebView.loadRequest(requestObj)
-            }
+                if UIApplication.shared.canOpenURL(appURL) {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.openURL(appURL)
+                    }
+                } else {
+                    //UIApplication.shared.openURL(webURL)
+                    viewForwebView.frame = self.view.frame
+                    self.view.addSubview(viewForwebView)
+                    
+                    let requestObj = URLRequest(url: webURL)
+                    detailWebView.loadRequest(requestObj)
+                }
+        }
+        else{
+            self.view.hideAllToasts()
+            self.view.makeToast("Check your internet connections")
+        }
         }
         else if (informationDict["key"] == "service_provider_snapchat_page")
         {
-            
-            let appURL = URL(string: "snapchat://app")
-            let webURL = URL(string: "https://www.snapchat.com/add/username")
-            
-            if UIApplication.shared.canOpenURL(appURL!) {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(appURL!, options: [:], completionHandler: nil)
-                } else {
-                    UIApplication.shared.openURL(appURL!)
-                }
-            } else {
-                // UIApplication.shared.openURL(webURL!)
-                viewForwebView.frame = self.view.frame
-                self.view.addSubview(viewForwebView)
+             if  (networkReachability?.isReachable)!{
+                detailWebLoadingView.isHidden = false
+                detailWebLoadingView.showLoading()
+                let appURL = URL(string: "snapchat://app")
+                let webURL = URL(string: "https://www.snapchat.com/add/username")
                 
-                let requestObj = URLRequest(url: webURL!)
-                detailWebView.loadRequest(requestObj)
-            }
-        }
-        else if (informationDict["key"] == "service_provider_googleplus_page")
-        {
-            let appURL = URL(string: "gplus://plus.google.com/+WpguruTv")
-            let webURL = URL(string: "http://http://plus.google.com/+WpguruTv")
-            
-            if UIApplication.shared.canOpenURL(appURL!) {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(appURL!, options: [:], completionHandler: nil)
+                if UIApplication.shared.canOpenURL(appURL!) {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(appURL!, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.openURL(appURL!)
+                    }
                 } else {
-                    UIApplication.shared.openURL(appURL!)
+                    // UIApplication.shared.openURL(webURL!)
+                    viewForwebView.frame = self.view.frame
+                    self.view.addSubview(viewForwebView)
+                    
+                    let requestObj = URLRequest(url: webURL!)
+                    detailWebView.loadRequest(requestObj)
                 }
-            } else {
-                // UIApplication.shared.openURL(webURL!)
-                viewForwebView.frame = self.view.frame
-                self.view.addSubview(viewForwebView)
-                
-                let requestObj = URLRequest(url: webURL!)
-                detailWebView.loadRequest(requestObj)
-            }
         }
+        else{
+            self.view.hideAllToasts()
+            self.view.makeToast("Check your internet connections")
+        }
+        }
+        
+        
         
         
     }
@@ -484,11 +517,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationArray.add(informationDetails)
         }
         
-        if (((serviceProviderArrayDict?.service_provider_linkdin_page) != nil) && ((serviceProviderArrayDict?.service_provider_linkdin_page) != "")){
-            
-            informationDetails = [ "key" : "service_provider_linkdin_page", "value":(serviceProviderArrayDict?.service_provider_linkdin_page)! ,"imageName": ""]
-            informationArray.add(informationDetails)
-        }
+        
         if (((serviceProviderArrayDict?.service_provider_instagram_page) != nil) && ((serviceProviderArrayDict?.service_provider_instagram_page) != "")){
             
             informationDetails = [ "key" : "service_provider_instagram_page", "value" :(serviceProviderArrayDict?.service_provider_instagram_page)!,"imageName": "" ]
@@ -505,11 +534,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(serviceProviderArrayDict?.service_provider_snapchat_page)!,"imageName": "" ]
             informationArray.add(informationDetails)
         }
-        if (((serviceProviderArrayDict?.service_provider_googleplus_page) != nil) && ((serviceProviderArrayDict?.service_provider_googleplus_page) != "")){
-            
-            informationDetails = [ "key" : "service_provider_googleplus_page", "value" :(serviceProviderArrayDict?.service_provider_googleplus_page)!,"imageName": "" ]
-            informationArray.add(informationDetails)
-        }
+       
         
         detailTableView.reloadData()
         
@@ -556,11 +581,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationArray.add(informationDetails)
         }
         
-        if (((favoriteDictinary.value(forKey: "linkedinpage")) != nil) && ((favoriteDictinary.value(forKey: "linkedinpage") as! String) != "")){
-            
-            informationDetails = [ "key" : "service_provider_linkdin_page", "value":(favoriteDictinary.value(forKey: "linkedinpage"))! as! String ,"imageName": ""]
-            informationArray.add(informationDetails)
-        }
+       
         if (((favoriteDictinary.value(forKey: "instagrampage")) != nil) && ((favoriteDictinary.value(forKey: "instagrampage") as! String) != "")){
             
             informationDetails = [ "key" : "service_provider_instagram_page", "value" :(favoriteDictinary.value(forKey: "instagrampage"))! as! String,"imageName": "" ]
@@ -568,7 +589,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         if (((favoriteDictinary.value(forKey: "twitterpage")) != nil) && ((favoriteDictinary.value(forKey: "twitterpage") as! String) != "")){
             
-            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(favoriteDictinary.value(forKey: "twitterpage"))! as! String as! String,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(favoriteDictinary.value(forKey: "twitterpage"))! as! String ,"imageName": "" ]
             informationArray.add(informationDetails)
         }
         
@@ -577,11 +598,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(favoriteDictinary.value(forKey: "snapchatpage"))! as! String,"imageName": "" ]
             informationArray.add(informationDetails)
         }
-        if (((favoriteDictinary.value(forKey: "googlepluspage")) != nil) && ((favoriteDictinary.value(forKey: "googlepluspage") as! String) != "")){
-            
-            informationDetails = [ "key" : "service_provider_googleplus_page", "value" :(favoriteDictinary.value(forKey: "googlepluspage"))! as! String ,"imageName": "" ]
-            informationArray.add(informationDetails)
-        }
+        
         
         detailTableView.reloadData()
         
@@ -620,11 +637,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationArray.add(informationDetails)
         }
         
-        if (((historyDict?.linkedinpage) != nil) && ((historyDict?.linkedinpage) != "")){
-            
-            informationDetails = [ "key" : "service_provider_linkdin_page", "value":(historyDict?.linkedinpage)!  ,"imageName": ""]
-            informationArray.add(informationDetails)
-        }
+       
         if (((historyDict?.instagrampage) != nil) && ((historyDict?.instagrampage) != "")){
             
             informationDetails = [ "key" : "service_provider_instagram_page", "value" :(historyDict?.instagrampage)! ,"imageName": "" ]
@@ -641,11 +654,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(historyDict?.snapchatpage)! ,"imageName": "" ]
             informationArray.add(informationDetails)
         }
-        if (((historyDict?.googlepluspage) != nil) && ((historyDict?.googlepluspage) != "")){
-            
-            informationDetails = [ "key" : "service_provider_googleplus_page", "value" :(historyDict?.googlepluspage)! ,"imageName": "" ]
-            informationArray.add(informationDetails)
-        }
+        
         
         detailTableView.reloadData()
         
@@ -751,7 +760,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             
         }
     }
-    //for data passed from service provider
+    //for favorite data passed from service provider
     func saveDetailsToCoreData()
     {
         let managedContext = getContext()
@@ -801,9 +810,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             return
         }
         
-        guard let linkedInPage = (serviceProviderArrayDict?.service_provider_linkdin_page) else{
-            return
-        }
+       
         guard let instagramPage = (serviceProviderArrayDict?.service_provider_instagram_page) else{
             return
         }
@@ -813,9 +820,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         guard let snapChatPage = (serviceProviderArrayDict?.service_provider_snapchat_page) else{
             return
         }
-        guard let googlePlusPage = (serviceProviderArrayDict?.service_provider_googleplus_page) else{
-            return
-        }
+        
         favoriteAttribute.setValue(serviceId, forKey: "id")
         favoriteAttribute.setValue(address, forKey: "address")
         favoriteAttribute.setValue(category, forKey: "category")
@@ -825,14 +830,15 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         favoriteAttribute.setValue(mapLocation, forKey: "maplocation")
         favoriteAttribute.setValue(openingTime, forKey: "openingtime")
         favoriteAttribute.setValue(facebookPage, forKey: "facebookpage")
-        favoriteAttribute.setValue(linkedInPage, forKey: "linkedinpage")
+        
         favoriteAttribute.setValue(instagramPage, forKey: "instagrampage")
         favoriteAttribute.setValue(twitterPage, forKey: "twitterpage")
         favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
-        favoriteAttribute.setValue(googlePlusPage, forKey: "googlepluspage")
+        
         favoriteAttribute.setValue(nameString, forKey: "name")
         favoriteAttribute.setValue(logoImage, forKey: "imgurl")
         favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
+        favoriteAttribute.setValue(Date(), forKey: "favoritedate")
         do {
             try managedContext.save()
             self.view.hideAllToasts()
@@ -901,10 +907,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         
         
-        let linkedInPage = (favoriteDictinary.value(forKey: "linkedinpage"))
-        if(linkedInPage != nil){
-            favoriteAttribute.setValue(linkedInPage, forKey: "linkedinpage")
-        }
+        
         let instagramPage = (favoriteDictinary.value(forKey: "instagrampage"))
         if(instagramPage != nil){
             favoriteAttribute.setValue(instagramPage, forKey: "instagrampage")
@@ -917,15 +920,12 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         if(snapChatPage != nil){
             favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
         }
-        let googlePlusPage = (favoriteDictinary.value(forKey: "googlepluspage"))
-        if(googlePlusPage != nil){
-            favoriteAttribute.setValue(googlePlusPage, forKey: "googlepluspage")
-        }
+        
         let openingTime = (favoriteDictinary.value(forKey: "openingtime"))
         if(openingTime != nil){
             favoriteAttribute.setValue(openingTime, forKey: "openingtime")
         }
-        
+        favoriteAttribute.setValue(Date(), forKey: "favoritedate")
         
         do {
             try managedContext.save()
@@ -984,9 +984,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             return
         }
         
-        guard let linkedInPage = (historyDict?.linkedinpage) else{
-            return
-        }
+       
         guard let instagramPage = (historyDict?.instagrampage) else{
             return
         }
@@ -996,9 +994,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         guard let snapChatPage = (historyDict?.snapchatpage) else{
             return
         }
-        guard let googlePlusPage = (historyDict?.googlepluspage) else{
-            return
-        }
+        
         favoriteAttribute.setValue(serviceId, forKey: "id")
         favoriteAttribute.setValue(address, forKey: "address")
         favoriteAttribute.setValue(category, forKey: "category")
@@ -1008,14 +1004,15 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         favoriteAttribute.setValue(mapLocation, forKey: "maplocation")
         favoriteAttribute.setValue(openingTime, forKey: "openingtime")
         favoriteAttribute.setValue(facebookPage, forKey: "facebookpage")
-        favoriteAttribute.setValue(linkedInPage, forKey: "linkedinpage")
+       
         favoriteAttribute.setValue(instagramPage, forKey: "instagrampage")
         favoriteAttribute.setValue(twitterPage, forKey: "twitterpage")
         favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
-        favoriteAttribute.setValue(googlePlusPage, forKey: "googlepluspage")
+        
         favoriteAttribute.setValue(nameString, forKey: "name")
         favoriteAttribute.setValue(logoImage, forKey: "imgurl")
         favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
+        favoriteAttribute.setValue(Date(), forKey: "favoritedate")
         do {
             try managedContext.save()
             self.view.hideAllToasts()
@@ -1074,9 +1071,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             return
         }
         
-        guard let linkedInPage = (serviceProviderArrayDict?.service_provider_linkdin_page) else{
-            return
-        }
+    
         guard let instagramPage = (serviceProviderArrayDict?.service_provider_instagram_page) else{
             return
         }
@@ -1086,21 +1081,19 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         guard let snapChatPage = (serviceProviderArrayDict?.service_provider_snapchat_page) else{
             return
         }
-        guard let googlePlusPage = (serviceProviderArrayDict?.service_provider_googleplus_page) else{
-            return
-        }
+       
         
         historyInfo.address = address
         historyInfo.category = category
         historyInfo.email = email
         historyInfo.facebookpage = facebookPage
-        historyInfo.googlepluspage = googlePlusPage
+       
         historyInfo.id = Int32(serviceId)
         historyInfo.imgurl = logoImage
         historyInfo.instagrampage = instagramPage
         
         
-        historyInfo.linkedinpage = linkedInPage
+       
         historyInfo.maplocation = mapLocation
         historyInfo.mobile = mobile
         historyInfo.name = nameString
@@ -1109,16 +1102,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         historyInfo.snapchatpage = snapChatPage
         historyInfo.twitterpage = twitterPage
         historyInfo.website = websitePage
-        
-        
-        
-        let unitFlags = Set<Calendar.Component>([.year, .month, .day])
-        var calendar = Calendar.current
-        calendar.timeZone = TimeZone(identifier: "UTC")!
-        let components = calendar.dateComponents(unitFlags, from: Date())
-        let today = calendar.date(from: components)
-        
-        historyInfo.date_history = today
+        historyInfo.date_history = Date()
         
         
         
@@ -1132,6 +1116,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         
         
     }
+    
     func getContext() -> NSManagedObjectContext{
         
         let appDelegate =  UIApplication.shared.delegate as? AppDelegate
@@ -1159,8 +1144,15 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         var historyArray: [HistoryEntity] = []
         let managedContext = getContext()
         let historyFetchRequest =  NSFetchRequest<NSFetchRequestResult>(entityName: "HistoryEntity")
+        let sort = NSSortDescriptor(key: #keyPath(HistoryEntity.date_history), ascending: false)
+        historyFetchRequest.sortDescriptors = [sort]
         let id = (serviceProviderArrayDict?.id)!
+        
         historyFetchRequest.predicate = NSPredicate.init(format: "id ==\(id)")
+        
+       print(Date())
+    
+        
         do {
             historyArray = (try managedContext.fetch(historyFetchRequest) as? [HistoryEntity])!
             
@@ -1168,14 +1160,57 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        
+       
         if (historyArray.count == 0){
             saveHistoryDataToCoreData()
+        }
+        else{
+            let fetchResult = historyArray[0]
+            let objectUpdate = fetchResult
+            let isSameDate = Calendar.current.isDate(objectUpdate.date_history!, inSameDayAs:Date())
+            if(isSameDate) {
+                objectUpdate.date_history = Date()
+                do{
+                    try managedContext.save()
+                }
+                catch
+                {
+                    print(error)
+                }
+            }
+            else {
+                saveHistoryDataToCoreData()
+            }
+            
             
         }
         
         
         
+    }
+    func webViewDidStartLoad(_ webView: UIWebView) {
+       // detailWebLoadingView.isHidden = false
+       // detailWebLoadingView.showLoading()
+    }
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        detailWebLoadingView.stopLoading()
+        detailWebLoadingView.isHidden = true
+    }
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        detailWebLoadingView.stopLoading()
+        detailWebLoadingView.isHidden = false
+        detailWebLoadingView.showNoDataView()
+    }
+    func setFontForInformationPage() {
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.font = UIFont(name: "Lato-Bold", size: titleLabel.font.pointSize)
+            locationLabel.font = UIFont(name: "Lato-Italic", size: locationLabel.font.pointSize)
+            
+        }
+        else {
+            titleLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: titleLabel.font.pointSize)
+            locationLabel.font = UIFont(name: "GE_SS_Unique_Light", size: locationLabel.font.pointSize)
+        }
     }
 }
 

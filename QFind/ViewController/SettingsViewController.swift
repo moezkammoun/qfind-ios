@@ -28,6 +28,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     var predicateSearchKey = String()
     var predicateSearchArray : [PredicateSearch]? = []
     var predicateTableHeight : Int?
+    let networkReachability = NetworkReachabilityManager()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,6 +44,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        settingsSearchBar.searchButton.isHidden = true
         if (UIDevice.current.userInterfaceIdiom == .pad)
         {
             predicateTableHeight = 85
@@ -51,6 +53,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             predicateTableHeight = 50
         }
         setLocalizedVariablesForSettings()
+        setFontForSettings()
         settingsBottomBar.favoriteview.backgroundColor = UIColor.white
         settingsBottomBar.historyView.backgroundColor = UIColor.white
         settingsBottomBar.homeView.backgroundColor = UIColor.white
@@ -111,13 +114,9 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     @IBAction func didTapEnglish(_ sender: UIButton) {
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
             
-            let alert = UIAlertController(title: "Alert", message: "Sorry. current language is English", preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // show the alert
-            self.present(alert, animated: true, completion: nil)
-            
+            self.view.hideAllToasts()
+            self.view.makeToast("You have already selected English")
+
         }
         else {
             var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language. ", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
@@ -144,7 +143,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     @IBAction func didTapArabic(_ sender: UIButton) {
       
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-            var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+            let refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
             refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
               
                 LocalizationLanguage.setAppleLAnguageTo(lang: "ar")
@@ -168,9 +167,8 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
         }
         else {
             
-            let alert = UIAlertController(title: "Alert", message: "Sorry. current language is Arabic", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            self.view.hideAllToasts()
+            self.view.makeToast("You have already selected Arabic")
         }
         
         
@@ -179,7 +177,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     }
     func showAlertToUSer()
     {
-        var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+        let refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
         
         refreshAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { (action: UIAlertAction!) in
             self.navigationController?.popToRootViewController(animated: true)
@@ -218,25 +216,19 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     func searchButtonPressed() {
         controller.view.removeFromSuperview()
          let trimmedText = settingsSearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedText == ""
-        {
-            
-            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // show the alert
-            self.present(alert, animated: true, completion: nil)
-        }
-        else{
+       if (networkReachability?.isReachable)! {
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             
             historyVC.pageNameString = PageName.searchResult
             historyVC.searchType = 4
             historyVC.searchKey = trimmedText
             self.present(historyVC, animated: false, completion: nil)
-       
+       }
+       else {
+        self.view.hideAllToasts()
+        self.view.makeToast("Check your internet connections")
         }
+        
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         
@@ -249,7 +241,12 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
             
         }
-        
+        if ((predicateSearchKey.count) > 0 ) {
+            settingsSearchBar.searchButton.isHidden = false
+        }
+        else {
+            settingsSearchBar.searchButton.isHidden = true
+        }
         if ((predicateSearchKey.count) >= 2)
         {
             controller.predicateProtocol = self
@@ -336,6 +333,16 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             
         }
     }
-   
+    func setFontForSettings() {
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            settingsLabel.font = UIFont(name: "Lato-Bold", size: settingsLabel.font.pointSize)
+            selectLanguageLabel.font = UIFont(name: "Lato-Light", size: selectLanguageLabel.font.pointSize)
+            
+        }
+        else {
+            settingsLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: settingsLabel.font.pointSize)
+            selectLanguageLabel.font = UIFont(name: "GE_SS_Unique_Light", size: selectLanguageLabel.font.pointSize)
+        }
+    }
 
 }

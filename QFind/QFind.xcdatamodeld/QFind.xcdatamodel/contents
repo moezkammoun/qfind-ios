@@ -5,11 +5,10 @@
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="googlepluspage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="favoritedate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imgurl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instagrampage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="linkedinpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="maplocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -25,11 +24,9 @@
         <attribute name="date_history" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="googlepluspage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imgurl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="instagrampage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="linkedinpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="maplocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -40,7 +37,7 @@
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="300"/>
-        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="315"/>
+        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="285"/>
+        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="285"/>
     </elements>
 </model>

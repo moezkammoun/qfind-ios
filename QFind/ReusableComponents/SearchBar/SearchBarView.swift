@@ -12,15 +12,18 @@ protocol SearchBarProtocol {
     
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool
    func menuButtonSelected()
+    
 }
 class SearchBarView: UIView,UITextFieldDelegate {
     @IBOutlet var searchView: UIView!
     
    
     @IBOutlet weak var searchInnerView: UIView!
+    @IBOutlet weak var searchButton: UIButton!
     
     @IBOutlet weak var searchText: UITextField!
     var searchDelegate : SearchBarProtocol?
+    var searchString = String()
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -39,7 +42,7 @@ class SearchBarView: UIView,UITextFieldDelegate {
         searchInnerView.layer.cornerRadius = 5.0
         searchInnerView.clipsToBounds = true
         searchText.delegate = self
-        
+       
        //  self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
         
     }
@@ -53,9 +56,23 @@ class SearchBarView: UIView,UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-       
-       // searchDelegate?.searchTextshouldChangeCharacters()
+        searchString = searchText.text!+string
+//        let  char = string.cString(using: String.Encoding.utf8)!
+//        let isBackSpace = strcmp(char, "\\b")
+//        if (isBackSpace == -92){
+//            searchString = String(searchString.characters.dropLast())
+//        }
+//        if ((searchString.count) > 0 ) {
+//            searchButton.isHidden = false
+//        }
+//        else {
+//            searchButton.isHidden = true
+//        }
+        
+        
+        
         searchDelegate?.textField(searchText, shouldChangeSearcgCharacters: range, replacementString: string)
+        
         return true
     }
     @IBAction func didTapSearchButton(_ sender: UIButton) {
@@ -64,5 +81,11 @@ class SearchBarView: UIView,UITextFieldDelegate {
     }
     @IBAction func didTapMenu(_ sender: UIButton) {
         searchDelegate?.menuButtonSelected()
+    }
+    func hideSearchButton() {
+        self.searchButton.isHidden = true
+    }
+    func unhideSearchButton() {
+        self.searchButton.isHidden = false
     }
 }

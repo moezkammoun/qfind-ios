@@ -26,7 +26,14 @@ class DetailTableViewCell: UITableViewCell {
     }
     func setInformationCellValues(informationCellDict : [String: String])
     {
-      
+        func setFontForInformationPage() {
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                informationText.font = UIFont(name: "Lato-Bold", size: informationText.font.pointSize)
+            }
+            else {
+                informationText.font = UIFont(name: "GE_SS_Unique_Bold", size: informationText.font.pointSize)
+            }
+        }
         informationImageView.image = UIImage(named: informationCellDict["imageName"]!)
         if (informationCellDict["key"] == "service_provider_website"){
             

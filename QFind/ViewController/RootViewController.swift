@@ -6,6 +6,7 @@
 //  Copyright © 2018 QFind. All rights reserved.
 //
 
+import Alamofire
 import UIKit
 
 class RootViewController: UIViewController {
@@ -13,6 +14,7 @@ class RootViewController: UIViewController {
     var sidebarView: SidebarView!
     var blackScreen: UIView!
     var webViewController = WebViewController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -165,10 +167,11 @@ extension RootViewController: SidebarViewDelegate {
         case .aboutus:
             let aboutUrlString: String?
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                aboutUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/1/1"
+               
+                aboutUrlString = Config.baseURL+"static-pages/1/1"
             }
             else {
-                aboutUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/1/2"
+                aboutUrlString = Config.baseURL+"static-pages/1/2"
             }
             if let aboutUrl = URL(string: aboutUrlString!) {
                 // show alert to choose app
@@ -176,6 +179,8 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = aboutUrl
+                    
+                    webViewVc.titleString = NSLocalizedString("About us", comment: "About us Label in the webview page")
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }
@@ -184,10 +189,10 @@ extension RootViewController: SidebarViewDelegate {
         case .howToBecomeQfinder:
             let qfindUrlString: String?
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-               qfindUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/2/1"
+               qfindUrlString = Config.baseURL+"static-pages/2/1"
             }
             else {
-               qfindUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/2/2"
+               qfindUrlString = Config.baseURL+"static-pages/2/2"
             }
             if let qfindertUrl = URL(string: qfindUrlString!) {
                 // show alert to choose app
@@ -195,6 +200,8 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = qfindertUrl
+                    webViewVc.titleString = NSLocalizedString("How to become qfinder", comment: "How to become qfinder Label in the webview page")
+                    
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }
@@ -203,10 +210,10 @@ extension RootViewController: SidebarViewDelegate {
         case .termsAndConditions:
             var termsUrlString: String?
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                termsUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/3/1"
+                termsUrlString = Config.baseURL+"static-pages/3/1"
             }
             else {
-                termsUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/3/2"
+                termsUrlString = Config.baseURL+"static-pages/3/2"
             }
             if let termsAndConditionUrl = URL(string: termsUrlString!) {
                 // show alert to choose app
@@ -214,6 +221,7 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = termsAndConditionUrl
+                    webViewVc.titleString = NSLocalizedString("Terms & conditions", comment: "Terms & conditions Label in the webview page")
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }
@@ -222,10 +230,10 @@ extension RootViewController: SidebarViewDelegate {
         case .contactUs:
             var contactUrlString: String?
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                contactUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/4/1"
+                contactUrlString = Config.baseURL+"static-pages/4/1"
             }
             else {
-                contactUrlString = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/static-pages/4/2"
+                contactUrlString = Config.baseURL+"static-pages/4/2"
             }
             if let contactUrl = URL(string: contactUrlString! ) {
                 // show alert to choose app
@@ -233,6 +241,7 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = contactUrl
+                    webViewVc.titleString = NSLocalizedString("Contact us", comment: "Contact us Label in the webview page")
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }
