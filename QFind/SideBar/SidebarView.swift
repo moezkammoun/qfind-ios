@@ -49,9 +49,14 @@ class SidebarView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         
         self.clipsToBounds=true
-        
-        titleArr = ["Menu", "About us", "How to became a qfinder", "Terms and conditions",
-                    "Contact us", "Settings"]
+        let menu = NSLocalizedString("Menu", comment: "Menu sidemenu item in sidemenu")
+        let aboutUs = NSLocalizedString("About us", comment: "About us sidemenu item in sidemenu")
+        let howToBecomeQFinder = NSLocalizedString("How to become qfinder", comment: "How to become qfinder sidemenu item in sidemenu")
+        let termsAndConditions = NSLocalizedString("Terms & conditions", comment: "Terms & conditions sidemenu item in sidemenu")
+        let contactUs = NSLocalizedString("Contact us", comment: "Contact us sidemenu item in sidemenu")
+        let settings = NSLocalizedString("Settings", comment: "Settings item in sidemenu")
+        titleArr = [menu, aboutUs, howToBecomeQFinder, termsAndConditions,
+                    contactUs, settings]
         
         setupViews()
         
@@ -147,14 +152,28 @@ class SidebarView: UIView, UITableViewDelegate, UITableViewDataSource {
             cellSeparator.backgroundColor = UIColor(red:210/255, green: 210/255, blue:210/255,alpha: 1.0)
             cell.addSubview(cellSeparator)
         }
-            if (UIDevice.current.userInterfaceIdiom == .pad)
-            {
-              cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 30)
-                cell.indentationLevel = 3
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                if (UIDevice.current.userInterfaceIdiom == .pad)
+                {
+                    cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 30)
+                    cell.indentationLevel = 3
+                }
+                else{
+                    cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 15)
+                }
+                
             }
-            else{
-                cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 15)
+            else {
+                if (UIDevice.current.userInterfaceIdiom == .pad)
+                {
+                    cell.textLabel?.font = UIFont(name: "GE_SS_Unique_Bold", size: 30)
+                    cell.indentationLevel = 3
+                }
+                else{
+                    cell.textLabel?.font = UIFont(name: "GE_SS_Unique_Bold", size: 15)
+                }
             }
+           
             
         return cell
     }

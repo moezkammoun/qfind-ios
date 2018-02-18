@@ -8,16 +8,24 @@
 
 import UIKit
 
-class WebViewController: UIViewController {
+class WebViewController: UIViewController,UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
+    
+    @IBOutlet weak var webViewLoader: LoadingView!
+    @IBOutlet weak var titleLabel: UILabel!
     var webViewUrl: URL? = nil
+    var titleString: String? = nil
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //let urlString = URL(string: webViewUrl!)
+        self.titleLabel.text = titleString?.uppercased()
         let requestObj = URLRequest(url: webViewUrl!)
         self.webView.loadRequest(requestObj)
+       webView.delegate = self
+        webViewLoader.isHidden = false
+        webViewLoader.showLoading()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,8 +35,23 @@ class WebViewController: UIViewController {
     @IBAction func didTapClose(_ sender: UIButton) {
         self.dismiss(animated: false, completion: nil)
     }
-    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
+    func webViewDidStartLoad(_ webView: UIWebView) {
+       
+    }
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        webViewLoader.stopLoading()
+        webViewLoader.isHidden = true
+    }
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        webViewLoader.isHidden = false
+        webViewLoader.stopLoading()
+        webViewLoader.showNoDataView()
+        
+    }
    
 
 }

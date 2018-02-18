@@ -22,6 +22,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     @IBOutlet weak var scrollSubView: UIView!
     @IBOutlet weak var sliderLoading: UIActivityIndicatorView!
     
+    @IBOutlet weak var searchButton: UIButton!
     @IBOutlet weak var logoImageView: UIImageView!
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var searchView: UIView!
@@ -33,7 +34,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     
     @IBOutlet weak var aspectRationHome: NSLayoutConstraint!
-    
+    let networkReachability = NetworkReachabilityManager()
     var controller = PredicateSearchViewController()
     var predicateSearchArray : [PredicateSearch]? = []
     var predicateSearchKey = String()
@@ -47,22 +48,22 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     override func viewDidLoad() {
         super.viewDidLoad()
 
-       // setRTLSupport()
-       
-        
-       // setLocalizedStrings()
         setUILayout()
-        
+        sliderLoading.isHidden = false
+        sliderLoading.startAnimating()
+        if  (networkReachability?.isReachable == false) {
        
+            self.view.hideAllToasts()
+            self.view.makeToast("Check your internet connections")
+            sliderLoading.stopAnimating()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-        sliderLoading.isHidden = false
-        sliderLoading.startAnimating()
+      
         
-        if (UIDevice.current.userInterfaceIdiom == .pad)
-        {
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
             predicateTableHeight = 85
         }
         else{
@@ -74,16 +75,15 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         searchText.text = ""
 
         setHomeSliderImages()
+        setFontForHomeView()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    func setRTLSupport()
-    {
+    func setRTLSupport() {
         if #available(iOS 9.0, *) {
-            let attribute = view.semanticContentAttribute
-           // let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
+           
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
                 slideShow.arabic = false
                 searchText.textAlignment = .left
@@ -98,8 +98,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
        
         
     }
-    func setSlideShow(imgArray : NSArray)
-    {
+    func setSlideShow(imgArray : NSArray) {
        
         sliderLoading.stopAnimating()
         sliderLoading.isHidden = true
@@ -117,9 +116,9 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             pageControl.currentPage = Int(slideShow.currentIndex)
             pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
         
+        
     }
-    func setUILayout()
-    {
+    func setUILayout() {
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
         
         searchView.layer.cornerRadius = 7.5
@@ -136,45 +135,30 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         self.findByCategoryButton.layer.shadowOffset = CGSize(width: -1, height: 15)
         self.findByCategoryButton.layer.shadowRadius = 12;
         self.findByCategoryButton.layer.shadowOpacity = 0.5;
-        
-        
-        
-        
-       
-        
+     
     }
-    func setLocalizedStrings()
-    {
+    func setLocalizedStrings() {
         self.qfindDayLabel.text = NSLocalizedString("QFIND_OF_THE_DAY", comment: "QFIND_OF_THE_DAY Label in the home page")
        
         self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         self.findByCategoryLabel.text = NSLocalizedString("FIND_BY_CATEGORY", comment: "FIND_BY_CATEGORY Label in the home page")
         self.orLabel.text = NSLocalizedString("OR", comment: "OR Label in the home page")
     }
-    func setHomeSliderImages()
-    {
+    func setHomeSliderImages() {
         let sliderImagesArray = sliderImagesDefault.value(forKey: "sliderimages")
         if (sliderImagesArray == nil)
         {
             getQFindOfTheDayFromServer()
         }
         else{
-            let date = Date()
-            let calendar = Calendar.current
-            let components = calendar.dateComponents([.year, .month, .day], from: date)
-            let currentDay = components.day
-            let currentMonth = components.month
-            let currentYear = components.year
-            let previoisDay : Int = sliderImagesDefault.value(forKey: "sliderDay") as! Int
-            let previoisMonth : Int = sliderImagesDefault.value(forKey: "sliderMonth") as! Int
-            let previoisYear : Int = sliderImagesDefault.value(forKey: "sliderYear") as! Int
             
-            if ((previoisYear < currentYear!) || ((previoisMonth < currentMonth!) && (previoisYear == currentYear)) || (( previoisDay < currentDay!) && (previoisMonth == currentMonth))){
-                getQFindOfTheDayFromServer()
-                
-            }
-            else{
+            let sliderDate = sliderImagesDefault.value(forKey: "sliderDate") as! Date
+            let isSameDate = Calendar.current.isDate(sliderDate, inSameDayAs:Date())
+            if(isSameDate) {
                 getImage()
+            }
+            else {
+                 getQFindOfTheDayFromServer()
             }
             
         }
@@ -182,19 +166,35 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     @objc func keyboardWillShow(notification: NSNotification) {
        
-        
+        if(UIDevice.current.userInterfaceIdiom == .pad) {
             if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= 200
+                self.view.frame.origin.y -= 250
+               
             }
+        }
+        else {
+            if self.view.frame.origin.y == 0{
+                self.view.frame.origin.y -= 250
+              
+            }
+        }
+        
         
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
       
-           
+        if(UIDevice.current.userInterfaceIdiom == .pad) {
             if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += 200
+                self.view.frame.origin.y += 250
             }
+        }
+        else {
+            if self.view.frame.origin.y != 0{
+                self.view.frame.origin.y += 250
+            }
+        }
+        
         
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -209,14 +209,16 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     //KASlideShow delegate
     
     func kaSlideShowWillShowNext(_ slideshow: KASlideShow) {
+       
     }
     
     func kaSlideShowWillShowPrevious(_ slideshow: KASlideShow) {
-        
+       
     }
     
     func kaSlideShowDidShowNext(_ slideshow: KASlideShow) {
         pageControl.currentPage = Int(slideShow.currentIndex)
+       
     }
     
     func kaSlideShowDidShowPrevious(_ slideshow: KASlideShow) {
@@ -224,19 +226,24 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
          pageControl.currentPage = Int(slideShow.currentIndex)
     }
     @objc func pageChanged() {
-       
+     
     }
     //MARK: SearchBar
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
-        
         predicateSearchKey = textField.text! + string
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
         }
-        
+        if ((predicateSearchKey.count) > 0 ) {
+                        searchButton.isHidden = false
+                    }
+                    else {
+                        searchButton.isHidden = true
+                    }
+    
         if ((predicateSearchKey.count) >= 2)
         {
             controller.predicateProtocol = self
@@ -259,19 +266,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         
     }
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
-        if let countValue = predicateSearchArray?.count
-        {
-            if countValue > 3
-            {
-                 return 3
-            }
-            else{
+       
                 return (predicateSearchArray?.count)!
-            }
-        }
-        else{
-            return 0
-        }
         
     }
     func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -292,11 +288,22 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     
     @IBAction func didTapFindCategory(_ sender: UIButton) {
-        controller.view.removeFromSuperview()
-        slideShow.stop()
-        let categoryVC : CategoryViewController = storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
-        
-        self.present(categoryVC, animated: false, completion: nil)
+        if  (networkReachability?.isReachable)!{
+           
+            controller.view.removeFromSuperview()
+            slideShow.stop()
+            let categoryVC : CategoryViewController = storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
+            
+            self.present(categoryVC, animated: false, completion: nil)
+            
+        }
+        else {
+            //let toastMessage = NSLocalizedString("checkInternet", comment: "checkInternet toast in the Home")
+            self.view.hideAllToasts()
+            self.view.makeToast("Check your internet connections")
+           
+        }
+       
     }
     @IBAction func didTapMenu(_ sender: UIButton) {
       self.showSidebar()
@@ -322,13 +329,17 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                         {
                             if countValue > 3
                             {
-                                self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: (CGFloat(self.predicateTableHeight!*3)))
+                                self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y-CGFloat(3*(self.predicateTableHeight!))-3, width: self.searchView.frame.width, height: (CGFloat(self.predicateTableHeight!*3)))
                             }
                             else if ((self.predicateSearchArray?.count == 1) && (self.predicateSearchArray![0].item_id == nil))
                                 {
-                                    self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: 0, height: 0)
+                                    self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y, width: 0, height: 0)
                                 }else{
-                               self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y+self.searchView.frame.height+20, width: self.searchView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+
+                                    
+                                self.controller.view.frame = CGRect(x: self.searchView.frame.origin.x, y:self.searchView.frame.origin.y-CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight!)), width: self.searchView.frame.width, height:  CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight!)))
+                                    
+                                
                                 }
                         }
                         
@@ -349,29 +360,19 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         let trimmedText = searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         let networkManager = NetworkReachabilityManager()
         if(networkManager?.isReachable == true){
-        if trimmedText == ""
-        {
-            
-            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // show the alert
-            self.present(alert, animated: true, completion: nil)
-        }
-        else{
+        
+        
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             historyVC.searchType = 4
             historyVC.searchKey = trimmedText
             historyVC.pageNameString = PageName.searchResult
             self.present(historyVC, animated: false, completion: nil)
-        }
+       
         }
         else{
-            let alert = UIAlertController(title: "Network", message: "No Network Available", preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+                self.view.hideAllToasts()
+                self.view.makeToast("Check your internet connections")
+           
         }
         
     }
@@ -386,19 +387,21 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                             
                         case .success(let data):
                             
-                            self.qFindDict = data.qfindOfTheDayData
                            
-                            self.imageDownloader(imgArray: (self.qFindDict?.image)!)
                             
                             if ((data.response == "error") || (data.code != "200")){
-                                
+                                self.sliderLoading.stopAnimating()
+                                self.sliderLoading.isHidden = true
                             }
                             else{
-                                
-                               
+                                self.sliderLoading.stopAnimating()
+                                self.sliderLoading.isHidden = true
+                                self.qFindDict = data.qfindOfTheDayData
+                                self.imageDownloader(imgArray: (self.qFindDict?.image)!)
                             }
                         case .failure(let error):
-                            print(error)
+                            self.sliderLoading.stopAnimating()
+                            self.sliderLoading.isHidden = true
                           
                         }
                         
@@ -433,15 +436,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                         let sliderData = SliderImagesModel(sliderImages: self.qFindArray)
                         let encodedData = NSKeyedArchiver.archivedData(withRootObject: sliderData)
                         sliderImagesDefault.set(encodedData, forKey: "sliderimages")
-                        
-                        let date = Date()
-                        let calendar = Calendar.current
-                        let components = calendar.dateComponents([.year, .month, .day], from: date)
-                        
-                        sliderImagesDefault.set(components.day, forKey: "sliderDay")
-                         sliderImagesDefault.set(components.month, forKey: "sliderMonth")
-                        sliderImagesDefault.set(components.year, forKey: "sliderYear")
-                       
+                        sliderImagesDefault.set(Date(), forKey: "sliderDate")
                         self.getImage()
                     
                         
@@ -461,6 +456,16 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     self.qFindArray = decodedTeams.sliderImages
     setSlideShow(imgArray: self.qFindArray)
     }
-    
+    func setFontForHomeView() {
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            qfindDayLabel.font = UIFont(name: "Lato-Regular", size: qfindDayLabel.font.pointSize)
+            findByCategoryLabel.font = UIFont(name: "Lato-Bold", size: qfindDayLabel.font.pointSize)
+            
+        }
+        else {
+            qfindDayLabel.font = UIFont(name: "GE_SS_Unique_Light", size: qfindDayLabel.font.pointSize)
+             findByCategoryLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: qfindDayLabel.font.pointSize)
+        }
+    }
 
 }

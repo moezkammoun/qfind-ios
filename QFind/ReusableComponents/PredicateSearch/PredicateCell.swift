@@ -23,6 +23,12 @@ class PredicateCell: UITableViewCell {
         // Configure the view for the selected state
     }
     func setPredicateCellValues(cellValues : PredicateSearch){
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            predicateText.font = UIFont(name: "Lato-Regular", size: predicateText.font.pointSize)
+        }
+        else {
+            predicateText.font = UIFont(name: "GE_SS_Unique_Light", size: predicateText.font.pointSize)
+        }
         predicateText.text = cellValues.search_name
     }
     override func prepareForReuse() {

@@ -43,6 +43,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     var historyFullArray = NSMutableArray()
     var sectionDict: HistoryEntity?
     var favoriteDictionary = NSMutableDictionary()
+    let networkReachability = NetworkReachabilityManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,9 +53,11 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         registerCell()
         
         fetchHistoryInfo()
+        setFontForHistory()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        historySearchBar.searchButton.isHidden = true
         if (UIDevice.current.userInterfaceIdiom == .pad)
         {
             predicateTableHeight = 85
@@ -201,7 +204,15 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell : HistoryCollectionViewCell = historyCollectionView.dequeueReusableCell(withReuseIdentifier: "historyCellId", for: indexPath) as! HistoryCollectionViewCell
-        
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+           cell.titleLabel.font = UIFont(name: "Lato-Light", size: cell.titleLabel.font.pointSize)
+          cell.subLabel.font = UIFont(name: "Lato-Light", size: cell.subLabel.font.pointSize)
+            
+        }
+        else {
+            cell.titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: cell.titleLabel.font.pointSize)
+            cell.subLabel.font = UIFont(name: "GE_SS_Unique_Light", size: cell.subLabel.font.pointSize)
+        }
         switch pageNameString{
         case .history?:
             
@@ -284,6 +295,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         switch pageNameString {
         case .history?:
             if historyFullArray.count != 0{
+                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                    header.headerLabel.font = UIFont(name: "Lato-Bold", size: header.headerLabel.font.pointSize)
+                }
+                else {
+                    header.headerLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: header.headerLabel.font.pointSize)
+                }
                 let history = historyFullArray[indexPath.section] as! [HistoryEntity]
                 let sectionHistory = history[indexPath.row]
                 let dateString = setDateFormat(dateData: sectionHistory.date_history!)
@@ -293,20 +310,10 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 if(dateString == currentDateString){
                     header.headerLabel.text = NSLocalizedString("Today", comment: "section header Label in the history page")
                 }
-                
-                
-                
-                
-                
                 if(indexPath.section == 1){
                     
                     let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-                    let unitFlags = Set<Calendar.Component>([.year, .month, .day])
-                    var calendar = Calendar.current
-                    calendar.timeZone = TimeZone(identifier: "UTC")!
-                    let components = calendar.dateComponents(unitFlags, from: yesterday)
-                    let yesterdayDate = calendar.date(from: components)
-                    if(sectionHistory.date_history == yesterdayDate){
+                    if(Calendar.current.isDate(sectionHistory.date_history!, inSameDayAs: yesterday)){
                         header.headerLabel.text = NSLocalizedString("Yesterday", comment: "section header Label in the history page")
                     }
                 }
@@ -368,8 +375,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             
         }
         else if (pageNameString == PageName.history){
-            
-            let historyServiceDict = historyArray![indexPath.row] as HistoryEntity
+            let history = historyFullArray[indexPath.section] as! [HistoryEntity]
+            let historyServiceDict = history[indexPath.row]
             let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
             
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
@@ -387,12 +394,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         favoriteDictionary.setValue(favDict.value(forKey: "category"), forKey: "category")
         favoriteDictionary.setValue(favDict.value(forKey: "email"), forKey: "email")
         favoriteDictionary.setValue(favDict.value(forKey: "facebookpage"), forKey: "facebookpage")
-        favoriteDictionary.setValue(favDict.value(forKey: "googlepluspage"), forKey: "googlepluspage")
         favoriteDictionary.setValue(favDict.value(forKey: "id"), forKey: "id")
         favoriteDictionary.setValue(favDict.value(forKey: "imgurl"), forKey: "imgurl")
         favoriteDictionary.setValue(favDict.value(forKey: "instagrampage"), forKey: "instagrampage")
-        favoriteDictionary.setValue(favDict.value(forKey: "linkedinpage"), forKey: "linkedinpage")
-        
         favoriteDictionary.setValue(favDict.value(forKey: "maplocation"), forKey: "maplocation")
         
         favoriteDictionary.setValue(favDict.value(forKey: "mobile"), forKey: "mobile")
@@ -472,17 +476,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
         let trimmedText = historySearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        if historySearchBar.searchText.text == ""
-        {
-            
-            let alert = UIAlertController(title: "Alert", message: "Please Enter Search Text", preferredStyle: UIAlertControllerStyle.alert)
-            
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            
-            // show the alert
-            self.present(alert, animated: true, completion: nil)
-        }
-        else{
+        if (networkReachability?.isReachable)! {
             previousPage = pageNameString
             pageNameString = PageName.searchResult
             setLocalizedVariable()
@@ -491,8 +485,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 return
             }
             getSearchResultFromServer(searchType: 4, searchKey: searchItemKey)
-            
         }
+        else {
+            self.view.hideAllToasts()
+            self.view.makeToast("Check your internet connections")
+        }
+       
         // controller.predicateSearchTable.reloadData()
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
@@ -504,7 +502,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
             
         }
-        
+        if ((predicateSearchKey.count) > 0 ) {
+            historySearchBar.searchButton.isHidden = false
+        }
+        else {
+            historySearchBar.searchButton.isHidden = true
+        }
         if ((predicateSearchKey.count) >= 2)
         {
             controller.predicateProtocol = self
@@ -682,7 +685,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             managedContext = appDelegate.managedObjectContext
         }
         let favoritesFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "FavoriteEntity")
-        
+        let sort = NSSortDescriptor(key: "favoritedate", ascending: false)
+        favoritesFetchRequest.sortDescriptors = [sort]
         do {
             favoritesArray = try managedContext?.fetch(favoritesFetchRequest)
             
@@ -710,7 +714,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     
     
     func deleteFavorite(currentIndex: IndexPath){
-        var refreshAlert = UIAlertController(title: "Item will be deleted from favorites", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
+        let refreshAlert = UIAlertController(title: "Item will be deleted from favorites", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
         refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
             guard let appDelegate =
                 UIApplication.shared.delegate as? AppDelegate else {
@@ -758,7 +762,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         do {
             historyArray = try managedContext.fetch(historyFetchRequest) as? [HistoryEntity]
             
-            
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -766,8 +769,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.historyLoadingView.isHidden = true
             self.historyLoadingView.stopLoading()
             self.setHistoryArray(historyInfo: historyArray!)
-            
-            
         }
         else{
             self.historyLoadingView.isHidden = false
@@ -798,7 +799,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 sectionArray.append(historyInfo[i])
             }
             else{
-                if ((historyInfo[i].date_history) == (historyInfo[i-1]).date_history){
+                if ( Calendar.current.isDate((historyInfo[i].date_history)!, inSameDayAs:(historyInfo[i-1]).date_history!)){
                     sectionArray.append(historyInfo[i])
                     if(i == historyInfo.count-1){
                         historyFullArray.add(sectionArray)
@@ -808,6 +809,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                     historyFullArray.add(sectionArray)
                     sectionArray = [HistoryEntity]()
                     sectionArray.append(historyInfo[i])
+                    if(i == historyInfo.count-1){
+                        historyFullArray.add(sectionArray)
+                    }
                 }
             }
         }
@@ -821,6 +825,14 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         dateFormatter.dateFormat = "dd-MMM-yyyy"
         let stringDate = dateFormatter.string(from: dateData)
         return stringDate
+    }
+    func setFontForHistory() {
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            historyLabel.font = UIFont(name: "Lato-Bold", size: historyLabel.font.pointSize)
+        }
+        else {
+            historyLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: historyLabel.font.pointSize)
+        }
     }
     
 }

@@ -17,6 +17,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchBarView" customModule="QFind" customModuleProvider="target">
             <connections>
+                <outlet property="searchButton" destination="sMP-z7-6ko" id="gG2-yj-DwB"/>
                 <outlet property="searchInnerView" destination="FaE-uI-dsG" id="2oD-DP-Jst"/>
                 <outlet property="searchText" destination="q5L-Vo-8Vc" id="Lek-6x-liL"/>
                 <outlet property="searchView" destination="iN0-l3-epB" id="JvA-zj-vcm"/>
@@ -79,7 +80,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zeu-PG-ePr">
-                    <rect key="frame" x="312" y="5.6666666666666679" width="47" height="49"/>
+                    <rect key="frame" x="312" y="6.3333333333333321" width="47" height="49"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="49" id="ZhB-fX-NHQ">
                             <variation key="heightClass=regular-widthClass=regular" constant="70"/>

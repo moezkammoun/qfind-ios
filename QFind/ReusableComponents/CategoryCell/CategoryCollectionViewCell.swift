@@ -21,6 +21,13 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     func setCategoryCellValues(categoryValues : Category)
     {
         
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                titleLabel.font = UIFont(name: "Lato-Light", size: titleLabel.font.pointSize)
+            }
+            else {
+                titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: titleLabel.font.pointSize)
+            }
+        
         self.titleLabel.text = categoryValues.categories_name
         if let imageUrl = categoryValues.categories_imge{
         thumbnailView.kf.indicatorType = .activity
@@ -30,7 +37,12 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         
     }
     func setSubCategoryCellValues(subCategoryValues : SubCategory){
-        
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.font = UIFont(name: "Lato-Light", size: titleLabel.font.pointSize)
+        }
+        else {
+            titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: titleLabel.font.pointSize)
+        }
         self.titleLabel.text = subCategoryValues.sub_categories_name
         if let imageUrl = subCategoryValues.sub_categories_imge{
             
@@ -39,15 +51,27 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         
     }
     func setServiceProviderCellValues(serviceProviderValues : ServiceProvider){
-        
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.font = UIFont(name: "Lato-Light", size: titleLabel.font.pointSize)
+            subTitleLabel.font = UIFont(name: "Lato-Light", size: subTitleLabel.font.pointSize)
+        }
+        else {
+            titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: titleLabel.font.pointSize)
+            subTitleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: subTitleLabel.font.pointSize)
+        }
         self.titleLabel.text = serviceProviderValues.service_provider_name
          self.subTitleLabel.text = serviceProviderValues.service_provider_location
         if let imageUrl = serviceProviderValues.service_provider_logo{
            
             thumbnailView.kf.setImage(with: URL(string: imageUrl))
         }
+        if (thumbnailView.image == nil) {
+            thumbnailView.image = UIImage(named: "placeholder")
+        }
         
         
     }
-    
+    override func prepareForReuse() {
+        thumbnailView.image = UIImage(named: "placeholder")
+    }
 }

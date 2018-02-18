@@ -16,15 +16,13 @@ var languageKey = 1
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    var historyDetailsArray:[HistoryEntity]?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         UIApplication.shared.statusBarStyle = .lightContent
           AppLocalizer.DoTheMagic()
         getAccessTokenFromServer()
-
-        
+        deletePreviousMonthHistoryFromCoreData()
         return true
         
     
@@ -196,6 +194,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     }
+    func deletePreviousMonthHistoryFromCoreData() {
+        let monthsToAdd = -1
+        let minimumDate = Calendar.current.date(byAdding: .month, value: monthsToAdd, to: Date())
+        var managedContext : NSManagedObjectContext?
+        if #available(iOS 10.0, *) {
+            managedContext =
+                persistentContainer.viewContext
+        } else {
+            // Fallback on earlier versions
+            managedContext = managedObjectContext
+        }
+        let historyFetchRequest =  NSFetchRequest<NSFetchRequestResult>(entityName: "HistoryEntity")
+
+        do {
+            historyDetailsArray = try managedContext?.fetch(historyFetchRequest) as? [HistoryEntity]
+
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        if (historyDetailsArray?.count != 0){
+            for fetchResult in historyDetailsArray! {
+                if (((fetchResult.date_history?.compare(minimumDate!)) == .orderedAscending) && (!(Calendar.current.isDate(fetchResult.date_history!, inSameDayAs:minimumDate!)))) {
+                    managedContext?.delete(fetchResult)
+                    do {
+                        try managedContext?.save()
+                    } catch let error as NSError {
+                        print(error)
+                    }
+            }
+            }
+        }
+       
+    }
     
+
 }
 
