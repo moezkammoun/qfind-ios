@@ -2,6 +2,10 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="FavoriteEntity" representedClassName=".FavoriteEntity" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabicaddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabiccategory" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabiclocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabicname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
@@ -20,6 +24,10 @@
     </entity>
     <entity name="HistoryEntity" representedClassName=".HistoryEntity" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabicaddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabiccategory" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabiclocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="arabicname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date_history" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
@@ -37,7 +45,7 @@
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="285"/>
-        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="285"/>
+        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="345"/>
+        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="345"/>
     </elements>
 </model>

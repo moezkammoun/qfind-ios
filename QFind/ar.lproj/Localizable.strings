@@ -29,4 +29,18 @@
 "Favorites" = "المفضلة";
 "Arabic" = "عربى";
 "ENGLISH" = "English";
-
+"Yes" = "نعم";
+"No" = "لا";
+"Selected_arabic" = "لقد قمت باختيار اللغة العربية بالفعل";
+"Check_internet" = "تأكد من اتصالك بالانترنت";
+"Favorite_delete_message" = "سيتم حذف البند من المفضلة. هل تريد المتابعة";
+"Added_to_favorite" = "تم الإضافة إلى المفضلة";
+"Removed_from_favorites" = "تم الحذف من المفضلة";
+"Settings_redicrection_message" = "سيتم تحويلك إلى الصفحة الرئيسية بعد تغيير اللغة، هل تريد المتابعة؟";
+"Nodata_message" = "لا توجد بيانات";
+"No_result_found" = "لم يتم العثور على نتائج";
+"Server_connection_error" = "حدث خطأ أثناء محاولة الاتصال مع الخادم";
+"Delete" = "مسح";
+"Cancel" = "إلغاء";
+"No_Favorite_message" = "لم تضف أي مفضلة بعد";
+"No_history_message" = "لا يوجد نتائج بخث سابقة";

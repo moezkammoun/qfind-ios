@@ -87,6 +87,28 @@ class SidebarView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = .clear
         cell.selectionStyle = .none
             
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                if (UIDevice.current.userInterfaceIdiom == .pad)
+                {
+                    cell.textLabel?.font = UIFont(name: "Lato-Regular", size: 30)
+                    cell.indentationLevel = 3
+                }
+                else{
+                    cell.textLabel?.font = UIFont(name: "Lato-Regular", size: 15)
+                }
+                
+            }
+            else {
+                if (UIDevice.current.userInterfaceIdiom == .pad)
+                {
+                    cell.textLabel?.font = UIFont(name: "GESSUniqueLight-Light", size: 30)
+                    cell.indentationLevel = 3
+                }
+                else{
+                    cell.textLabel?.font = UIFont(name: "GESSUniqueLight-Light", size: 15)
+                }
+            }
+            
         if indexPath.row == 0 {
             
             let cellImg: UIImageView!
@@ -95,28 +117,33 @@ class SidebarView: UIView, UITableViewDelegate, UITableViewDataSource {
                 
                 if ((LocalizationLanguage.currentAppleLanguage()) == "en")
                 {
-                    cellImg = UIImageView(frame: CGRect(x: cell.frame.width-90, y: 15, width: 90,
-                                                    height: 90))
+                    cellImg = UIImageView(frame: CGRect(x: cell.frame.width-80, y: 40, width: 50,
+                                                    height: 50))
+                     cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 30)
                 }
                 else{
-                    cellImg = UIImageView(frame: CGRect(x: 20, y: 15, width: 90,
-                                                    height: 90))
+                    cellImg = UIImageView(frame: CGRect(x: 40, y: 40, width: 50,
+                                                    height: 50))
+                    cell.textLabel?.font = UIFont(name: "GESSUniqueBold-Bold", size: 30)
+                    
                 }
                 
             }
             else{
                 if ((LocalizationLanguage.currentAppleLanguage()) == "en")
                 {
-                    cellImg = UIImageView(frame: CGRect(x: cell.frame.width-60, y: 5, width: 50,
-                                                        height: 50))
+                    cellImg = UIImageView(frame: CGRect(x: cell.frame.width-50, y: 15, width: 31,
+                                                        height: 31))
+                   cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 15)
                 }
                 else{
-                    cellImg = UIImageView(frame: CGRect(x: 15, y: 5, width: 50,
-                                                        height: 50))
+                    cellImg = UIImageView(frame: CGRect(x: 15, y: 15, width: 31,
+                                                        height: 31))
+                    cell.textLabel?.font = UIFont(name: "GESSUniqueBold-Bold", size: 15)
                 }
             }
            
-            cellImg.layer.cornerRadius = 40
+           // cellImg.layer.cornerRadius = 40
             cellImg.layer.masksToBounds=true
             cellImg.contentMode = .scaleAspectFit
          cellImg.layer.masksToBounds=true
@@ -152,27 +179,7 @@ class SidebarView: UIView, UITableViewDelegate, UITableViewDataSource {
             cellSeparator.backgroundColor = UIColor(red:210/255, green: 210/255, blue:210/255,alpha: 1.0)
             cell.addSubview(cellSeparator)
         }
-            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                if (UIDevice.current.userInterfaceIdiom == .pad)
-                {
-                    cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 30)
-                    cell.indentationLevel = 3
-                }
-                else{
-                    cell.textLabel?.font = UIFont(name: "Lato-Bold", size: 15)
-                }
-                
-            }
-            else {
-                if (UIDevice.current.userInterfaceIdiom == .pad)
-                {
-                    cell.textLabel?.font = UIFont(name: "GE_SS_Unique_Bold", size: 30)
-                    cell.indentationLevel = 3
-                }
-                else{
-                    cell.textLabel?.font = UIFont(name: "GE_SS_Unique_Bold", size: 15)
-                }
-            }
+            
            
             
         return cell

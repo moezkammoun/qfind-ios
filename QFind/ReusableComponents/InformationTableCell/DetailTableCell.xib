@@ -33,7 +33,7 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="aJq-0c-rD6" secondAttribute="height" multiplier="40:35" id="WiB-Me-szU"/>
                                     <constraint firstAttribute="width" constant="17" id="i6P-70-vck">
-                                        <variation key="heightClass=regular-widthClass=regular" constant="30"/>
+                                        <variation key="heightClass=regular-widthClass=regular" constant="26"/>
                                     </constraint>
                                 </constraints>
                             </imageView>

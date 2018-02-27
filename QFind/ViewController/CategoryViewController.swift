@@ -66,30 +66,34 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
 
-       searchBarView.searchButton.isHidden = true
+       
         registerNib()
         setUpUi()
         categoryPageNameString = PageNameInCategory.category
         backButton.isHidden = true
         backImageView.isHidden = true
-        if  (networkReachability?.isReachable)!{
+        
+        if  (networkReachability?.isReachable)! {
             getCategoriesFromServer()
         }
         else{
             self.categoryLoadingView.stopLoading()
              self.categoryLoadingView.isHidden = true
-            
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+            let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+            self.view.makeToast(checkInternet)
         }
         
         //Refreshcontrol
         self.categoryCollectionView.register(UINib(nibName: "CustomFooterView", bundle: nil), forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: footerViewReuseIdentifier)
+        
+       
     }
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-        
+         setFontForCategory()
+        predicateSearchKey = ""
         categorySliderLoader.isHidden = false
         categorySliderLoader.startAnimating()
         if (UIDevice.current.userInterfaceIdiom == .pad)
@@ -103,13 +107,17 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         setLocalizedVariables()
         setRTLSupport()
         sliderSetUp()
-        setFontForCategory()
+        
         searchBarView.searchText.text = ""
         bottomBar.favoriteview.backgroundColor = UIColor.white
         bottomBar.historyView.backgroundColor = UIColor.white
         bottomBar.homeView.backgroundColor = UIColor.white
         
        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+       setFontForCategory()
     }
     
     func setUpUi()
@@ -161,7 +169,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             break
         }
         
-         self.searchBarView.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+       //  self.searchBarView.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
 
     }
     func registerNib()
@@ -271,14 +279,26 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell : CategoryCollectionViewCell = categoryCollectionView.dequeueReusableCell(withReuseIdentifier: "categoryCellId", for: indexPath) as! CategoryCollectionViewCell
         self.categoryLoadingView.hideNoDataView()
+
         if (categoryPageNameString == PageNameInCategory.category)
         {
+            
             backButton.isHidden = true
             backImageView.isHidden = true
             cell.titleCenterConstraint.constant = 0
             cell.subTitleLabel.isHidden = true
             let categoryDictionary = categoryDataArray![indexPath.row]
             cell.setCategoryCellValues(categoryValues: categoryDictionary)
+//            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+//                cell.titleLabel.font = UIFont(name: "Lato-Light", size: cell.titleLabel.font.pointSize)
+//                cell.subTitleLabel.font = UIFont(name: "Lato-Light", size: cell.subTitleLabel.font.pointSize)
+//            }
+//            else {
+//                cell.titleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: cell.titleLabel.font.pointSize)
+//                cell.subTitleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: cell.subTitleLabel.font.pointSize)
+//            }
+            
+            
         }
         else if (categoryPageNameString == PageNameInCategory.subcategory){
             backButton.isHidden = false
@@ -286,9 +306,11 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             cell.titleCenterConstraint.constant = 0
             cell.subTitleLabel.isHidden = true
             categoryTitle.text = subCategoryName
+            
             let subCategoryDictionary = subCategoryDataArray![indexPath.row]
             
             cell.setSubCategoryCellValues(subCategoryValues: subCategoryDictionary)
+            
         }
         else if(categoryPageNameString == PageNameInCategory.serviceProvider){
             backButton.isHidden = false
@@ -297,7 +319,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             cell.subTitleLabel.isHidden = false
             let serviceProviderDict = serviceProviderArray[indexPath.row]
             cell.setServiceProviderCellValues(serviceProviderValues: serviceProviderDict)
-            
+           
         }
         cell.layer.shadowColor = UIColor.lightGray.cgColor
         cell.layer.shadowOffset = CGSize(width:0,height: 2.0)
@@ -305,10 +327,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         cell.layer.shadowOpacity = 1.0
         cell.layer.masksToBounds = false;
         cell.layer.shadowPath = UIBezierPath(roundedRect:cell.bounds, cornerRadius:cell.contentView.layer.cornerRadius).cgPath
-        
-      
        
-        
         return cell
     }
  
@@ -329,6 +348,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                         categoryLoadingView.isHidden = false
                         categoryPageNameString = PageNameInCategory.subcategory
                         subCategoryName = categoryDict.categories_name?.uppercased()
+                        
                         categoryTitle.text = categoryDict.categories_name?.uppercased()
                         backButton.isHidden = false
                         backImageView.isHidden = false
@@ -355,13 +375,14 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     self.categoryLoadingView.stopLoading()
                     self.categoryLoadingView.isHidden = true
                     self.view.hideAllToasts()
-                    self.view.makeToast("Check your internet connections")
+                    let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                    self.view.makeToast(checkInternet)
                     }
                 
                 
             }
             else if(categoryPageNameString == PageNameInCategory.subcategory) {
-                if  (networkReachability?.isReachable)! {
+                if  (networkReachability?.isReachable)!  {
                     categoryPageNameString = PageNameInCategory.serviceProvider
                     backButton.isHidden = false
                     backImageView.isHidden = false
@@ -379,7 +400,8 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     self.categoryLoadingView.stopLoading()
                     self.categoryLoadingView.isHidden = true
                     self.view.hideAllToasts()
-                    self.view.makeToast("Check your internet connections")
+                    let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                    self.view.makeToast(checkInternet)
                     }
             }
             else {
@@ -442,42 +464,34 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
  // MARK: Bottombar
     func favouriteButtonPressed() {
       
-        //if  (networkReachability?.isReachable)!{
+       
             controller.view.removeFromSuperview()
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             
             historyVC.pageNameString = PageName.favorite
             self.present(historyVC, animated: false, completion: nil)
-//        }
-//        else {
-//            self.view.hideAllToasts()
-//            self.view.makeToast("Check your internet connections")
-//        }
-//
     }
+
     func homebuttonPressed() {
 
       
         self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
     func historyButtonPressed() {
-      //  if  (networkReachability?.isReachable)!{
+      
             controller.view.removeFromSuperview()
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             
             historyVC.pageNameString = PageName.history
             self.present(historyVC, animated: false, completion: nil)
-//        }
-//        else {
-//            self.view.hideAllToasts()
-//            self.view.makeToast("Check your internet connections")
-//        }
+
        
     }
     // MARK: Searchbar
     func searchButtonPressed() {
         controller.view.removeFromSuperview()
         if  (networkReachability?.isReachable)!{
+             if ((predicateSearchKey.count) > 0 ) {
             let trimmedText = searchBarView.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
            
                 let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
@@ -486,12 +500,14 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 historyVC.searchType = 4
                 historyVC.searchKey = trimmedText
                 self.present(historyVC, animated: false, completion: nil)
-          
+            }
             
         }
         else {
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+            searchBarView.searchText.resignFirstResponder()
+            let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+            self.view.makeToast(checkInternet)
         }
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
@@ -502,12 +518,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         if (isBackSpace == -92){
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
         }
-        if ((predicateSearchKey.count) > 0 ) {
-            searchBarView.searchButton.isHidden = false
-        }
-        else {
-            searchBarView.searchButton.isHidden = true
-        }
+
             if ((predicateSearchKey.count) >= 2)
             {
                     controller.view.isHidden = false
@@ -590,15 +601,15 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             }
             else{
                 categoryPageNameString = PageNameInCategory.category
-                self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
                 
+                self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
                 categoryCollectionView.reloadData()
             }
         }
         else{
             categoryPageNameString = PageNameInCategory.category
-            self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
             
+            self.categoryTitle.text = NSLocalizedString("CATEGORIES", comment: "CATEGORIES Label in the category page")
             categoryCollectionView.reloadData()
         }
         
@@ -606,7 +617,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     // MARK: Service calls
     func getCategoriesFromServer()
     {
-        if(networkReachability?.isReachable == true){
+        if  (networkReachability?.isReachable)!{
             if let tokenString = tokenDefault.value(forKey: "accessTokenString")
             {
             Alamofire.request(QFindRouter.getCategory(["token": tokenString,
@@ -643,8 +654,6 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     }
     func getSubcategoriesFromServer()
     {
-        //categoryLoadingView.isHidden = false
-        //categoryLoadingView.showLoading()
         
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
@@ -737,6 +746,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                         if ((data.response == "error") || (data.code != "200")){
                             self.categorySliderLoader.stopAnimating()
                             self.categorySliderLoader.isHidden = true
+                            self.slideShow.addImage(UIImage(named: "placeholder"))
                         }
                         else{
                              self.categorySliderLoader.stopAnimating()
@@ -748,6 +758,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     case .failure(let error):
                         self.categorySliderLoader.stopAnimating()
                         self.categorySliderLoader.isHidden = true
+                        self.slideShow.addImage(UIImage(named: "placeholder"))
                        
                     }
                     
@@ -812,7 +823,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             Alamofire.request(QFindRouter.getServiceProvider(["token": tokenString,
-                                                              "language" :languageKey , "category": categoryId, "limit": 10,"offset": offsetValue]))
+                                                              "language" :1 , "category": categoryId, "limit": 10,"offset": offsetValue]))
                 .responseObject { (response: DataResponse<ServiceProviderData>) -> Void in
                     switch response.result {
                     case .success(let data):
@@ -823,14 +834,13 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                             if (offsetValue < 2){
                             self.categoryLoadingView.noDataView.isHidden = false
                             self.categoryLoadingView.showNoDataView()
-                            self.categoryLoadingView.noDataLabel.text = "No Results Found"
+                            let noDataText = NSLocalizedString("No_result_found", comment: "No result message")
+                            self.categoryLoadingView.noDataLabel.text = noDataText
                             self.categoryLoader.stopAnimating()
                             self.categoryLoader.isHidden = true
                             }
                         }
                         else{
-                            
-                           
                             self.categoryLoadingView.stopLoading()
                              self.categoryLoadingView.isHidden = true
                             self.categoryLoader.stopAnimating()
@@ -852,7 +862,8 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                          if (offsetValue < 2){
                             self.categoryLoadingView.isHidden = false
                             self.categoryLoadingView.showNoDataView()
-                            self.categoryLoadingView.noDataLabel.text = "No Results Found"
+                            let noDataText = NSLocalizedString("No_result_found", comment: "No result message")
+                            self.categoryLoadingView.noDataLabel.text = noDataText
                             self.categoryLoadingView.noDataView.isHidden = false
                        
                         }
@@ -909,12 +920,27 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         
     }
     func setFontForCategory() {
+        
+        let searchPlaceHolder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
             categoryTitle.font = UIFont(name: "Lato-Bold", size: categoryTitle.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "Lato-Regular", size: (searchBarView.searchText.font?.pointSize)!)! // Note the !
+            ]
+           searchBarView.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes:attributes)
         }
         else {
-            categoryTitle.font = UIFont(name: "GE_SS_Unique_Bold", size: categoryTitle.font.pointSize)
+            categoryTitle.font = UIFont(name: "GESSUniqueBold-Bold", size: categoryTitle.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "GESSUniqueLight-Light", size: (searchBarView.searchText.font?.pointSize)!)! 
+            ]
+            searchBarView.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes: attributes)
         }
+        
+    
     }
+    
 
 }

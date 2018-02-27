@@ -52,12 +52,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         setRTLSupportForHistory()
         registerCell()
         
-        fetchHistoryInfo()
-        setFontForHistory()
+       fetchHistoryInfo()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-        historySearchBar.searchButton.isHidden = true
+       
         if (UIDevice.current.userInterfaceIdiom == .pad)
         {
             predicateTableHeight = 85
@@ -81,7 +81,14 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         else if (pageNameString == PageName.favorite){
             fetchDataFromCoreData()
         }
+//        else if (pageNameString == PageName.history){
+//            fetchHistoryInfo()
+//        }
         
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        setFontForHistory()
     }
     func setUi()
     {
@@ -124,7 +131,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     func setLocalizedVariable()
     {
         
-        self.historySearchBar.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+       // self.historySearchBar.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
         switch pageNameString {
         case .history?:
             self.historyLabel.text = NSLocalizedString("HISTORY", comment: "HISTORY Label in the history page")
@@ -153,6 +160,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 return historyFullArray.count
             }
             else{
+               
                 return 0
             }
             
@@ -197,22 +205,18 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         case .searchResult?:
             return (searchResultArray?.count)!
         default:
+            
             return 0
             
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        historyLoadingView.stopLoading()
+        historyLoadingView.isHidden = true
+        
         let cell : HistoryCollectionViewCell = historyCollectionView.dequeueReusableCell(withReuseIdentifier: "historyCellId", for: indexPath) as! HistoryCollectionViewCell
-        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-           cell.titleLabel.font = UIFont(name: "Lato-Light", size: cell.titleLabel.font.pointSize)
-          cell.subLabel.font = UIFont(name: "Lato-Light", size: cell.subLabel.font.pointSize)
-            
-        }
-        else {
-            cell.titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: cell.titleLabel.font.pointSize)
-            cell.subLabel.font = UIFont(name: "GE_SS_Unique_Light", size: cell.subLabel.font.pointSize)
-        }
+        
         switch pageNameString{
         case .history?:
             
@@ -230,10 +234,19 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             cell.favoriteButton.isHidden = false
             let favoriteDict = favoritesArray![indexPath.row]
             let id = favoriteDict.value(forKey: "id")
-            let name = favoriteDict.value(forKey: "name")
-            let shortDescription = favoriteDict.value(forKey: "shortdescription")
+            var name: String? = nil
+            var shortDescription: String? = nil
+            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                name = favoriteDict.value(forKey: "name") as? String
+                shortDescription = favoriteDict.value(forKey: "shortdescription") as? String
+            
+            }
+            else{
+                name = favoriteDict.value(forKey: "arabicname") as? String
+                shortDescription = favoriteDict.value(forKey: "arabiclocation") as? String
+            }
             let img = favoriteDict.value(forKey: "imgurl")
-            cell.setFavoriteData(favoriteId: id as! Int, favoriteName: name as! String, subTitle: shortDescription as! String, imgUrl: img as! String)
+            cell.setFavoriteData(favoriteId: id as! Int, favoriteName: (name)!, subTitle: (shortDescription)!, imgUrl: img as! String)
             
         case .searchResult?:
             cell.favoriteButton.isHidden = true
@@ -299,10 +312,11 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                     header.headerLabel.font = UIFont(name: "Lato-Bold", size: header.headerLabel.font.pointSize)
                 }
                 else {
-                    header.headerLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: header.headerLabel.font.pointSize)
+                    header.headerLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: header.headerLabel.font.pointSize)
                 }
                 let history = historyFullArray[indexPath.section] as! [HistoryEntity]
                 let sectionHistory = history[indexPath.row]
+                
                 let dateString = setDateFormat(dateData: sectionHistory.date_history!)
                 
                 header.headerLabel.text = dateString
@@ -310,13 +324,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 if(dateString == currentDateString){
                     header.headerLabel.text = NSLocalizedString("Today", comment: "section header Label in the history page")
                 }
-                if(indexPath.section == 1){
-                    
+                
                     let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
                     if(Calendar.current.isDate(sectionHistory.date_history!, inSameDayAs: yesterday)){
                         header.headerLabel.text = NSLocalizedString("Yesterday", comment: "section header Label in the history page")
                     }
-                }
+                
                 
             }
         case .favorite? :
@@ -391,7 +404,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     }
     func setFavoriteDictionary(favDict: NSManagedObject){
         favoriteDictionary.setValue(favDict.value(forKey: "address"), forKey: "address")
+        favoriteDictionary.setValue(favDict.value(forKey: "arabicaddress"), forKey: "arabicaddress")
         favoriteDictionary.setValue(favDict.value(forKey: "category"), forKey: "category")
+        favoriteDictionary.setValue(favDict.value(forKey: "arabiccategory"), forKey: "arabiccategory")
         favoriteDictionary.setValue(favDict.value(forKey: "email"), forKey: "email")
         favoriteDictionary.setValue(favDict.value(forKey: "facebookpage"), forKey: "facebookpage")
         favoriteDictionary.setValue(favDict.value(forKey: "id"), forKey: "id")
@@ -402,8 +417,10 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         favoriteDictionary.setValue(favDict.value(forKey: "mobile"), forKey: "mobile")
         
         favoriteDictionary.setValue(favDict.value(forKey: "name"), forKey: "name")
+         favoriteDictionary.setValue(favDict.value(forKey: "arabicname"), forKey: "arabicname")
         favoriteDictionary.setValue(favDict.value(forKey: "openingtime"), forKey: "openingtime")
         favoriteDictionary.setValue(favDict.value(forKey: "shortdescription"), forKey: "shortdescription")
+        favoriteDictionary.setValue(favDict.value(forKey: "arabiclocation"), forKey: "arabiclocation")
         favoriteDictionary.setValue(favDict.value(forKey: "snapchatpage"), forKey: "snapchatpage")
         favoriteDictionary.setValue(favDict.value(forKey: "twitterpage"), forKey: "twitterpage")
         favoriteDictionary.setValue(favDict.value(forKey: "website"), forKey: "website")
@@ -443,12 +460,23 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         setBottomBarHistoryBackground()
         previousPage = pageNameString
         if (pageNameString != PageName.history){
-            
+            historyLoadingView.isHidden = false
+            historyLoadingView.showLoading()
             pageNameString = PageName.history
-            
+            if (historyArray?.count == 0) {
+                historyLoadingView.stopLoading()
+                historyLoadingView.isHidden = false
+                historyLoadingView.showNoDataView()
+                let historyMissingMessage  = NSLocalizedString("No_history_message", comment: "No history message")
+                historyLoadingView.noDataLabel.text = historyMissingMessage
+                
+            }
+           
+                 historyCollectionView.reloadData()
+          
             setLocalizedVariable()
-            historyLoadingView.isHidden = true
-            historyCollectionView.reloadData()
+            
+           
             
             
         }
@@ -476,7 +504,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
         let trimmedText = historySearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        if (networkReachability?.isReachable)! {
+        if  (networkReachability?.isReachable)!  {
+            if ((predicateSearchKey.count) > 0 ) {
             previousPage = pageNameString
             pageNameString = PageName.searchResult
             setLocalizedVariable()
@@ -485,10 +514,13 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 return
             }
             getSearchResultFromServer(searchType: 4, searchKey: searchItemKey)
+            }
         }
         else {
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+            historySearchBar.searchText.resignFirstResponder()
+            let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+            self.view.makeToast(checkInternet)
         }
        
         // controller.predicateSearchTable.reloadData()
@@ -501,12 +533,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         if (isBackSpace == -92){
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
             
-        }
-        if ((predicateSearchKey.count) > 0 ) {
-            historySearchBar.searchButton.isHidden = false
-        }
-        else {
-            historySearchBar.searchButton.isHidden = true
         }
         if ((predicateSearchKey.count) >= 2)
         {
@@ -645,7 +671,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                             self.historyLoadingView.noDataView.isHidden = false
                             self.historyCollectionView.reloadData()
                             self.historyLoadingView.showNoDataView()
-                            self.historyLoadingView.noDataLabel.text = "No Results Found"
+                            let noDataText = NSLocalizedString("No_result_found", comment: "No result message")
+                            self.historyLoadingView.noDataLabel.text = noDataText
                         }
                         else{
                             
@@ -661,7 +688,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                         self.historyLoadingView.stopLoading()
                         self.historyCollectionView.reloadData()
                         self.historyLoadingView.showNoDataView()
-                        self.historyLoadingView.noDataLabel.text = "No Results Found"
+                        let noDataText = NSLocalizedString("No_result_found", comment: "No result message")
+                        self.historyLoadingView.noDataLabel.text = noDataText
                         self.historyLoadingView.noDataView.isHidden = false
                     }
                     
@@ -702,7 +730,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.historyLoadingView.isHidden = false
             self.historyLoadingView.stopLoading()
             self.historyLoadingView.showNoDataView()
-            self.historyLoadingView.noDataLabel.text = "No Favorites Found"
+            let favoriteMissingMessage  = NSLocalizedString("No_Favorite_message", comment: "No favorite message")
+            self.historyLoadingView.noDataLabel.text = favoriteMissingMessage
             self.historyLoadingView.noDataView.isHidden = false
             
         }
@@ -714,21 +743,40 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     
     
     func deleteFavorite(currentIndex: IndexPath){
-        let refreshAlert = UIAlertController(title: "Item will be deleted from favorites", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
-        refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-            guard let appDelegate =
-                UIApplication.shared.delegate as? AppDelegate else {
-                    return
+        var titleFont = [NSAttributedStringKey : UIFont]()
+        var messageFont = [NSAttributedStringKey : UIFont]()
+         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleFont = [NSAttributedStringKey.font: UIFont(name: "Lato-Bold", size: 17.0)!]
+            messageFont = [NSAttributedStringKey.font: UIFont(name: "Lato-Regular", size: 17.0)!]
+        }
+         else{
+            titleFont = [NSAttributedStringKey.font: UIFont(name: "GESSUniqueBold-Bold", size: 17.0)!]
+            messageFont = [NSAttributedStringKey.font: UIFont(name: "GESSUniqueLight-Light", size: 17.0)!]
+        }
+        let refreshAlert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        let titleMessage  = NSLocalizedString("Delete", comment: "favorite delete title")
+        let messageString  = NSLocalizedString("Favorite_delete_message", comment: "favorite delete confirmation message")
+        let titleAttrString = NSMutableAttributedString(string: titleMessage, attributes: titleFont)
+        let messageAttrString = NSMutableAttributedString(string: messageString, attributes: messageFont)
+        let deleteMessage = NSLocalizedString("Delete", comment: "Delete Label")
+        let cancelMessage = NSLocalizedString("Cancel", comment: "Cancel Label")
+        
+        refreshAlert.setValue(titleAttrString, forKey: "attributedTitle")
+        refreshAlert.setValue(messageAttrString, forKey: "attributedMessage")
+        let noMessageAction = UIAlertAction(title: cancelMessage, style: .default) { (action) in
+            refreshAlert .dismiss(animated: true, completion: nil)
+        }
+        let yesAction = UIAlertAction(title: deleteMessage, style: .default) { (action) in
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                                return
             }
             var managedContext : NSManagedObjectContext?
             if #available(iOS 10.0, *) {
-                managedContext =
-                    appDelegate.persistentContainer.viewContext
-                
+                managedContext = appDelegate.persistentContainer.viewContext
             } else {
                 // Fallback on earlier versions
                 managedContext = appDelegate.managedObjectContext
-                
+            
             }
             managedContext?.delete(self.favoritesArray![currentIndex.row])
             do {
@@ -741,18 +789,18 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 self.historyLoadingView.isHidden = false
                 self.historyLoadingView.stopLoading()
                 self.historyLoadingView.showNoDataView()
-                self.historyLoadingView.noDataLabel.text = "No Favorites Found"
+                let favoriteMissingMessage  = NSLocalizedString("No_Favorite_message", comment: "No favorite message")
+                self.historyLoadingView.noDataLabel.text = favoriteMissingMessage
                 self.historyLoadingView.noDataView.isHidden = false
-            }
-            self.historyCollectionView.reloadData()
-        }))
-        //cancel action
-        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
-            refreshAlert .dismiss(animated: true, completion: nil)
-        }))
-        self.present(refreshAlert, animated: true, completion: nil)
+                }
+                self.historyCollectionView.reloadData()
+            
+        }
+        refreshAlert.addAction(noMessageAction)
+        refreshAlert.addAction(yesAction)
+        present(refreshAlert, animated: true, completion: nil)
         
-        
+    
     }
     func fetchHistoryInfo(){
         let managedContext = getContext()
@@ -765,6 +813,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
+        
         if (historyArray?.count != 0){
             self.historyLoadingView.isHidden = true
             self.historyLoadingView.stopLoading()
@@ -774,7 +823,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.historyLoadingView.isHidden = false
             self.historyLoadingView.stopLoading()
             self.historyLoadingView.showNoDataView()
-            self.historyLoadingView.noDataLabel.text = "No History Found"
+            let historyMissingMessage  = NSLocalizedString("No_history_message", comment: "No history message")
+            self.historyLoadingView.noDataLabel.text = historyMissingMessage
             self.historyLoadingView.noDataView.isHidden = false
             
         }
@@ -793,12 +843,13 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     }
     func setHistoryArray(historyInfo: [HistoryEntity]){
         
-        
+        print(historyInfo.count)
         for i in 0 ..< historyInfo.count {
             if (i == 0){
                 sectionArray.append(historyInfo[i])
             }
             else{
+               
                 if ( Calendar.current.isDate((historyInfo[i].date_history)!, inSameDayAs:(historyInfo[i-1]).date_history!)){
                     sectionArray.append(historyInfo[i])
                     if(i == historyInfo.count-1){
@@ -814,7 +865,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                     }
                 }
             }
-        }
+            
+        }//for
         if (historyInfo.count == 1){
             historyFullArray.add(sectionArray)
         }
@@ -827,11 +879,24 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         return stringDate
     }
     func setFontForHistory() {
+        let searchPlaceHolder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
             historyLabel.font = UIFont(name: "Lato-Bold", size: historyLabel.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "Lato-Regular", size: (historySearchBar.searchText.font?.pointSize)!)! // Note the !
+            ]
+            
+            historySearchBar.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes:attributes)
         }
         else {
-            historyLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: historyLabel.font.pointSize)
+            historyLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: historyLabel.font.pointSize)
+           
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "GESSUniqueLight-Light", size: (historySearchBar.searchText.font?.pointSize)!)! // Note the !
+            ]
+            historySearchBar.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes: attributes)
         }
     }
     

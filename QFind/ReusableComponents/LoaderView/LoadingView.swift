@@ -56,7 +56,7 @@ class LoadingView: UIView {
     
     func showLoading()
     {
-        
+        activityIndicator.color = UIColor(red: 13/255, green: 50/255, blue: 68/255, alpha: 1)
        // self.isHidden = false
         self.noDataLabel.isHidden = true
         activityIndicator.isHidden = false
@@ -76,6 +76,8 @@ class LoadingView: UIView {
     func showNoDataView(){
         self.isNoDataDisplayed = true
         //self.isHidden = false
+        let noDataText = NSLocalizedString("No_result_found", comment: "No result message")
+        self.noDataLabel.text = noDataText
         self.noDataView.isHidden = false
         self.noDataView.backgroundColor = UIColor(red: 243/255, green: 241/255, blue: 238/255, alpha: 1)
         self.activityIndicator.stopAnimating()

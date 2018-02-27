@@ -256,6 +256,7 @@ struct ServiceProviderData: ResponseObjectSerializable {
 
 struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializable {
     var service_provider_name: String? = nil
+   
     var service_provider_address: String? = nil
     var service_provider_location: String? = nil
     var service_provider_category: String? = nil
@@ -273,6 +274,10 @@ struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializab
     var service_provider_snapchat_page: String? = nil
     var service_provider_googleplus_page: String? = nil
     var created_on: String? = nil
+    var service_provider_name_arabic: String? = nil
+    var service_provider_address_arabic: String? = nil
+    var service_provider_location_arabic: String? = nil
+    var service_provider_category_arabic: String? = nil
     var image : NSArray? = nil
 
     public init?(response: HTTPURLResponse, representation: AnyObject) {
@@ -296,6 +301,10 @@ struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializab
             self.service_provider_snapchat_page = representation["service_provider_snapchat_page"] as? String
             self.service_provider_googleplus_page = representation["service_provider_googleplus_page"] as? String
             self.created_on = representation["created_on"] as? String
+            self.service_provider_name_arabic = representation["service_provider_name_arabic"] as? String
+            self.service_provider_address_arabic = representation["service_provider_address_arabic"] as? String
+            self.service_provider_location_arabic = representation["service_provider_location_arabic"] as? String
+            self.service_provider_category_arabic = representation["service_provider_category_arabic"] as? String
             self.image = representation["image"] as? NSArray
         }
         

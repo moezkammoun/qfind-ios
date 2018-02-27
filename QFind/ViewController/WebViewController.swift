@@ -22,10 +22,10 @@ class WebViewController: UIViewController,UIWebViewDelegate {
         self.titleLabel.text = titleString?.uppercased()
         let requestObj = URLRequest(url: webViewUrl!)
         self.webView.loadRequest(requestObj)
-       webView.delegate = self
+        webView.delegate = self
         webViewLoader.isHidden = false
         webViewLoader.showLoading()
-        
+        webView.backgroundColor = UIColor.white
     }
 
     override func didReceiveMemoryWarning() {

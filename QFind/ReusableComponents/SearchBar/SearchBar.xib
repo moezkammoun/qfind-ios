@@ -28,11 +28,11 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="findByCategoryBG" translatesAutoresizingMaskIntoConstraints="NO" id="Ogp-DY-pvf">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="toolbarBackground" translatesAutoresizingMaskIntoConstraints="NO" id="Ogp-DY-pvf">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FaE-uI-dsG">
-                    <rect key="frame" x="20" y="12" width="268" height="36"/>
+                    <rect key="frame" x="20" y="12" width="286" height="36"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" translatesAutoresizingMaskIntoConstraints="NO" id="UbN-kp-qkG">
                             <rect key="frame" x="5" y="8" width="20" height="20"/>
@@ -44,7 +44,7 @@
                             </constraints>
                         </imageView>
                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
-                            <rect key="frame" x="29" y="5" width="205" height="26"/>
+                            <rect key="frame" x="29" y="5" width="223" height="26"/>
                             <color key="textColor" red="0.091605968770000004" green="0.19254547359999999" blue="0.24080395700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
                             <textInputTraits key="textInputTraits"/>
@@ -53,7 +53,7 @@
                             </variation>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sMP-z7-6ko">
-                            <rect key="frame" x="242" y="8" width="20" height="20"/>
+                            <rect key="frame" x="260" y="8" width="20" height="20"/>
                             <state key="normal" backgroundImage="search"/>
                             <connections>
                                 <action selector="didTapSearchButton:" destination="-1" eventType="touchUpInside" id="Bkw-pk-HHL"/>
@@ -80,13 +80,13 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zeu-PG-ePr">
-                    <rect key="frame" x="312" y="6.3333333333333321" width="47" height="49"/>
+                    <rect key="frame" x="328" y="15" width="31" height="31"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="49" id="ZhB-fX-NHQ">
-                            <variation key="heightClass=regular-widthClass=regular" constant="70"/>
+                        <constraint firstAttribute="height" constant="31" id="ZhB-fX-NHQ">
+                            <variation key="heightClass=regular-widthClass=regular" constant="50"/>
                         </constraint>
-                        <constraint firstAttribute="width" constant="47" id="wva-Zv-fot">
-                            <variation key="heightClass=regular-widthClass=regular" constant="70"/>
+                        <constraint firstAttribute="width" constant="31" id="wva-Zv-fot">
+                            <variation key="heightClass=regular-widthClass=regular" constant="50"/>
                         </constraint>
                     </constraints>
                     <state key="normal" image="hamburger-white"/>
@@ -97,26 +97,26 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="Ogp-DY-pvf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="3Xq-Dz-bdz"/>
                 <constraint firstAttribute="bottom" secondItem="FaE-uI-dsG" secondAttribute="bottom" constant="12" id="93s-99-jRR">
                     <variation key="heightClass=regular-widthClass=regular" constant="21"/>
                 </constraint>
+                <constraint firstItem="Ogp-DY-pvf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="IEX-x7-cuY"/>
                 <constraint firstItem="FaE-uI-dsG" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="M2G-hk-rPD">
                     <variation key="heightClass=regular-widthClass=regular" constant="21"/>
                 </constraint>
-                <constraint firstItem="Zeu-PG-ePr" firstAttribute="leading" secondItem="FaE-uI-dsG" secondAttribute="trailing" constant="24" id="P2v-Y5-Fev">
-                    <variation key="heightClass=regular-widthClass=regular" constant="55"/>
+                <constraint firstItem="Zeu-PG-ePr" firstAttribute="leading" secondItem="FaE-uI-dsG" secondAttribute="trailing" constant="22" id="P2v-Y5-Fev">
+                    <variation key="heightClass=regular-widthClass=regular" constant="50"/>
                 </constraint>
                 <constraint firstAttribute="trailing" secondItem="Zeu-PG-ePr" secondAttribute="trailing" constant="16" id="PYx-mq-Qd1">
-                    <variation key="heightClass=regular-widthClass=regular" constant="25"/>
+                    <variation key="heightClass=regular-widthClass=regular" constant="30"/>
                 </constraint>
                 <constraint firstItem="FaE-uI-dsG" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="dJI-eY-MsM">
                     <variation key="heightClass=regular-widthClass=regular" constant="25"/>
                 </constraint>
-                <constraint firstItem="Ogp-DY-pvf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="mMj-oJ-RNH"/>
-                <constraint firstItem="Ogp-DY-pvf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="mSk-KI-hou"/>
                 <constraint firstItem="Zeu-PG-ePr" firstAttribute="centerY" secondItem="FaE-uI-dsG" secondAttribute="centerY" id="oAr-WY-6jO"/>
-                <constraint firstAttribute="bottom" secondItem="Ogp-DY-pvf" secondAttribute="bottom" id="p0I-8Z-5t4"/>
-                <constraint firstAttribute="trailing" secondItem="Ogp-DY-pvf" secondAttribute="trailing" id="r1X-Jh-6fR"/>
+                <constraint firstAttribute="bottom" secondItem="Ogp-DY-pvf" secondAttribute="bottom" id="obN-lL-fnu"/>
+                <constraint firstAttribute="trailing" secondItem="Ogp-DY-pvf" secondAttribute="trailing" id="puL-Ki-Mle"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="208.5" y="91"/>
@@ -124,8 +124,8 @@
     </objects>
     <resources>
         <image name="Qmarker" width="29" height="29"/>
-        <image name="findByCategoryBG" width="740" height="155"/>
-        <image name="hamburger-white" width="60" height="60"/>
+        <image name="hamburger-white" width="512" height="512"/>
         <image name="search" width="29" height="29"/>
+        <image name="toolbarBackground" width="512" height="512"/>
     </resources>
 </document>
