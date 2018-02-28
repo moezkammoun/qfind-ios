@@ -44,7 +44,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-        settingsSearchBar.searchButton.isHidden = true
+       predicateSearchKey = ""
         if (UIDevice.current.userInterfaceIdiom == .pad)
         {
             predicateTableHeight = 85
@@ -53,11 +53,15 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             predicateTableHeight = 50
         }
         setLocalizedVariablesForSettings()
-        setFontForSettings()
+        
         settingsBottomBar.favoriteview.backgroundColor = UIColor.white
         settingsBottomBar.historyView.backgroundColor = UIColor.white
         settingsBottomBar.homeView.backgroundColor = UIColor.white
         settingsSearchBar.searchText.text = ""
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        setFontForSettings()
     }
     func setUILayout()
     {
@@ -108,7 +112,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
         self.selectLanguageLabel.text = NSLocalizedString("Select_language", comment: "Select_language Label in the Settings page")
         self.englishButtonLabel.text = NSLocalizedString("ENGLISH", comment: "ENGLISH BUTTON LABEL in the Settings page")
          self.arabicButtonLabel.text = NSLocalizedString("Arabic", comment: "Arabic button label in the Settings page")
-          self.settingsSearchBar.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+        
         
     }
     @IBAction func didTapEnglish(_ sender: UIButton) {
@@ -119,33 +123,57 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
 
         }
         else {
-            var refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language. ", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
-            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+            
+            let refreshAlert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+            let titleFont = [NSAttributedStringKey.font: UIFont(name: "GESSUniqueBold-Bold", size: 17.0)!]
+            
+            let redirectionMessage = NSLocalizedString("Settings_redicrection_message", comment: "redirection message in settings page")
+            let titleAttrString = NSMutableAttributedString(string: redirectionMessage, attributes: titleFont)
+            let yesMessage = NSLocalizedString("Yes", comment: "yes message")
+            let noMessage = NSLocalizedString("No", comment: "no message")
+            
+            refreshAlert.setValue(titleAttrString, forKey: "attributedTitle")
+            let noMessageAction = UIAlertAction(title: noMessage, style: .default) { (action) in
+                refreshAlert .dismiss(animated: true, completion: nil)
+            }
+            let yesAction = UIAlertAction(title: yesMessage, style: .default) { (action) in
                 LocalizationLanguage.setAppleLAnguageTo(lang: "en")
                 languageKey = 1
                 if #available(iOS 9.0, *) {
                     UIView.appearance().semanticContentAttribute = .forceLeftToRight
                     self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
-                    
+                
                 } else {
-                    // Fallback on earlier versions
+                                    // Fallback on earlier versions
                 }
-            }))
-            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
-                refreshAlert .dismiss(animated: true, completion: nil)
-            }))
-            present(refreshAlert, animated: true, completion: nil)
-           
+                
+            }
+            refreshAlert.addAction(noMessageAction)
+            refreshAlert.addAction(yesAction)
+             present(refreshAlert, animated: true, completion: nil)
+            
         }
        
     }
     
     @IBAction func didTapArabic(_ sender: UIButton) {
-      
+
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-            let refreshAlert = UIAlertController(title: "You will be redirected to the home page after changing the language.", message: "Do you want to continue?", preferredStyle: UIAlertControllerStyle.alert)
-            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-              
+            
+            
+            let refreshAlert = UIAlertController(title: "", message: "", preferredStyle: .alert)
+            let titleFont = [NSAttributedStringKey.font: UIFont(name: "Lato-Bold", size: 17.0)!]
+            
+            let redirectionMessage = NSLocalizedString("Settings_redicrection_message", comment: "redirection message in settings page")
+            let titleAttrString = NSMutableAttributedString(string: redirectionMessage, attributes: titleFont)
+            let yesMessage = NSLocalizedString("Yes", comment: "yes message")
+            let noMessage = NSLocalizedString("No", comment: "no message")
+            
+            refreshAlert.setValue(titleAttrString, forKey: "attributedTitle")
+            let noMessageAction = UIAlertAction(title: noMessage, style: .default) { (action) in
+                refreshAlert .dismiss(animated: true, completion: nil)
+            }
+            let yesAction = UIAlertAction(title: yesMessage, style: .default) { (action) in
                 LocalizationLanguage.setAppleLAnguageTo(lang: "ar")
                 languageKey = 2
                 if #available(iOS 9.0, *) {
@@ -155,20 +183,20 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
                 } else {
                     // Fallback on earlier versions
                 }
-            }))
-            
-            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
                 
-                refreshAlert .dismiss(animated: true, completion: nil)
-            }))
+            }
+            refreshAlert.addAction(noMessageAction)
+            refreshAlert.addAction(yesAction)
             present(refreshAlert, animated: true, completion: nil)
-          
+            
+           
             
         }
         else {
             
             self.view.hideAllToasts()
-            self.view.makeToast("You have already selected Arabic")
+            let selectionToast =  NSLocalizedString("Selected_arabic", comment: "selected arabic Label in the settings page")
+            self.view.makeToast(selectionToast)
         }
         
         
@@ -216,17 +244,21 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     func searchButtonPressed() {
         controller.view.removeFromSuperview()
          let trimmedText = settingsSearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-       if (networkReachability?.isReachable)! {
+       if  (networkReachability?.isReachable)!  {
+        if ((predicateSearchKey.count) > 0 ) {
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             
             historyVC.pageNameString = PageName.searchResult
             historyVC.searchType = 4
             historyVC.searchKey = trimmedText
             self.present(historyVC, animated: false, completion: nil)
+        }
        }
        else {
         self.view.hideAllToasts()
-        self.view.makeToast("Check your internet connections")
+        settingsSearchBar.searchText.resignFirstResponder()
+        let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+        self.view.makeToast(checkInternet)
         }
         
     }
@@ -241,12 +273,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
             
         }
-        if ((predicateSearchKey.count) > 0 ) {
-            settingsSearchBar.searchButton.isHidden = false
-        }
-        else {
-            settingsSearchBar.searchButton.isHidden = true
-        }
+
         if ((predicateSearchKey.count) >= 2)
         {
             controller.predicateProtocol = self
@@ -334,14 +361,26 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
         }
     }
     func setFontForSettings() {
+        let searchPlaceHolder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
             settingsLabel.font = UIFont(name: "Lato-Bold", size: settingsLabel.font.pointSize)
             selectLanguageLabel.font = UIFont(name: "Lato-Light", size: selectLanguageLabel.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "Lato-Regular", size: (settingsSearchBar.searchText.font?.pointSize)!)! // Note the !
+            ]
+            settingsSearchBar.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes:attributes)
             
         }
         else {
-            settingsLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: settingsLabel.font.pointSize)
-            selectLanguageLabel.font = UIFont(name: "GE_SS_Unique_Light", size: selectLanguageLabel.font.pointSize)
+            settingsLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: settingsLabel.font.pointSize)
+            selectLanguageLabel.font = UIFont(name: "GESSUniqueLight-Light", size: selectLanguageLabel.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "GESSUniqueLight-Light", size: (settingsSearchBar.searchText.font?.pointSize)!)!
+            ]
+            
+            settingsSearchBar.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes: attributes)
         }
     }
 

@@ -43,10 +43,19 @@ class SearchBarView: UIView,UITextFieldDelegate {
         searchInnerView.clipsToBounds = true
         searchText.delegate = self
        
-       //  self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
-        
+         self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+        setFontForSearchText()
     }
-
+    func setFontForSearchText() {
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            searchText.font = UIFont(name: "Lato-Regular", size: (searchText.font?.pointSize)!)
+            
+        }
+        else {
+            
+            searchText.font = UIFont(name: "GESSUniqueLight-Light", size: (searchText.font?.pointSize)!)
+        }
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         searchText.resignFirstResponder()
         return true

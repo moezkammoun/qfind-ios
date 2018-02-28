@@ -1,4 +1,4 @@
-//
+ //
 //  DetailViewController.swift
 //  QFind
 //
@@ -34,6 +34,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     var informationArray = NSMutableArray()
     var fromFavorite: Bool? = false
     var fromHistory: Bool? = false
+    var fromSearch: Bool? = false
     var favoriteDeleted : Bool? = false
     var favoriteDictinary = NSMutableDictionary()
     var historyDict: HistoryEntity?
@@ -42,13 +43,17 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         super.viewDidLoad()
         
         if(fromHistory == true){
-            titleLabel.text = historyDict?.name
-            
             setHistoryInformationData()
+            print(historyDict?.id)
+            print(Int((historyDict?.id)!))
+            fetchHistoryInfo(idValue: Int((historyDict?.id)!))
         }
-        else if(fromFavorite == false){
-            fetchHistoryInfo()
+         else if(fromFavorite == false){
+            fetchHistoryInfo(idValue: (serviceProviderArrayDict?.id)!)
         }
+//         else if(fromSearch == true){
+//            fetchHistoryInfo(idValue: (serviceProviderArrayDict?.id)!)
+//        }
         detailWebView.delegate = self
         
     }
@@ -60,8 +65,12 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         detailBottomBar.homeView.backgroundColor = UIColor.white
         
         initialSetUp()
-        setFontForInformationPage()
+       
         
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+         setFontForInformationPage()
     }
     func initialSetUp()
     {
@@ -77,28 +86,22 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         
         if (fromFavorite == true){
             informationArray = NSMutableArray()
-            if  (favoriteDictinary.value(forKey: "name") != nil) {
-                titleLabel.text = favoriteDictinary.value(forKey: "name") as! String
-            }
-            if  (favoriteDictinary.value(forKey: "shortdescription") != nil) {
-                locationLabel.text = favoriteDictinary.value(forKey: "shortdescription") as! String
-            }
+
             
             setFavoriteInformationData()
+            fetchHistoryInfo(idValue: favoriteDictinary.value(forKey: "id") as! Int)
         }
         else if (fromHistory == false){
             informationArray = NSMutableArray()
-            titleLabel.text = serviceProviderArrayDict?.service_provider_name
-            locationLabel.text = serviceProviderArrayDict?.service_provider_location
             setInformationData()
         }
         else{
             let fetchData = checkAddedToFavorites(serviceId: Int((historyDict?.id)!), entityNameString: "FavoriteEntity")
             if (fetchData.count == 0){
-                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
             }
             else{
-                favoriteButton.setImage(UIImage(named: "favorite-red"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
             }
         }
         
@@ -131,18 +134,13 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     }
     
     func favouriteButtonPressed() {
-       // if  (networkReachability?.isReachable)!{
+       
             detailBottomBar.favoriteview.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             
             historyVC.pageNameString = PageName.favorite
             self.present(historyVC, animated: false, completion: nil)
-//        }
-//        else {
-//            self.view.hideAllToasts()
-//            self.view.makeToast("Check your internet connections")
-//        }
-        
+
     }
     func homebuttonPressed() {
         
@@ -150,28 +148,23 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
     func historyButtonPressed() {
-      //  if  (networkReachability?.isReachable)!{
+     
             detailBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             
             historyVC.pageNameString = PageName.history
             self.present(historyVC, animated: false, completion: nil)
-//        }
-//        else {
-//            self.view.hideAllToasts()
-//            self.view.makeToast("Check your internet connections")
-//        }
+
         
     }
     @IBAction func didTapShare(_ sender: UIButton) {
-        if  (networkReachability?.isReachable)!{
+        if  (networkReachability?.isReachable)! {
             let firstActivityItem = "Text you want"
             let secondActivityItem : NSURL = NSURL(string: "http//:urlyouwant")!
             // If you want to put an image
-            let image : UIImage = UIImage(named: "banner-1")!
             
             let activityViewController : UIActivityViewController = UIActivityViewController(
-                activityItems: [firstActivityItem, secondActivityItem, image], applicationActivities: nil)
+                activityItems: [firstActivityItem, secondActivityItem], applicationActivities: nil)
             
             
             activityViewController.popoverPresentationController?.sourceView = (sender )
@@ -196,7 +189,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         else {
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+            let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+            self.view.makeToast(checkInternet)
         }
        
     }
@@ -216,13 +210,17 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 cell.forwardImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
             }
         }
+        
         if (indexPath.row == (informationArray.count)-1)
         {
             cell.separatorView.isHidden = true
         }
         let informationDict = informationArray[indexPath.row] as! [String: String]
         cell.setInformationCellValues(informationCellDict: informationDict)
-        
+        if (informationDict["key"] == "service_provider_opening_time")
+        {
+            cell.selectionStyle = .none
+        }
         
         
         return cell
@@ -257,7 +255,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         else if (informationDict["key"] == "service_provider_website")
         {
-            if  (networkReachability?.isReachable)!{
+            if  (networkReachability?.isReachable)! {
                 detailWebLoadingView.isHidden = false
                 detailWebLoadingView.showLoading()
                 let websiteUrlString = informationDict["value"]
@@ -275,12 +273,13 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             }
             else {
                 self.view.hideAllToasts()
-                self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
             }
         }
         else if (informationDict["key"] == "service_provider_address")
         {
-             if  (networkReachability?.isReachable)!{
+             if  (networkReachability?.isReachable)! {
                 detailWebLoadingView.isHidden = false
                 detailWebLoadingView.showLoading()
                 if ((serviceProviderArrayDict?.service_provider_map_location) != nil){
@@ -308,14 +307,15 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             }
              else {
                 self.view.hideAllToasts()
-                self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
             }
             
         }
             
         else if (informationDict["key"] == "service_provider_mail_account")
         {
-            if  (networkReachability?.isReachable)!{
+            if  (networkReachability?.isReachable)! {
                 
                 guard let email = informationDict["value"] else{
                     return
@@ -339,7 +339,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             }
             else {
                 self.view.hideAllToasts()
-                self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
             }
         }
         else if (informationDict["key"] == "service_provider_facebook_page")
@@ -372,13 +373,14 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             }
              else{
                 self.view.hideAllToasts()
-                self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
             }
         }
        
         else if (informationDict["key"] == "service_provider_instagram_page")
         {
-            if  (networkReachability?.isReachable)!{
+            if  (networkReachability?.isReachable)! {
                 detailWebLoadingView.isHidden = false
                 detailWebLoadingView.showLoading()
             var instagramHooks = "instagram://user?username=johndoe"
@@ -404,12 +406,13 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             }
             else{
                 self.view.hideAllToasts()
-                self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
             }
         }
         else if (informationDict["key"] == "service_provider_twitter_page")
         {
-            if  (networkReachability?.isReachable)!{
+            if  (networkReachability?.isReachable)! {
                 detailWebLoadingView.isHidden = false
                 detailWebLoadingView.showLoading()
                 let screenName =  "betkowskii"
@@ -433,12 +436,13 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         else{
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
         }
         }
         else if (informationDict["key"] == "service_provider_snapchat_page")
         {
-             if  (networkReachability?.isReachable)!{
+             if  (networkReachability?.isReachable)! {
                 detailWebLoadingView.isHidden = false
                 detailWebLoadingView.showLoading()
                 let appURL = URL(string: "snapchat://app")
@@ -461,7 +465,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         else{
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
         }
         }
         
@@ -480,10 +485,10 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     {
         let fetchData = checkAddedToFavorites(serviceId: (serviceProviderArrayDict?.id)!, entityNameString: "FavoriteEntity")
         if (fetchData.count == 0){
-            favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
+            favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
         }
         else{
-            favoriteButton.setImage(UIImage(named: "favorite-red"), for: .normal)
+            favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
         }
         if ((serviceProviderArrayDict?.service_provider_mobile_number) != nil){
             
@@ -496,10 +501,23 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_website","value" :(serviceProviderArrayDict?.service_provider_website)!,"imageName": "website" ]
             informationArray.add(informationDetails)
         }
-        if ((serviceProviderArrayDict?.service_provider_address) != nil){
-            
-            informationDetails = [ "key" : "service_provider_address","value" :(serviceProviderArrayDict?.service_provider_address)!,"imageName": "location"  ]
-            informationArray.add(informationDetails)
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+             titleLabel.text = serviceProviderArrayDict?.service_provider_name
+             locationLabel.text = serviceProviderArrayDict?.service_provider_location
+            if ((serviceProviderArrayDict?.service_provider_address) != nil){
+                
+                informationDetails = [ "key" : "service_provider_address","value" :(serviceProviderArrayDict?.service_provider_address)!,"imageName": "location"  ]
+                informationArray.add(informationDetails)
+            }
+        }
+        else{
+             titleLabel.text = serviceProviderArrayDict?.service_provider_name_arabic
+             locationLabel.text = serviceProviderArrayDict?.service_provider_location_arabic
+            if ((serviceProviderArrayDict?.service_provider_address_arabic) != nil){
+                
+                informationDetails = [ "key" : "service_provider_address_arabic","value" :(serviceProviderArrayDict?.service_provider_address_arabic)!,"imageName": "location"  ]
+                informationArray.add(informationDetails)
+            }
         }
         if ((serviceProviderArrayDict?.service_provider_opening_time) != nil){
             
@@ -513,25 +531,25 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         if (((serviceProviderArrayDict?.service_provider_facebook_page) != nil) && ((serviceProviderArrayDict?.service_provider_facebook_page) != "")){
             
-            informationDetails = [ "key" : "service_provider_facebook_page","value" :(serviceProviderArrayDict?.service_provider_facebook_page)! ,"imageName": ""]
+            informationDetails = [ "key" : "service_provider_facebook_page","value" :(serviceProviderArrayDict?.service_provider_facebook_page)! ,"imageName": "facebook"]
             informationArray.add(informationDetails)
         }
         
         
         if (((serviceProviderArrayDict?.service_provider_instagram_page) != nil) && ((serviceProviderArrayDict?.service_provider_instagram_page) != "")){
             
-            informationDetails = [ "key" : "service_provider_instagram_page", "value" :(serviceProviderArrayDict?.service_provider_instagram_page)!,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_instagram_page", "value" :(serviceProviderArrayDict?.service_provider_instagram_page)!,"imageName": "instagram" ]
             informationArray.add(informationDetails)
         }
         if (((serviceProviderArrayDict?.service_provider_twitter_page) != nil) && ((serviceProviderArrayDict?.service_provider_twitter_page) != "")){
             
-            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(serviceProviderArrayDict?.service_provider_twitter_page)!,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(serviceProviderArrayDict?.service_provider_twitter_page)!,"imageName": "twitter" ]
             informationArray.add(informationDetails)
         }
         
         if (((serviceProviderArrayDict?.service_provider_snapchat_page) != nil) && ((serviceProviderArrayDict?.service_provider_snapchat_page) != "")){
             
-            informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(serviceProviderArrayDict?.service_provider_snapchat_page)!,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(serviceProviderArrayDict?.service_provider_snapchat_page)!,"imageName": "snapchat" ]
             informationArray.add(informationDetails)
         }
        
@@ -544,10 +562,10 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         
         let fetchData = checkAddedToFavorites(serviceId: favoriteDictinary.value(forKey: "id") as! Int, entityNameString: "FavoriteEntity")
         if (fetchData.count == 0){
-            favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
+            favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
         }
         else{
-            favoriteButton.setImage(UIImage(named: "favorite-red"), for: .normal)
+            favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
         }
         
         if ((favoriteDictinary.value(forKey: "mobile")) != nil){
@@ -560,11 +578,33 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_website","value" :(favoriteDictinary.value(forKey: "website"))! as! String,"imageName": "website" ]
             informationArray.add(informationDetails)
         }
-        if ((favoriteDictinary.value(forKey: "address")) != nil){
-            
-            informationDetails = [ "key" : "service_provider_address","value" :(favoriteDictinary.value(forKey: "address"))! as! String,"imageName": "location"  ]
-            informationArray.add(informationDetails)
+        if ((LocalizationLanguage.currentAppleLanguage() == "en")) {
+            if  (favoriteDictinary.value(forKey: "name") != nil) {
+                titleLabel.text = favoriteDictinary.value(forKey: "name") as? String
+            }
+            if  (favoriteDictinary.value(forKey: "shortdescription") != nil) {
+                locationLabel.text = favoriteDictinary.value(forKey: "shortdescription") as? String
+            }
+            if ((favoriteDictinary.value(forKey: "address")) != nil){
+                
+                informationDetails = [ "key" : "service_provider_address","value" :(favoriteDictinary.value(forKey: "address"))! as! String,"imageName": "location"  ]
+                informationArray.add(informationDetails)
+            }
         }
+        else{
+            if  (favoriteDictinary.value(forKey: "arabicname") != nil) {
+                titleLabel.text = favoriteDictinary.value(forKey: "arabicname") as? String
+            }
+            if  (favoriteDictinary.value(forKey: "arabiclocation") != nil) {
+                locationLabel.text = favoriteDictinary.value(forKey: "arabiclocation") as? String
+            }
+            if ((favoriteDictinary.value(forKey: "arabicaddress")) != nil){
+                
+                informationDetails = [ "key" : "service_provider_address","value" :(favoriteDictinary.value(forKey: "arabicaddress"))! as! String,"imageName": "location"  ]
+                informationArray.add(informationDetails)
+            }
+        }
+        
         if ((favoriteDictinary.value(forKey: "openingtime")) != nil){
             
             informationDetails = [ "key" : "service_provider_opening_time","value" :(favoriteDictinary.value(forKey: "openingtime"))! as! String,"imageName": "time" ]
@@ -577,25 +617,25 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         if (((favoriteDictinary.value(forKey: "facebookpage")) != nil) && ((favoriteDictinary.value(forKey: "facebookpage") as! String) != "")){
             
-            informationDetails = [ "key" : "service_provider_facebook_page","value" :(favoriteDictinary.value(forKey: "facebookpage"))! as! String ,"imageName": ""]
+            informationDetails = [ "key" : "service_provider_facebook_page","value" :(favoriteDictinary.value(forKey: "facebookpage"))! as! String ,"imageName": "facebook"]
             informationArray.add(informationDetails)
         }
         
        
         if (((favoriteDictinary.value(forKey: "instagrampage")) != nil) && ((favoriteDictinary.value(forKey: "instagrampage") as! String) != "")){
             
-            informationDetails = [ "key" : "service_provider_instagram_page", "value" :(favoriteDictinary.value(forKey: "instagrampage"))! as! String,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_instagram_page", "value" :(favoriteDictinary.value(forKey: "instagrampage"))! as! String,"imageName": "instagram" ]
             informationArray.add(informationDetails)
         }
-        if (((favoriteDictinary.value(forKey: "twitterpage")) != nil) && ((favoriteDictinary.value(forKey: "twitterpage") as! String) != "")){
+        if (((favoriteDictinary.value(forKey: "twitterpage")) != nil) && ((favoriteDictinary.value(forKey: "twitterpage") as! String) != "twitter")){
             
-            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(favoriteDictinary.value(forKey: "twitterpage"))! as! String ,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(favoriteDictinary.value(forKey: "twitterpage"))! as! String ,"imageName": "twitter" ]
             informationArray.add(informationDetails)
         }
         
         if (((favoriteDictinary.value(forKey: "snapchatpage")) != nil) && ((favoriteDictinary.value(forKey: "snapchatpage") as! String) != "")){
             
-            informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(favoriteDictinary.value(forKey: "snapchatpage"))! as! String,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(favoriteDictinary.value(forKey: "snapchatpage"))! as! String,"imageName": "snapchat" ]
             informationArray.add(informationDetails)
         }
         
@@ -605,7 +645,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     }
     func setHistoryInformationData()
     {
-        
+       
         if (historyDict?.mobile != nil){
             
             informationDetails = ["key" : "service_provider_mobile_number","value" :(historyDict?.mobile)! ,"imageName": "phone"]
@@ -616,10 +656,25 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             informationDetails = [ "key" : "service_provider_website","value" :(historyDict?.website)! ,"imageName": "website" ]
             informationArray.add(informationDetails)
         }
-        if ((historyDict?.address) != nil){
+        if((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.text = historyDict?.name
+            locationLabel.text = historyDict?.shortdescription
+            if ((historyDict?.address) != nil){
+                
+                informationDetails = [ "key" : "service_provider_address","value" :(historyDict?.address)! ,"imageName": "location"  ]
+                informationArray.add(informationDetails)
+            }
             
-            informationDetails = [ "key" : "service_provider_address","value" :(historyDict?.address)! ,"imageName": "location"  ]
-            informationArray.add(informationDetails)
+            
+        }
+        else {
+            titleLabel.text = historyDict?.arabicname
+            locationLabel.text = historyDict?.arabiclocation
+            if ((historyDict?.address) != nil){
+                
+                informationDetails = [ "key" : "service_provider_address","value" :(historyDict?.arabicaddress)! ,"imageName": "location"  ]
+                informationArray.add(informationDetails)
+            }
         }
         if ((historyDict?.openingtime) != nil){
             
@@ -633,25 +688,25 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         }
         if (((historyDict?.facebookpage) != nil) && ((historyDict?.facebookpage) != "")){
             
-            informationDetails = [ "key" : "service_provider_facebook_page","value" :(historyDict?.facebookpage)!  ,"imageName": ""]
+            informationDetails = [ "key" : "service_provider_facebook_page","value" :(historyDict?.facebookpage)!  ,"imageName": "facebook"]
             informationArray.add(informationDetails)
         }
         
        
         if (((historyDict?.instagrampage) != nil) && ((historyDict?.instagrampage) != "")){
             
-            informationDetails = [ "key" : "service_provider_instagram_page", "value" :(historyDict?.instagrampage)! ,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_instagram_page", "value" :(historyDict?.instagrampage)! ,"imageName": "instagram" ]
             informationArray.add(informationDetails)
         }
         if (((historyDict?.twitterpage) != nil) && ((historyDict?.twitterpage) != "")){
             
-            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(historyDict?.twitterpage)! ,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_twitter_page", "value"  :(historyDict?.twitterpage)! ,"imageName": "twitter" ]
             informationArray.add(informationDetails)
         }
         
         if (((historyDict?.snapchatpage) != nil) && ((historyDict?.snapchatpage) != "")){
             
-            informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(historyDict?.snapchatpage)! ,"imageName": "" ]
+            informationDetails = [ "key" : "service_provider_snapchat_page", "value" :(historyDict?.snapchatpage)! ,"imageName": "snapchat" ]
             informationArray.add(informationDetails)
         }
         
@@ -664,16 +719,12 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         viewForwebView.removeFromSuperview()
     }
     @IBAction func didTapFavorite(_ sender: UIButton) {
-        
-        
-        
-        
         let managedContext = getContext()
         if (fromFavorite == true){
             if (favoriteDeleted == true){
                 favoriteDeleted = false
                 
-                favoriteButton.setImage(UIImage(named: "favorite-red"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
                 
                 saveFavoriteDetailsToCoreData()
                 
@@ -690,7 +741,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                 favoritesFetchRequest.predicate = NSPredicate.init(format: "id ==\(serviceId)")
                 let fetchResults = try! managedContext.fetch(favoritesFetchRequest)
                 if (fetchResults.count != 0){
-                    favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
+                    favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
                     for fetResult in fetchResults{
                         managedContext.delete(fetResult)
                     }
@@ -698,16 +749,18 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                     do {
                         try managedContext.save()
                         self.view.hideAllToasts()
-                        self.view.makeToast("Removed from Favorite")
+                        let favoriteRemovedMessage =  NSLocalizedString("Removed_from_favorites", comment: "Removed from favorite message")
+                        self.view.makeToast(favoriteRemovedMessage)
                     } catch {
                         print("error")
                     }
                     
                 }
                 else{
-                    favoriteButton.setImage(UIImage(named: "favorite-white"), for: .normal)
+                    favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
                     self.view.hideAllToasts()
-                    self.view.makeToast("Added to Favorite")
+                    let favoriteaddedMessage =  NSLocalizedString("Added_to_favorite", comment: "Addedc to favorite message")
+                    self.view.makeToast(favoriteaddedMessage)
                 }
                 
                 
@@ -717,15 +770,16 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         else if (fromHistory == false){
             let favFetchResults = checkAddedToFavorites(serviceId: (serviceProviderArrayDict?.id)!,entityNameString: "FavoriteEntity")
             if (favFetchResults.count == 0){
-                favoriteButton.setImage(UIImage(named: "favorite-red"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
                 saveDetailsToCoreData()
             }
             else{
-                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
                 for fetResult in favFetchResults{
                     managedContext.delete(fetResult)
                     self.view.hideAllToasts()
-                    self.view.makeToast("Removed from Favorite")
+                    let favoriteRemovedMessage =  NSLocalizedString("Removed_from_favorites", comment: "Removed from favorite message")
+                    self.view.makeToast(favoriteRemovedMessage)
                 }
                 
                 do {
@@ -740,15 +794,16 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         else{
             let favFetchResults = checkAddedToFavorites(serviceId: Int((historyDict?.id)!),entityNameString: "FavoriteEntity")
             if (favFetchResults.count == 0){
-                favoriteButton.setImage(UIImage(named: "favorite-red"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
                 saveFavoriteToCoreDataUsingHistory()
             }
             else{
-                favoriteButton.setImage(UIImage(named: "favorite-White"), for: .normal)
+                favoriteButton.setImage(UIImage(named: "favoriteBlank"), for: .normal)
                 for fetResult in favFetchResults{
                     managedContext.delete(fetResult)
                     self.view.hideAllToasts()
-                    self.view.makeToast("Removed from Favorite")
+                    let favoriteRemovedMessage =  NSLocalizedString("Removed_from_favorites", comment: "Removed from favorite message")
+                    self.view.makeToast(favoriteRemovedMessage)
                 }
                 
                 do {
@@ -760,28 +815,33 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             
         }
     }
-    //for favorite data passed from service provider
+    //MARK: Favorite Coredata
     func saveDetailsToCoreData()
     {
         let managedContext = getContext()
-        let entityFavorite =
-            NSEntityDescription.entity(forEntityName: "FavoriteEntity",
-                                       in: managedContext)!
-        
-        let favoriteAttribute = NSManagedObject(entity: entityFavorite,
-                                                insertInto: managedContext)
-        
         //set values to coredata
         guard let nameString = (serviceProviderArrayDict?.service_provider_name) else{
+            return
+        }
+        guard let arabicNameString = (serviceProviderArrayDict?.service_provider_name_arabic) else{
             return
         }
         guard let address = (serviceProviderArrayDict?.service_provider_address) else{
             return
         }
+        guard let arabicAddress = (serviceProviderArrayDict?.service_provider_address_arabic) else{
+            return
+        }
         guard let shortDescription = (serviceProviderArrayDict?.service_provider_location) else{
             return
         }
+        guard let arabicLocation = (serviceProviderArrayDict?.service_provider_location_arabic) else{
+            return
+        }
         guard let category = (serviceProviderArrayDict?.service_provider_category) else{
+            return
+        }
+        guard let arabicCategory = (serviceProviderArrayDict?.service_provider_category_arabic) else{
             return
         }
         guard let logoImage = (serviceProviderArrayDict?.service_provider_logo) else{
@@ -821,9 +881,17 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             return
         }
         
+        let entityFavorite =
+            NSEntityDescription.entity(forEntityName: "FavoriteEntity",
+                                       in: managedContext)!
+        
+        let favoriteAttribute = NSManagedObject(entity: entityFavorite,
+                                                insertInto: managedContext)
         favoriteAttribute.setValue(serviceId, forKey: "id")
         favoriteAttribute.setValue(address, forKey: "address")
+        favoriteAttribute.setValue(arabicAddress, forKey: "arabicaddress")
         favoriteAttribute.setValue(category, forKey: "category")
+        favoriteAttribute.setValue(arabicCategory, forKey: "arabiccategory")
         favoriteAttribute.setValue(email, forKey: "email")
         favoriteAttribute.setValue(websitePage, forKey: "website")
         favoriteAttribute.setValue(mobile, forKey: "mobile")
@@ -836,13 +904,16 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
         
         favoriteAttribute.setValue(nameString, forKey: "name")
+        favoriteAttribute.setValue(arabicNameString, forKey: "arabicname")
         favoriteAttribute.setValue(logoImage, forKey: "imgurl")
         favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
+        favoriteAttribute.setValue(arabicLocation, forKey: "arabiclocation")
         favoriteAttribute.setValue(Date(), forKey: "favoritedate")
         do {
             try managedContext.save()
             self.view.hideAllToasts()
-            self.view.makeToast("Added To Favorite")
+            let favoriteaddedMessage =  NSLocalizedString("Added_to_favorite", comment: "Addedc to favorite message")
+            self.view.makeToast(favoriteaddedMessage)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
@@ -851,6 +922,70 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     {
         
         let managedContext = getContext()
+        
+        
+        //set values to coredata
+        guard let nameString = favoriteDictinary.value(forKey: "name") else{
+            return
+        }
+        
+        
+        guard let arabicNameString = favoriteDictinary.value(forKey: "arabicname") else {
+            return
+        }
+        guard let address = favoriteDictinary.value(forKey: "address") else {
+            return
+        }
+        guard let arabicaddress = favoriteDictinary.value(forKey: "arabicaddress") else {
+            return
+        }
+        guard let shortDescription = (favoriteDictinary.value(forKey: "shortdescription")) else {
+            return
+        }
+        guard let arabicLocation = (favoriteDictinary.value(forKey: "arabiclocation")) else {
+            return
+        }
+        guard let category = (favoriteDictinary.value(forKey: "category")) else {
+            return
+        }
+        guard let arabicCategory = (favoriteDictinary.value(forKey: "arabiccategory")) else {
+            return
+        }
+        guard let logoImage = (favoriteDictinary.value(forKey: "imgurl")) else {
+            return
+        }
+        guard let serviceId = (favoriteDictinary.value(forKey: "id")) else {
+           return
+        }
+        guard let email = (favoriteDictinary.value(forKey: "email")) else {
+            return
+        }
+        guard let websitePage = (favoriteDictinary.value(forKey: "website")) else {
+            return
+        }
+        guard let mobile = (favoriteDictinary.value(forKey: "mobile")) else {
+            return
+        }
+        guard let mapLocation = (favoriteDictinary.value(forKey: "maplocation")) else {
+            return
+        }
+        guard let facebookPage = (favoriteDictinary.value(forKey: "facebookpage")) else {
+            return
+        }
+        guard let instagramPage = (favoriteDictinary.value(forKey: "instagrampage")) else {
+            return
+        }
+        guard let twitterPage = (favoriteDictinary.value(forKey: "twitterpage")) else {
+            return
+        }
+        guard let snapChatPage = (favoriteDictinary.value(forKey: "snapchatpage")) else {
+            return
+        }
+        guard let openingTime = (favoriteDictinary.value(forKey: "openingtime")) else {
+            return
+        }
+      
+      
         let entityFavorite =
             NSEntityDescription.entity(forEntityName: "FavoriteEntity",
                                        in: managedContext)!
@@ -858,79 +993,34 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         let favoriteAttribute = NSManagedObject(entity: entityFavorite,
                                                 insertInto: managedContext)
         
-        //set values to coredata
-        let nameString = favoriteDictinary.value(forKey: "name")
-        if(nameString != nil) {
-            favoriteAttribute.setValue(nameString, forKey: "name")
-        }
-        
-        let address = favoriteDictinary.value(forKey: "address")
-        if (address != nil){
-            favoriteAttribute.setValue(address, forKey: "address")
-        }
-        let shortDescription = (favoriteDictinary.value(forKey: "shortdescription"))
-        if (shortDescription != nil){
-            favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
-        }
-        let category = (favoriteDictinary.value(forKey: "category"))
-        if (category != nil){
-            favoriteAttribute.setValue(category, forKey: "category")
-        }
-        let logoImage = (favoriteDictinary.value(forKey: "imgurl"))
-        if (logoImage != nil){
-            favoriteAttribute.setValue(logoImage, forKey: "imgurl")
-        }
-        let serviceId = (favoriteDictinary.value(forKey: "id"))
-        if (serviceId != nil){
-            favoriteAttribute.setValue(serviceId, forKey: "id")
-        }
-        let email = (favoriteDictinary.value(forKey: "email"))
-        if (email != nil){
-            favoriteAttribute.setValue(email, forKey: "email")
-        }
-        let websitePage = (favoriteDictinary.value(forKey: "website"))
-        if(websitePage != nil){
-            favoriteAttribute.setValue(websitePage, forKey: "website")
-        }
-        let mobile = (favoriteDictinary.value(forKey: "mobile"))
-        if(mobile != nil){
-            favoriteAttribute.setValue(mobile, forKey: "mobile")
-        }
-        let mapLocation = (favoriteDictinary.value(forKey: "maplocation"))
-        if(mapLocation != nil){
-            favoriteAttribute.setValue(mapLocation, forKey: "maplocation")
-            
-        }
-        let facebookPage = (favoriteDictinary.value(forKey: "facebookpage"))
-        if(facebookPage != nil){
-            favoriteAttribute.setValue(facebookPage, forKey: "facebookpage")
-        }
-        
-        
-        
-        let instagramPage = (favoriteDictinary.value(forKey: "instagrampage"))
-        if(instagramPage != nil){
-            favoriteAttribute.setValue(instagramPage, forKey: "instagrampage")
-        }
-        let twitterPage = (favoriteDictinary.value(forKey: "twitterpage"))
-        if(twitterPage != nil){
-            favoriteAttribute.setValue(twitterPage, forKey: "twitterpage")
-        }
-        let snapChatPage = (favoriteDictinary.value(forKey: "snapchatpage"))
-        if(snapChatPage != nil){
-            favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
-        }
-        
-        let openingTime = (favoriteDictinary.value(forKey: "openingtime"))
-        if(openingTime != nil){
-            favoriteAttribute.setValue(openingTime, forKey: "openingtime")
-        }
+        favoriteAttribute.setValue(nameString, forKey: "name")
+        favoriteAttribute.setValue(arabicNameString, forKey: "arabicname")
+        favoriteAttribute.setValue(address, forKey: "address")
+        favoriteAttribute.setValue(arabicaddress, forKey: "arabicaddress")
+        favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
+        favoriteAttribute.setValue(arabicLocation, forKey: "arabiclocation")
+        favoriteAttribute.setValue(category, forKey: "category")
+        favoriteAttribute.setValue(arabicCategory, forKey: "arabiccategory")
+        favoriteAttribute.setValue(logoImage, forKey: "imgurl")
+        favoriteAttribute.setValue(serviceId, forKey: "id")
+        favoriteAttribute.setValue(email, forKey: "email")
+        favoriteAttribute.setValue(websitePage, forKey: "website")
+        favoriteAttribute.setValue(mobile, forKey: "mobile")
+        favoriteAttribute.setValue(mapLocation, forKey: "maplocation")
+        favoriteAttribute.setValue(facebookPage, forKey: "facebookpage")
+        favoriteAttribute.setValue(instagramPage, forKey: "instagrampage")
+        favoriteAttribute.setValue(twitterPage, forKey: "twitterpage")
+        favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
+        favoriteAttribute.setValue(openingTime, forKey: "openingtime")
         favoriteAttribute.setValue(Date(), forKey: "favoritedate")
+        
+        
         
         do {
             try managedContext.save()
             self.view.hideAllToasts()
-            self.view.makeToast("Added To Favorite")
+            let favoriteaddedMessage =  NSLocalizedString("Added_to_favorite", comment: "Addedc to favorite message")
+            self.view.makeToast(favoriteaddedMessage)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
@@ -938,24 +1028,31 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     func saveFavoriteToCoreDataUsingHistory()
     {
         let managedContext = getContext()
-        let entityFavorite =
-            NSEntityDescription.entity(forEntityName: "FavoriteEntity",
-                                       in: managedContext)!
         
-        let favoriteAttribute = NSManagedObject(entity: entityFavorite,
-                                                insertInto: managedContext)
         
         //set values to coredata
         guard let nameString = (historyDict?.name) else{
             return
         }
+        guard let arabicNameString = (historyDict?.arabicname) else{
+            return
+        }
         guard let address = (historyDict?.address) else{
+            return
+        }
+        guard let arabicAddress = (historyDict?.arabicaddress) else{
             return
         }
         guard let shortDescription = (historyDict?.shortdescription) else{
             return
         }
+        guard let arabicLocation = (historyDict?.arabiclocation) else{
+            return
+        }
         guard let category = (historyDict?.category) else{
+            return
+        }
+        guard let arabicCategory = (historyDict?.arabiccategory) else{
             return
         }
         guard let logoImage = (historyDict?.imgurl) else{
@@ -995,9 +1092,18 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             return
         }
         
+        let entityFavorite =
+            NSEntityDescription.entity(forEntityName: "FavoriteEntity",
+                                       in: managedContext)!
+        
+        let favoriteAttribute = NSManagedObject(entity: entityFavorite,
+                                                insertInto: managedContext)
+        
         favoriteAttribute.setValue(serviceId, forKey: "id")
         favoriteAttribute.setValue(address, forKey: "address")
+        favoriteAttribute.setValue(arabicAddress, forKey: "arabicaddress")
         favoriteAttribute.setValue(category, forKey: "category")
+        favoriteAttribute.setValue(arabicCategory, forKey: "arabiccategory")
         favoriteAttribute.setValue(email, forKey: "email")
         favoriteAttribute.setValue(websitePage, forKey: "website")
         favoriteAttribute.setValue(mobile, forKey: "mobile")
@@ -1010,99 +1116,301 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
         
         favoriteAttribute.setValue(nameString, forKey: "name")
+        favoriteAttribute.setValue(arabicNameString, forKey: "arabicname")
         favoriteAttribute.setValue(logoImage, forKey: "imgurl")
         favoriteAttribute.setValue(shortDescription, forKey: "shortdescription")
+        favoriteAttribute.setValue(arabicLocation, forKey: "arabiclocation")
         favoriteAttribute.setValue(Date(), forKey: "favoritedate")
         do {
             try managedContext.save()
             self.view.hideAllToasts()
-            self.view.makeToast("Added To Favorite")
+            let favoriteaddedMessage =  NSLocalizedString("Added_to_favorite", comment: "Addedc to favorite message")
+            self.view.makeToast(favoriteaddedMessage)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
     }
     func saveHistoryDataToCoreData(){
-        let managedContext = getContext()
+       let managedContext = getContext()
+        if(fromHistory == true) {
+            guard let nameString = (historyDict?.name) else{
+                return
+            }
+            guard let arabicNameString = (historyDict?.arabicname) else{
+                return
+            }
+            guard let address = (historyDict?.address) else{
+                return
+            }
+            guard let arabicAddress = (historyDict?.arabicaddress) else{
+                return
+            }
+            guard let shortDescription = (historyDict?.shortdescription) else{
+                return
+            }
+            guard let arabicLocation = (historyDict?.arabiclocation) else{
+                return
+            }
+            guard let category = (historyDict?.category) else{
+                return
+            }
+            guard let arabicCategory = (historyDict?.arabiccategory) else{
+                return
+            }
+            guard let logoImage = (historyDict?.imgurl) else{
+                return
+            }
+            guard let serviceId = (historyDict?.id) else{
+                return
+            }
+            
+            guard let email = (historyDict?.email) else{
+                return
+            }
+            guard let websitePage = (historyDict?.website) else{
+                return
+            }
+            guard let mobile = (historyDict?.mobile) else{
+                return
+            }
+            guard let mapLocation = (historyDict?.maplocation) else{
+                return
+            }
+            guard let openingTime = (historyDict?.openingtime) else{
+                return
+            }
+            guard let facebookPage = (historyDict?.facebookpage) else{
+                return
+            }
+            
+            
+            guard let instagramPage = (historyDict?.instagrampage) else{
+                return
+            }
+            guard let twitterPage = (historyDict?.twitterpage) else{
+                return
+            }
+            guard let snapChatPage = (historyDict?.snapchatpage) else{
+                return
+            }
+            
+            let historyInfo: HistoryEntity = NSEntityDescription.insertNewObject(forEntityName: "HistoryEntity", into: managedContext) as! HistoryEntity
+            
+            historyInfo.name = nameString
+            historyInfo.arabicname = arabicNameString
+            historyInfo.address = address
+            historyInfo.arabicaddress = arabicAddress
+            historyInfo.category = category
+            historyInfo.arabiccategory = arabicCategory
+            historyInfo.email = email
+            historyInfo.facebookpage = facebookPage
+            historyInfo.id = Int32(serviceId)
+            historyInfo.imgurl = logoImage
+            historyInfo.instagrampage = instagramPage
+            
+            
+            
+            historyInfo.maplocation = mapLocation
+            historyInfo.mobile = mobile
+            
+            
+            historyInfo.openingtime = openingTime
+            historyInfo.shortdescription = shortDescription
+            historyInfo.arabiclocation = arabicLocation
+            historyInfo.snapchatpage = snapChatPage
+            historyInfo.twitterpage = twitterPage
+            historyInfo.website = websitePage
+            historyInfo.date_history = Date()
+        }
         
+        if(fromFavorite == false) {
+
+            guard let nameString = (serviceProviderArrayDict?.service_provider_name) else{
+                return
+            }
+            guard let arabicNameString = (serviceProviderArrayDict?.service_provider_name_arabic) else{
+                return
+            }
+            guard let address = (serviceProviderArrayDict?.service_provider_address) else{
+                return
+            }
+            guard let arabicAddress = (serviceProviderArrayDict?.service_provider_address_arabic) else{
+                return
+               
+            }
+            guard let shortDescription = (serviceProviderArrayDict?.service_provider_location) else{
+                return
+            }
+            guard let arabicLocation = (serviceProviderArrayDict?.service_provider_location_arabic) else{
+              
+                return
+            }
+            guard let category = (serviceProviderArrayDict?.service_provider_category) else{
+                
+                return
+            }
+            guard let arabicCategory = (serviceProviderArrayDict?.service_provider_category_arabic) else{
+               
+                return
+            }
+            guard let logoImage = (serviceProviderArrayDict?.service_provider_logo) else{
+                return
+            }
+            guard let serviceId = (serviceProviderArrayDict?.id) else{
+                return
+            }
+            
+            guard let email = (serviceProviderArrayDict?.service_provider_mail_account) else{
+                return
+            }
+            guard let websitePage = (serviceProviderArrayDict?.service_provider_website) else{
+                return
+            }
+            guard let mobile = (serviceProviderArrayDict?.service_provider_mobile_number) else{
+                return
+            }
+            guard let mapLocation = (serviceProviderArrayDict?.service_provider_map_location) else{
+                return
+            }
+            guard let openingTime = (serviceProviderArrayDict?.service_provider_opening_time) else{
+                return
+            }
+            guard let facebookPage = (serviceProviderArrayDict?.service_provider_facebook_page) else{
+                return
+            }
+            
+            
+            guard let instagramPage = (serviceProviderArrayDict?.service_provider_instagram_page) else{
+                return
+            }
+            guard let twitterPage = (serviceProviderArrayDict?.service_provider_twitter_page) else{
+                return
+            }
+            guard let snapChatPage = (serviceProviderArrayDict?.service_provider_snapchat_page) else{
+                return
+            }
+            
+          
+            let historyInfo: HistoryEntity = NSEntityDescription.insertNewObject(forEntityName: "HistoryEntity", into: managedContext) as! HistoryEntity
+            
+            historyInfo.name = nameString
+            historyInfo.arabicname = arabicNameString
+            historyInfo.address = address
+             historyInfo.arabicaddress = arabicAddress
+              historyInfo.arabiclocation = arabicLocation
+            historyInfo.category = category
+            historyInfo.arabiccategory = arabicCategory
+            
+            historyInfo.email = email
+            historyInfo.facebookpage = facebookPage
+            historyInfo.id = Int32(serviceId)
+            historyInfo.imgurl = logoImage
+            historyInfo.instagrampage = instagramPage
+            
+            
+            
+            historyInfo.maplocation = mapLocation
+            historyInfo.mobile = mobile
+           
+           
+            historyInfo.openingtime = openingTime
+            historyInfo.shortdescription = shortDescription
+            
+            historyInfo.snapchatpage = snapChatPage
+            historyInfo.twitterpage = twitterPage
+            historyInfo.website = websitePage
+            historyInfo.date_history = Date()
+        }
+        else {
+            guard let nameString = (favoriteDictinary.value(forKey: "name") ) else{
+                return
+            }
+            guard let arabicNameString = (favoriteDictinary.value(forKey: "arabicname") ) else{
+                return
+            }
+            guard let address = (favoriteDictinary.value(forKey: "address") ) else{
+                return
+            }
+            guard let arabicAddress = (favoriteDictinary.value(forKey: "arabicaddress") ) else{
+                return
+            }
+            guard let shortDescription = (favoriteDictinary.value(forKey: "shortdescription") ) else{
+                return
+            }
+            guard let arabicLocation = (favoriteDictinary.value(forKey: "arabiclocation") ) else{
+                return
+            }
+            guard let category = (favoriteDictinary.value(forKey: "category") ) else{
+                return
+            }
+            guard let arabicCategory = (favoriteDictinary.value(forKey: "arabiccategory") ) else{
+                return
+            }
+            guard let logoImage = (favoriteDictinary.value(forKey: "imgurl") ) else{
+                return
+            }
+            guard let serviceId = (favoriteDictinary.value(forKey: "id") as? Int ) else{
+                return
+            }
+            
+            guard let email = (favoriteDictinary.value(forKey: "email") ) else{
+                return
+            }
+            guard let websitePage = (favoriteDictinary.value(forKey: "website") ) else{
+                return
+            }
+            guard let mobile = (favoriteDictinary.value(forKey: "mobile") ) else{
+                return
+            }
+            guard let mapLocation = (favoriteDictinary.value(forKey: "maplocation") ) else{
+                return
+            }
+            guard let openingTime = (favoriteDictinary.value(forKey: "openingtime") ) else{
+                return
+            }
+            guard let facebookPage = (favoriteDictinary.value(forKey: "facebookpage") ) else{
+                return
+            }
+            
+            
+            guard let instagramPage = (favoriteDictinary.value(forKey: "instagrampage") ) else{
+                return
+            }
+            guard let twitterPage = (favoriteDictinary.value(forKey: "twitterpage") ) else{
+                return
+            }
+            guard let snapChatPage = (favoriteDictinary.value(forKey: "snapchatpage") ) else{
+                return
+            }
+            
+           
+            let historyInfo: HistoryEntity = NSEntityDescription.insertNewObject(forEntityName: "HistoryEntity", into: managedContext) as! HistoryEntity
+            historyInfo.address = address as? String
+            historyInfo.arabicaddress = arabicAddress as? String
+            historyInfo.category = category as? String
+            historyInfo.arabiccategory = arabicCategory as? String
+            historyInfo.email = email as? String
+            historyInfo.facebookpage = facebookPage as? String
+            historyInfo.id = Int32(serviceId)
+            historyInfo.imgurl = logoImage as? String
+            historyInfo.instagrampage = instagramPage as? String
+            
+            
+            
+            historyInfo.maplocation = mapLocation as? String
+            historyInfo.mobile = mobile as? String
+            historyInfo.name = nameString as? String
+            historyInfo.arabicname = arabicNameString as? String
+            historyInfo.openingtime = openingTime as? String
+            historyInfo.shortdescription = shortDescription as? String
+            historyInfo.arabiclocation = arabicLocation as? String
+            historyInfo.snapchatpage = snapChatPage as? String
+            historyInfo.twitterpage = twitterPage as? String
+            historyInfo.website = websitePage as? String
+            historyInfo.date_history = Date()
+        }
         
-        
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "HistoryEntity")
-        
-        let historyEntity =
-            NSEntityDescription.entity(forEntityName: "HistoryEntity",
-                                       in: managedContext)!
-        let historyInfo: HistoryEntity = NSEntityDescription.insertNewObject(forEntityName: "HistoryEntity", into: managedContext) as! HistoryEntity
-        
-        guard let nameString = (serviceProviderArrayDict?.service_provider_name) else{
-            return
-        }
-        guard let address = (serviceProviderArrayDict?.service_provider_address) else{
-            return
-        }
-        guard let shortDescription = (serviceProviderArrayDict?.service_provider_location) else{
-            return
-        }
-        guard let category = (serviceProviderArrayDict?.service_provider_category) else{
-            return
-        }
-        guard let logoImage = (serviceProviderArrayDict?.service_provider_logo) else{
-            return
-        }
-        guard let serviceId = (serviceProviderArrayDict?.id) else{
-            return
-        }
-        
-        guard let email = (serviceProviderArrayDict?.service_provider_mail_account) else{
-            return
-        }
-        guard let websitePage = (serviceProviderArrayDict?.service_provider_website) else{
-            return
-        }
-        guard let mobile = (serviceProviderArrayDict?.service_provider_mobile_number) else{
-            return
-        }
-        guard let mapLocation = (serviceProviderArrayDict?.service_provider_map_location) else{
-            return
-        }
-        guard let openingTime = (serviceProviderArrayDict?.service_provider_opening_time) else{
-            return
-        }
-        guard let facebookPage = (serviceProviderArrayDict?.service_provider_facebook_page) else{
-            return
-        }
-        
-    
-        guard let instagramPage = (serviceProviderArrayDict?.service_provider_instagram_page) else{
-            return
-        }
-        guard let twitterPage = (serviceProviderArrayDict?.service_provider_twitter_page) else{
-            return
-        }
-        guard let snapChatPage = (serviceProviderArrayDict?.service_provider_snapchat_page) else{
-            return
-        }
        
-        
-        historyInfo.address = address
-        historyInfo.category = category
-        historyInfo.email = email
-        historyInfo.facebookpage = facebookPage
-       
-        historyInfo.id = Int32(serviceId)
-        historyInfo.imgurl = logoImage
-        historyInfo.instagrampage = instagramPage
-        
-        
-       
-        historyInfo.maplocation = mapLocation
-        historyInfo.mobile = mobile
-        historyInfo.name = nameString
-        historyInfo.openingtime = openingTime
-        historyInfo.shortdescription = shortDescription
-        historyInfo.snapchatpage = snapChatPage
-        historyInfo.twitterpage = twitterPage
-        historyInfo.website = websitePage
-        historyInfo.date_history = Date()
         
         
         
@@ -1140,17 +1448,15 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         return fetchResults
     }
     
-    func fetchHistoryInfo(){
+    func fetchHistoryInfo(idValue: Int){
         var historyArray: [HistoryEntity] = []
         let managedContext = getContext()
         let historyFetchRequest =  NSFetchRequest<NSFetchRequestResult>(entityName: "HistoryEntity")
         let sort = NSSortDescriptor(key: #keyPath(HistoryEntity.date_history), ascending: false)
         historyFetchRequest.sortDescriptors = [sort]
-        let id = (serviceProviderArrayDict?.id)!
+      
         
-        historyFetchRequest.predicate = NSPredicate.init(format: "id ==\(id)")
-        
-       print(Date())
+        historyFetchRequest.predicate = NSPredicate.init(format: "id ==\(idValue)")
     
         
         do {
@@ -1208,8 +1514,8 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             
         }
         else {
-            titleLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: titleLabel.font.pointSize)
-            locationLabel.font = UIFont(name: "GE_SS_Unique_Light", size: locationLabel.font.pointSize)
+            titleLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: titleLabel.font.pointSize)
+            locationLabel.font = UIFont(name: "GESSUniqueLight-Light", size: locationLabel.font.pointSize)
         }
     }
 }

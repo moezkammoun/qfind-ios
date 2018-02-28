@@ -17,16 +17,34 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var subTitleLabel: UILabel!
     @IBOutlet weak var thumbnailView: UIImageView!
     @IBOutlet weak var titleCenterConstraint: NSLayoutConstraint!
-    
+    var ipadFontSize =  CGFloat()
+    var ipadSubtitleFontSize =  CGFloat()
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            ipadFontSize = 21
+            ipadSubtitleFontSize = 14
+        }
+        else {
+            ipadFontSize = 11
+            ipadSubtitleFontSize = 10
+        }
+                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                    titleLabel.font = UIFont(name: "Lato-Light", size: ipadFontSize)
+                    subTitleLabel.font = UIFont(name: "Lato-Light", size: ipadSubtitleFontSize)
+                }
+                else {
+                    titleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadFontSize)
+                    subTitleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadSubtitleFontSize)
+                }
+       
+    }
+   
     func setCategoryCellValues(categoryValues : Category)
     {
         
-            if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                titleLabel.font = UIFont(name: "Lato-Light", size: titleLabel.font.pointSize)
-            }
-            else {
-                titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: titleLabel.font.pointSize)
-            }
+        
+
         
         self.titleLabel.text = categoryValues.categories_name
         if let imageUrl = categoryValues.categories_imge{
@@ -34,15 +52,10 @@ class CategoryCollectionViewCell: UICollectionViewCell {
             thumbnailView.kf.setImage(with: URL(string: imageUrl))
             
         }
-        
+        self.layoutIfNeeded()
     }
     func setSubCategoryCellValues(subCategoryValues : SubCategory){
-        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-            titleLabel.font = UIFont(name: "Lato-Light", size: titleLabel.font.pointSize)
-        }
-        else {
-            titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: titleLabel.font.pointSize)
-        }
+       
         self.titleLabel.text = subCategoryValues.sub_categories_name
         if let imageUrl = subCategoryValues.sub_categories_imge{
             
@@ -52,15 +65,16 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     }
     func setServiceProviderCellValues(serviceProviderValues : ServiceProvider){
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-            titleLabel.font = UIFont(name: "Lato-Light", size: titleLabel.font.pointSize)
-            subTitleLabel.font = UIFont(name: "Lato-Light", size: subTitleLabel.font.pointSize)
+            
+            self.titleLabel.text = serviceProviderValues.service_provider_name
+            self.subTitleLabel.text = serviceProviderValues.service_provider_location
         }
         else {
-            titleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: titleLabel.font.pointSize)
-            subTitleLabel.font = UIFont(name: "GE_SS_Unique_Light", size: subTitleLabel.font.pointSize)
+            
+            self.titleLabel.text = serviceProviderValues.service_provider_name_arabic
+            self.subTitleLabel.text = serviceProviderValues.service_provider_location_arabic
         }
-        self.titleLabel.text = serviceProviderValues.service_provider_name
-         self.subTitleLabel.text = serviceProviderValues.service_provider_location
+        
         if let imageUrl = serviceProviderValues.service_provider_logo{
            
             thumbnailView.kf.setImage(with: URL(string: imageUrl))

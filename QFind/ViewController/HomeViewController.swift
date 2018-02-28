@@ -45,24 +45,28 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     var countValue : Int?
     var arrayCount : Int? = 0
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setUILayout()
         sliderLoading.isHidden = false
         sliderLoading.startAnimating()
-        if  (networkReachability?.isReachable == false) {
+        
+        if (networkReachability?.isReachable == false) {
        
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+            let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+            self.view.makeToast(checkInternet)
             sliderLoading.stopAnimating()
         }
+        
     }
-    
+   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-      
-        
+        self.slideShow.addImage(UIImage(named: "sliderPlaceholder"))
+        predicateSearchKey = ""
         if (UIDevice.current.userInterfaceIdiom == .pad) {
             predicateTableHeight = 85
         }
@@ -73,11 +77,13 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         setRTLSupport()
         setLocalizedStrings()
         searchText.text = ""
-
         setHomeSliderImages()
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
         setFontForHomeView()
     }
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -138,11 +144,13 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
      
     }
     func setLocalizedStrings() {
+       
         self.qfindDayLabel.text = NSLocalizedString("QFIND_OF_THE_DAY", comment: "QFIND_OF_THE_DAY Label in the home page")
        
-        self.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
+    
         self.findByCategoryLabel.text = NSLocalizedString("FIND_BY_CATEGORY", comment: "FIND_BY_CATEGORY Label in the home page")
         self.orLabel.text = NSLocalizedString("OR", comment: "OR Label in the home page")
+        // setFontForHomeView()
     }
     func setHomeSliderImages() {
         let sliderImagesArray = sliderImagesDefault.value(forKey: "sliderimages")
@@ -151,10 +159,11 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             getQFindOfTheDayFromServer()
         }
         else{
+            let needToCallWebservice = getArrayCount()
             
             let sliderDate = sliderImagesDefault.value(forKey: "sliderDate") as! Date
             let isSameDate = Calendar.current.isDate(sliderDate, inSameDayAs:Date())
-            if(isSameDate) {
+            if(isSameDate && needToCallWebservice == false) {
                 getImage()
             }
             else {
@@ -163,6 +172,23 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             
         }
 
+    }
+    func getArrayCount() -> Bool
+    {
+        let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
+        let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
+        let sliderArray = decodedTeams.sliderImages
+        let sliderArrayCount = sliderArray.count
+        for var i in (0..<sliderArray.count) {
+            let index = sliderArray.index(of: "")
+            if (index < 5) {
+                sliderArray.removeObject(at: index)
+            }
+        }
+        if sliderArrayCount == sliderArray.count {
+            return false
+        }
+        return true
     }
     @objc func keyboardWillShow(notification: NSNotification) {
        
@@ -237,12 +263,12 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         if (isBackSpace == -92){
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
         }
-        if ((predicateSearchKey.count) > 0 ) {
-                        searchButton.isHidden = false
-                    }
-                    else {
-                        searchButton.isHidden = true
-                    }
+//        if ((predicateSearchKey.count) > 0 ) {
+//                        searchButton.isHidden = false
+//                    }
+//                    else {
+//                        searchButton.isHidden = true
+//                    }
     
         if ((predicateSearchKey.count) >= 2)
         {
@@ -288,7 +314,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     
     @IBAction func didTapFindCategory(_ sender: UIButton) {
-        if  (networkReachability?.isReachable)!{
+        if  (networkReachability?.isReachable)! {
            
             controller.view.removeFromSuperview()
             slideShow.stop()
@@ -300,7 +326,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         else {
             //let toastMessage = NSLocalizedString("checkInternet", comment: "checkInternet toast in the Home")
             self.view.hideAllToasts()
-            self.view.makeToast("Check your internet connections")
+            let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+            self.view.makeToast(checkInternet)
            
         }
        
@@ -357,21 +384,25 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     @IBAction func didTapHomeSearch(_ sender: UIButton) {
         controller.view.removeFromSuperview()
-        let trimmedText = searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let networkManager = NetworkReachabilityManager()
-        if(networkManager?.isReachable == true){
+       
+         if  (networkReachability?.isReachable)!  {
         
-        
-            let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
-            historyVC.searchType = 4
-            historyVC.searchKey = trimmedText
-            historyVC.pageNameString = PageName.searchResult
-            self.present(historyVC, animated: false, completion: nil)
+            if ((predicateSearchKey.count) > 0 ) {
+                 let trimmedText = searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+                let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
+                historyVC.searchType = 4
+                historyVC.searchKey = trimmedText
+                historyVC.pageNameString = PageName.searchResult
+                self.present(historyVC, animated: false, completion: nil)
+            }
+           
        
         }
         else{
                 self.view.hideAllToasts()
-                self.view.makeToast("Check your internet connections")
+                searchText.resignFirstResponder()
+                let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
+                self.view.makeToast(checkInternet)
            
         }
         
@@ -392,16 +423,19 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                             if ((data.response == "error") || (data.code != "200")){
                                 self.sliderLoading.stopAnimating()
                                 self.sliderLoading.isHidden = true
+                                self.slideShow.addImage(UIImage(named: "sliderPlaceholder"))
                             }
                             else{
-                                self.sliderLoading.stopAnimating()
-                                self.sliderLoading.isHidden = true
+                                //self.sliderLoading.stopAnimating()
+                                //self.sliderLoading.isHidden = true
                                 self.qFindDict = data.qfindOfTheDayData
-                                self.imageDownloader(imgArray: (self.qFindDict?.image)!)
+                                
+                                self.imageDownloader(imgArray: (self.qFindDict?.image)!.mutableCopy() as! NSMutableArray)
                             }
                         case .failure(let error):
                             self.sliderLoading.stopAnimating()
                             self.sliderLoading.isHidden = true
+                            self.slideShow.addImage(UIImage(named: "sliderPlaceholder"))
                           
                         }
                         
@@ -413,7 +447,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     
     
-    func imageDownloader(imgArray : NSArray){
+    func imageDownloader(imgArray : NSMutableArray){
         
         while self.qFindArray.count < imgArray.count {
             self.qFindArray.add("")
@@ -424,7 +458,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         {
             let slideiImageUrl = URL(string: imgArray[i] as! String)
             KingfisherManager.shared.retrieveImage(with: slideiImageUrl!, options: nil, progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
-                
+                ImageDownloader.default.downloadTimeout = 70
                 if let image = image {
                     self.arrayCount = self.arrayCount! + 1
 
@@ -432,7 +466,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
 
                     if (self.arrayCount == imgArray.count)
                     {
-                       
+                        
+                        
                         let sliderData = SliderImagesModel(sliderImages: self.qFindArray)
                         let encodedData = NSKeyedArchiver.archivedData(withRootObject: sliderData)
                         sliderImagesDefault.set(encodedData, forKey: "sliderimages")
@@ -443,7 +478,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                     }
                    
                 } else {
-                    
+                   
+                    print(error)
                 }
             })
         }
@@ -454,18 +490,42 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
     let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
     self.qFindArray = decodedTeams.sliderImages
+    
+    for var i in (0..<qFindArray.count) {
+         let index = self.qFindArray.index(of: "")
+            if (index < 5) {
+                self.qFindArray.removeObject(at: index)
+            }
+    }
     setSlideShow(imgArray: self.qFindArray)
     }
     func setFontForHomeView() {
+         let searchPlaceHolder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
             qfindDayLabel.font = UIFont(name: "Lato-Regular", size: qfindDayLabel.font.pointSize)
             findByCategoryLabel.font = UIFont(name: "Lato-Bold", size: qfindDayLabel.font.pointSize)
+            orLabel.font = UIFont(name: "Lato-Regular", size: orLabel.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "Lato-Regular", size: (searchText.font?.pointSize)!)! // Note the !
+            ]
+            
+            searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes:attributes)
             
         }
         else {
-            qfindDayLabel.font = UIFont(name: "GE_SS_Unique_Light", size: qfindDayLabel.font.pointSize)
-             findByCategoryLabel.font = UIFont(name: "GE_SS_Unique_Bold", size: qfindDayLabel.font.pointSize)
+            qfindDayLabel.font = UIFont(name: "GESSUniqueLight-Light", size: qfindDayLabel.font.pointSize)
+             findByCategoryLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: qfindDayLabel.font.pointSize)
+            orLabel.font = UIFont(name: "GESSUniqueLight-Light", size: orLabel.font.pointSize)
+            let attributes = [
+                NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
+                NSAttributedStringKey.font : UIFont(name: "GESSUniqueLight-Light", size: (searchText.font?.pointSize)!)! // Note the !
+            ]
+          
+            searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes: attributes)
         }
+       
     }
+    
 
 }

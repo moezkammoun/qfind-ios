@@ -197,6 +197,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func deletePreviousMonthHistoryFromCoreData() {
         let monthsToAdd = -1
         let minimumDate = Calendar.current.date(byAdding: .month, value: monthsToAdd, to: Date())
+        
+        
         var managedContext : NSManagedObjectContext?
         if #available(iOS 10.0, *) {
             managedContext =

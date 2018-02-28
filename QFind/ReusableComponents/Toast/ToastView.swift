@@ -458,6 +458,8 @@ public extension UIView {
         if let title = title {
             titleLabel = UILabel()
             titleLabel?.numberOfLines = style.titleNumberOfLines
+           
+            
             titleLabel?.font = style.titleFont
             titleLabel?.textAlignment = style.titleAlignment
             titleLabel?.lineBreakMode = .byTruncatingTail
@@ -468,7 +470,7 @@ public extension UIView {
             let maxTitleSize = CGSize(width: (self.bounds.size.width * style.maxWidthPercentage) - imageRect.size.width, height: self.bounds.size.height * style.maxHeightPercentage)
             let titleSize = titleLabel?.sizeThatFits(maxTitleSize)
             if let titleSize = titleSize {
-                titleLabel?.frame = CGRect(x: 0.0, y: 0.0, width: titleSize.width, height: titleSize.height)
+                titleLabel?.frame = CGRect(x: 0.0, y: 0.0, width: titleSize.width+30, height: titleSize.height)
             }
         }
         
@@ -476,7 +478,23 @@ public extension UIView {
             messageLabel = UILabel()
             messageLabel?.text = message
             messageLabel?.numberOfLines = style.messageNumberOfLines
-            messageLabel?.font = style.messageFont
+            if (UIDevice.current.userInterfaceIdiom == .pad) {
+                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                    messageLabel?.font = UIFont(name: "Lato-Bold", size: 22)
+                }
+                else {
+                    messageLabel?.font = UIFont(name: "GESSUniqueBold-Bold", size: 22)
+                }
+            }
+            else{
+                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                    messageLabel?.font = UIFont(name: "Lato-Bold", size: 16)
+                }
+                else {
+                    messageLabel?.font = UIFont(name: "GESSUniqueBold-Bold", size: 16)
+                }
+            }
+           // messageLabel?.font = style.messageFont
             messageLabel?.textAlignment = style.messageAlignment
             messageLabel?.lineBreakMode = .byTruncatingTail;
             messageLabel?.textColor = style.messageColor
@@ -765,7 +783,7 @@ public enum ToastPosition {
         case .center:
             return CGPoint(x: superview.bounds.size.width / 2.0, y: superview.bounds.size.height / 2.0)
         case .bottom:
-            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding)
+            return CGPoint(x: superview.bounds.size.width / 2.0, y: (superview.bounds.size.height - (toast.frame.size.height / 2.0)) - bottomPadding-70)
         }
     }
 }

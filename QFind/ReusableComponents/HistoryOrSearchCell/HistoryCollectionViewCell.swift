@@ -15,15 +15,31 @@ class HistoryCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var historyThumbnail: UIImageView!
      var favBtnTapAction : (()->())?
+    var ipadTitleFontSize =  CGFloat()
+    var ipadSubTitleFontSize =  CGFloat()
     override func awakeFromNib() {
         super.awakeFromNib()
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            ipadTitleFontSize = 26
+            ipadSubTitleFontSize = 15
+        }
+        else {
+            ipadTitleFontSize = 15
+            ipadSubTitleFontSize = 12
+        }
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.font = UIFont(name: "Lato-Light", size:ipadTitleFontSize)
+            subLabel.font = UIFont(name: "Lato-Light", size: ipadSubTitleFontSize)
+            
+        }
+        else {
+            titleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadTitleFontSize)
+            subLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadSubTitleFontSize)
+        }
         if #available(iOS 9.0, *) {
-            let attribute = self.semanticContentAttribute
-            let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
-            
-            
             self.titleLabel.textAlignment = .center
             self.subLabel.textAlignment = .center
+            
             
         } else {
             // Fallback on earlier versions
@@ -37,6 +53,7 @@ class HistoryCollectionViewCell: UICollectionViewCell {
         favBtnTapAction?()
     }
     func searchResultData(searchResultCellValues: ServiceProvider){
+       
         self.titleLabel.text = searchResultCellValues.service_provider_name
         self.subLabel.text = searchResultCellValues.service_provider_location
         self.historyThumbnail.kf.indicatorType = .activity
@@ -45,6 +62,7 @@ class HistoryCollectionViewCell: UICollectionViewCell {
             historyThumbnail.image = UIImage(named: "placeholder")
         }}
     func setFavoriteData(favoriteId: Int, favoriteName: String, subTitle : String, imgUrl : String){
+        
         self.titleLabel.text = favoriteName
         self.subLabel.text = subTitle
        
@@ -56,12 +74,24 @@ class HistoryCollectionViewCell: UICollectionViewCell {
     }
 
     func setHistoryData(historyInfo: HistoryEntity){
-        self.titleLabel.text = historyInfo.name
-        self.subLabel.text = historyInfo.shortdescription
+         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+           
+            self.titleLabel.text = historyInfo.name
+            self.subLabel.text = historyInfo.shortdescription
+        }
+         else{
+            
+            self.titleLabel.text = historyInfo.arabicname
+            self.subLabel.text = historyInfo.arabiclocation
+        }
+        
         
         self.historyThumbnail.kf.indicatorType = .activity
+        if(historyInfo.imgurl != nil){
+            self.historyThumbnail.kf.setImage(with: URL(string: historyInfo.imgurl!))
+        }
         
-        self.historyThumbnail.kf.setImage(with: URL(string: historyInfo.imgurl!))
+        
         if (historyThumbnail.image == nil) {
             historyThumbnail.image = UIImage(named: "placeholder")
         }
