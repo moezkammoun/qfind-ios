@@ -24,17 +24,17 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     @IBOutlet weak var historyLoadingView: LoadingView!
     @IBOutlet weak var historyBottomBar: BottomBarView!
     @IBOutlet weak var historyView: UIView!
+    @IBOutlet weak var bottombarHeight: NSLayoutConstraint!
+    @IBOutlet weak var bottombarBottomContsraint: NSLayoutConstraint!
     var controller = PredicateSearchViewController()
     var pageNameString : PageName?
     var predicateSearchKey = String()
     var predicateSearchArray : [PredicateSearch]? = []
     var previousPage : PageName?
     var searchResultArray: [ServiceProvider]? = []
-    
     var favoriteServiceProvider : ServiceProvider?
     var searchType : Int?
     var searchKey : String?
-    
     var predicateTableHeight : Int?
     var tapGestRecognizer = UITapGestureRecognizer()
     var favoritesArray:[NSManagedObject]?
@@ -44,32 +44,26 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     var sectionDict: HistoryEntity?
     var favoriteDictionary = NSMutableDictionary()
     let networkReachability = NetworkReachabilityManager()
+    var headerFontSize =  CGFloat()
+    var fontName = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUi()
         setRTLSupportForHistory()
         registerCell()
-        
        fetchHistoryInfo()
-        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
-       
-        if (UIDevice.current.userInterfaceIdiom == .pad)
-        {
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
             predicateTableHeight = 85
         }
         else{
             predicateTableHeight = 50
         }
         setLocalizedVariable()
-        
-        
-        if (pageNameString == PageName.searchResult)
-        {
+        if (pageNameString == PageName.searchResult) {
             guard let searchItemType = self.searchType else{
                 return
             }
@@ -81,17 +75,25 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         else if (pageNameString == PageName.favorite){
             fetchDataFromCoreData()
         }
-//        else if (pageNameString == PageName.history){
-//            fetchHistoryInfo()
-//        }
-        
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
         setFontForHistory()
     }
-    func setUi()
-    {
+    func setUi() {
+        if UIDevice().userInterfaceIdiom == .phone {
+            if (UIScreen.main.nativeBounds.height == 2436) {
+                bottombarBottomContsraint.isActive = true
+                bottombarHeight.constant = 60
+                bottombarBottomContsraint.constant = 0
+            }
+            else{
+                bottombarHeight.isActive = false
+            }
+        }
+        else{
+            bottombarHeight.isActive = false
+        }
         historySearchBar.searchDelegate = self
         historyBottomBar.bottombarDelegate = self
         controller  = (storyboard?.instantiateViewController(withIdentifier: "predicateId"))! as! PredicateSearchViewController
@@ -102,20 +104,17 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    func setRTLSupportForHistory()
-    {
+    func setRTLSupportForHistory() {
         if #available(iOS 9.0, *) {
             let attribute = view.semanticContentAttribute
             let layoutDirection = UIView.userInterfaceLayoutDirection(for: attribute)
             if layoutDirection == .leftToRight {
-                
                 historySearchBar.searchText.textAlignment = .left
-                if let _img = backButtonImageView.image{
+                if let _img = backButtonImageView.image {
                     backButtonImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.downMirrored)
                 }
             }
             else{
-                
                 historySearchBar.searchText.textAlignment = .right
                 if let _img = backButtonImageView.image {
                     backButtonImageView.image = UIImage(cgImage: _img.cgImage!, scale:_img.scale , orientation: UIImageOrientation.upMirrored)
@@ -124,14 +123,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         } else {
             // Fallback on earlier versions
         }
-        
-        
-        
     }
-    func setLocalizedVariable()
-    {
-        
-       // self.historySearchBar.searchText.placeholder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the search bar ")
+    func setLocalizedVariable() {
         switch pageNameString {
         case .history?:
             self.historyLabel.text = NSLocalizedString("HISTORY", comment: "HISTORY Label in the history page")
@@ -144,43 +137,32 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         default:
             break
         }
-        
     }
-    func registerCell()
-    {
-        
+    func registerCell() {
         let nib = UINib(nibName: "HistoryOrSearchCell", bundle: nil)
         historyCollectionView?.register(nib, forCellWithReuseIdentifier: "historyCellId")
     }
     //MARK: CollectionView
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        switch pageNameString{
+        switch pageNameString {
         case .history?:
-            if(historyFullArray.count != 0){
+            if(historyFullArray.count != 0) {
                 return historyFullArray.count
             }
             else{
-               
                 return 0
             }
-            
-            
-            
         case .favorite?:
-            if (favoritesArray?.count != 0){
+            if (favoritesArray?.count != 0) {
                 return 1
-            }else{
+            }else {
                 return 0
             }
-            
         case .searchResult?:
-            if (searchResultArray!.count > 0)
-            {
-                if((searchResultArray![0].service_provider_name) != nil && (searchResultArray![0].service_provider_address) != nil)
-                {
+            if (searchResultArray!.count > 0) {
+                if((searchResultArray![0].service_provider_name) != nil && (searchResultArray![0].service_provider_address) != nil) {
                     return 1
                 }
-                    
                 else{
                     return 0
                 }
@@ -192,34 +174,26 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         default:
             return 0
         }
-        
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch pageNameString{
         case .history?:
             let itemCount = historyFullArray[section] as! NSArray
-            
             return itemCount.count
         case .favorite?:
             return (favoritesArray?.count)!
         case .searchResult?:
             return (searchResultArray?.count)!
         default:
-            
             return 0
-            
         }
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         historyLoadingView.stopLoading()
         historyLoadingView.isHidden = true
-        
         let cell : HistoryCollectionViewCell = historyCollectionView.dequeueReusableCell(withReuseIdentifier: "historyCellId", for: indexPath) as! HistoryCollectionViewCell
-        
         switch pageNameString{
         case .history?:
-            
             let history = historyFullArray[indexPath.section] as! [HistoryEntity]
             let sectionHistory = history[indexPath.row]
             cell.setHistoryData(historyInfo: sectionHistory)
@@ -227,9 +201,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         case .favorite?:
             cell.favBtnTapAction = {
                 () in
-                
                 self.deleteFavorite(currentIndex: indexPath)
-                
             }
             cell.favoriteButton.isHidden = false
             let favoriteDict = favoritesArray![indexPath.row]
@@ -239,7 +211,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
                 name = favoriteDict.value(forKey: "name") as? String
                 shortDescription = favoriteDict.value(forKey: "shortdescription") as? String
-            
             }
             else{
                 name = favoriteDict.value(forKey: "arabicname") as? String
@@ -247,16 +218,13 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             }
             let img = favoriteDict.value(forKey: "imgurl")
             cell.setFavoriteData(favoriteId: id as! Int, favoriteName: (name)!, subTitle: (shortDescription)!, imgUrl: img as! String)
-            
         case .searchResult?:
             cell.favoriteButton.isHidden = true
             let searchResultDict = searchResultArray![indexPath.row]
             cell.searchResultData(searchResultCellValues: searchResultDict)
         default:
             break
-            
         }
-        
         let shadowSize : CGFloat = 5.0
         var shadowPath : UIBezierPath?
         if #available(iOS 9.0, *) {
@@ -279,58 +247,65 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         } else {
             // Fallback on earlier versions
         }
-        
         cell.layer.masksToBounds = false
         cell.layer.shadowColor = UIColor.black.cgColor
         cell.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
         cell.layer.shadowOpacity = 0.19
         cell.layer.shadowPath = shadowPath?.cgPath
-        
-        
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let heightValue = UIScreen.main.bounds.height/100
-        if (UIDevice.current.userInterfaceIdiom == .pad)
-        {
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
             return CGSize(width: historyCollectionView.frame.width, height: heightValue*10)
         }
         else{
             return CGSize(width: historyCollectionView.frame.width, height: heightValue*9)
         }
-        
     }
-    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        
         let header = historyCollectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "SectionHeader", for: indexPath) as! SectionHeaderCollectionReusableView
         switch pageNameString {
         case .history?:
             if historyFullArray.count != 0{
-                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                    header.headerLabel.font = UIFont(name: "Lato-Bold", size: header.headerLabel.font.pointSize)
+                if (UIDevice.current.userInterfaceIdiom == .pad) {
+                    headerFontSize = 26
                 }
                 else {
-                    header.headerLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: header.headerLabel.font.pointSize)
+                    headerFontSize = 19
+                }
+                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+                    fontName = "Lato-Bold"
+                }
+                else {
+                    fontName = "GESSUniqueBold-Bold"
                 }
                 let history = historyFullArray[indexPath.section] as! [HistoryEntity]
                 let sectionHistory = history[indexPath.row]
-                
                 let dateString = setDateFormat(dateData: sectionHistory.date_history!)
-                
-                header.headerLabel.text = dateString
-                let currentDateString = setDateFormat(dateData: Date())
-                if(dateString == currentDateString){
-                    header.headerLabel.text = NSLocalizedString("Today", comment: "section header Label in the history page")
+                header.headerLabel.attributedText = dateString
+                let isSameDate = Calendar.current.isDate(sectionHistory.date_history!, inSameDayAs:Date())
+                if (isSameDate) {
+                    var todayMutableString = NSMutableAttributedString()
+                    let todayString = NSLocalizedString("Today", comment: "section header Label in the history page")
+                    todayMutableString = NSMutableAttributedString(
+                        string: todayString,
+                        attributes: [NSAttributedStringKey.font:UIFont(
+                            name: fontName,
+                            size: headerFontSize)!])
+                    header.headerLabel.attributedText = todayMutableString
                 }
-                
-                    let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-                    if(Calendar.current.isDate(sectionHistory.date_history!, inSameDayAs: yesterday)){
-                        header.headerLabel.text = NSLocalizedString("Yesterday", comment: "section header Label in the history page")
-                    }
-                
-                
+                 var myMutableString = NSMutableAttributedString()
+                let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+                if(Calendar.current.isDate(sectionHistory.date_history!, inSameDayAs: yesterday)){
+                     let yesterdayString = NSLocalizedString("Yesterday", comment: "section header Label in the history page")
+                        myMutableString = NSMutableAttributedString(
+                            string: yesterdayString,
+                            attributes: [NSAttributedStringKey.font:UIFont(
+                                name: fontName,
+                                size: headerFontSize)!])
+                        header.headerLabel.attributedText = myMutableString
+                }
             }
         case .favorite? :
             header.headerLabel.text = ""
@@ -339,9 +314,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         default:
             break
         }
-        
-        
-        
         return header
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
@@ -361,7 +333,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             return CGSize.zero
         default:
             return CGSize.zero
-            break
         }
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -375,31 +346,25 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.present(informationVC, animated: false, completion: nil)
         }
         else if (pageNameString == PageName.favorite){
-            
             let favoriteServiceDict = favoritesArray![indexPath.row]
             let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
             controller.view.removeFromSuperview()
             setFavoriteDictionary(favDict: favoriteServiceDict)
-            
             informationVC.favoriteDictinary = favoriteDictionary
             informationVC.fromFavorite = true
             self.present(informationVC, animated: false, completion: nil)
-            
         }
         else if (pageNameString == PageName.history){
             let history = historyFullArray[indexPath.section] as! [HistoryEntity]
             let historyServiceDict = history[indexPath.row]
             let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
-            
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
             controller.view.removeFromSuperview()
-            
             informationVC.fromHistory = true
             informationVC.historyDict = historyServiceDict
-            
             self.present(informationVC, animated: false, completion: nil)
-            
+
         }
     }
     func setFavoriteDictionary(favDict: NSManagedObject){
@@ -413,19 +378,23 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         favoriteDictionary.setValue(favDict.value(forKey: "imgurl"), forKey: "imgurl")
         favoriteDictionary.setValue(favDict.value(forKey: "instagrampage"), forKey: "instagrampage")
         favoriteDictionary.setValue(favDict.value(forKey: "maplocation"), forKey: "maplocation")
-        
         favoriteDictionary.setValue(favDict.value(forKey: "mobile"), forKey: "mobile")
-        
         favoriteDictionary.setValue(favDict.value(forKey: "name"), forKey: "name")
-         favoriteDictionary.setValue(favDict.value(forKey: "arabicname"), forKey: "arabicname")
+        favoriteDictionary.setValue(favDict.value(forKey: "arabicname"), forKey: "arabicname")
         favoriteDictionary.setValue(favDict.value(forKey: "openingtime"), forKey: "openingtime")
+        favoriteDictionary.setValue(favDict.value(forKey: "openingtitle"), forKey: "openingtitle")
+        favoriteDictionary.setValue(favDict.value(forKey: "openingtime_arabic"), forKey: "openingtime_arabic")
+        favoriteDictionary.setValue(favDict.value(forKey: "openingtitle_arabic"), forKey: "openingtitle_arabic")
+        favoriteDictionary.setValue(favDict.value(forKey: "closingtime"), forKey: "closingtime")
+        favoriteDictionary.setValue(favDict.value(forKey: "closingtime_arabic"), forKey: "closingtime_arabic")
+        favoriteDictionary.setValue(favDict.value(forKey: "closingtitle"), forKey: "closingtitle")
+        favoriteDictionary.setValue(favDict.value(forKey: "closingtitle_arabic"), forKey: "closingtitle_arabic")
+
         favoriteDictionary.setValue(favDict.value(forKey: "shortdescription"), forKey: "shortdescription")
         favoriteDictionary.setValue(favDict.value(forKey: "arabiclocation"), forKey: "arabiclocation")
         favoriteDictionary.setValue(favDict.value(forKey: "snapchatpage"), forKey: "snapchatpage")
         favoriteDictionary.setValue(favDict.value(forKey: "twitterpage"), forKey: "twitterpage")
         favoriteDictionary.setValue(favDict.value(forKey: "website"), forKey: "website")
-        
-        
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -443,18 +412,13 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             fetchDataFromCoreData()
             setLocalizedVariable()
             historyCollectionView.reloadData()
-            
         }
-        
-        
-        
     }
     func homebuttonPressed() {
         historyBottomBar.favoriteview.backgroundColor = UIColor.white
         historyBottomBar.historyView.backgroundColor = UIColor.white
         historyBottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
         self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
-        
     }
     func historyButtonPressed() {
         setBottomBarHistoryBackground()
@@ -469,16 +433,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 historyLoadingView.showNoDataView()
                 let historyMissingMessage  = NSLocalizedString("No_history_message", comment: "No history message")
                 historyLoadingView.noDataLabel.text = historyMissingMessage
-                
             }
-           
-                 historyCollectionView.reloadData()
-          
+            historyCollectionView.reloadData()
             setLocalizedVariable()
-            
-           
-            
-            
         }
     }
     func setBottomBarHistoryBackground(){
@@ -509,7 +466,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             previousPage = pageNameString
             pageNameString = PageName.searchResult
             setLocalizedVariable()
-            
             guard let searchItemKey = trimmedText else{
                 return
             }
@@ -522,8 +478,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
             self.view.makeToast(checkInternet)
         }
-       
-        // controller.predicateSearchTable.reloadData()
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         
@@ -532,7 +486,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
-            
         }
         if ((predicateSearchKey.count) >= 2)
         {
@@ -541,12 +494,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             addChildViewController(controller)
             view.addSubview((controller.view)!)
             controller.didMove(toParentViewController: self)
-            
             tapGestRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissPopupView(sender:)))
             self.historyView.addGestureRecognizer(tapGestRecognizer)
             getPredicateSearchFromServer()
-            
-            
         }
         else{
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
@@ -566,9 +516,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     //MARK:TableView
     func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int {
         return (predicateSearchArray?.count)!
-        
     }
-    
     func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:PredicateCell = tableView.dequeueReusableCell(withIdentifier: "predicateCellId") as! PredicateCell!
         let predicatedict = predicateSearchArray![indexPath.row]
@@ -591,11 +539,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             return
         }
         getSearchResultFromServer(searchType: searchItemType, searchKey: searchItemKey)
-        
         controller.predicateSearchTable.reloadData()
-        
     }
-    
     @IBAction func didTapBack(_ sender: UIButton) {
         historySearchBar.searchText.text = ""
         if ((previousPage == PageName.history)&&(pageNameString == PageName.searchResult)){
@@ -606,14 +551,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             historyCollectionView.reloadData()
         }
         else if((previousPage == PageName.favorite)&&(pageNameString == PageName.searchResult)){
-            
             previousPage = pageNameString
             pageNameString = PageName.favorite
             setLocalizedVariable()
             setBottomBarFavoriteBackground()
             historyCollectionView.reloadData()
         }
-            
         else{
             self.dismiss(animated: false, completion: nil)
         }
@@ -621,41 +564,43 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     func getPredicateSearchFromServer()
     {
         let trimmedSearchKey = self.predicateSearchKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
-            
             Alamofire.request(QFindRouter.getPredicateSearch(["token": tokenString,
                                                               "search_key":  trimmedSearchKey , "language" :languageKey]))
                 .responseObject { (response: DataResponse<PredicateSearchData>) -> Void in
                     switch response.result {
-                        
                     case .success(let data):
-                        
                         self.predicateSearchArray = data.predicateSearchData
                         self.controller.predicateSearchTable.reloadData()
                         if ((self.predicateSearchArray?.count == 1) && (self.predicateSearchArray![0].item_id == nil))
                         {
                             self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: 0, height: 0)
                         }else{
+                            if UIDevice().userInterfaceIdiom == .phone {
+                                if (UIScreen.main.nativeBounds.height == 2436) {
+                                     self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+40, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                                }
+                                else {
+                                    self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                                }
+                            }
+                            else {
                             self.controller.view.frame = CGRect(x: self.historySearchBar.searchInnerView.frame.origin.x, y:self.historySearchBar.searchInnerView.frame.origin.y+self.historySearchBar.searchInnerView.frame.height+20, width: self.historySearchBar.searchInnerView.frame.width, height: CGFloat((self.predicateSearchArray?.count)!*(self.predicateTableHeight)!))
+                            }
                         }
-                        
                     case .failure(let error):
                         self.historyLoadingView.isHidden = false
                         self.historyLoadingView.stopLoading()
                         self.historyLoadingView.noDataView.isHidden = false
                     }
-                    
             }
-            
         }
     }
     func getSearchResultFromServer(searchType: Int, searchKey: String)
     {
         historyLoadingView.isHidden = false
         historyLoadingView.showLoading()
-        
         if let tokenString = tokenDefault.value(forKey: "accessTokenString")
         {
             Alamofire.request(QFindRouter.getSearchResult(["token": tokenString,
@@ -663,9 +608,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 .responseObject { (response: DataResponse<SearchResultData>) -> Void in
                     switch response.result {
                     case .success(let data):
-                        
-                        self.searchResultArray = data.searchResultData
-                        
                         if ((data.response == "error") || (data.code != "200")){
                             self.historyLoadingView.stopLoading()
                             self.historyLoadingView.noDataView.isHidden = false
@@ -675,14 +617,11 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                             self.historyLoadingView.noDataLabel.text = noDataText
                         }
                         else{
-                            
+                            self.searchResultArray = data.searchResultData
                             self.historyLoadingView.isHidden = true
                             self.historyLoadingView.stopLoading()
-                            
                             self.historyCollectionView.reloadData()
                         }
-                        
-                        
                     case .failure(let error):
                         self.historyLoadingView.isHidden = false
                         self.historyLoadingView.stopLoading()
@@ -692,14 +631,10 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                         self.historyLoadingView.noDataLabel.text = noDataText
                         self.historyLoadingView.noDataView.isHidden = false
                     }
-                    
             }
-            
         }
     }
-    
     func fetchDataFromCoreData() {
-        
         guard let appDelegate =
             UIApplication.shared.delegate as? AppDelegate else {
                 return
@@ -709,7 +644,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             managedContext =
                 appDelegate.persistentContainer.viewContext
         } else {
-            
             managedContext = appDelegate.managedObjectContext
         }
         let favoritesFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "FavoriteEntity")
@@ -717,14 +651,12 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         favoritesFetchRequest.sortDescriptors = [sort]
         do {
             favoritesArray = try managedContext?.fetch(favoritesFetchRequest)
-            
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
         if (favoritesArray?.count != 0){
             self.historyLoadingView.isHidden = true
             self.historyLoadingView.stopLoading()
-            
         }
         else{
             self.historyLoadingView.isHidden = false
@@ -733,15 +665,9 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             let favoriteMissingMessage  = NSLocalizedString("No_Favorite_message", comment: "No favorite message")
             self.historyLoadingView.noDataLabel.text = favoriteMissingMessage
             self.historyLoadingView.noDataView.isHidden = false
-            
         }
         historyCollectionView.reloadData()
-        
-        
-        
     }
-    
-    
     func deleteFavorite(currentIndex: IndexPath){
         var titleFont = [NSAttributedStringKey : UIFont]()
         var messageFont = [NSAttributedStringKey : UIFont]()
@@ -760,7 +686,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         let messageAttrString = NSMutableAttributedString(string: messageString, attributes: messageFont)
         let deleteMessage = NSLocalizedString("Delete", comment: "Delete Label")
         let cancelMessage = NSLocalizedString("Cancel", comment: "Cancel Label")
-        
         refreshAlert.setValue(titleAttrString, forKey: "attributedTitle")
         refreshAlert.setValue(messageAttrString, forKey: "attributedMessage")
         let noMessageAction = UIAlertAction(title: cancelMessage, style: .default) { (action) in
@@ -776,7 +701,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             } else {
                 // Fallback on earlier versions
                 managedContext = appDelegate.managedObjectContext
-            
             }
             managedContext?.delete(self.favoritesArray![currentIndex.row])
             do {
@@ -794,13 +718,10 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                 self.historyLoadingView.noDataView.isHidden = false
                 }
                 self.historyCollectionView.reloadData()
-            
         }
         refreshAlert.addAction(noMessageAction)
         refreshAlert.addAction(yesAction)
         present(refreshAlert, animated: true, completion: nil)
-        
-    
     }
     func fetchHistoryInfo(){
         let managedContext = getContext()
@@ -813,7 +734,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        
         if (historyArray?.count != 0){
             self.historyLoadingView.isHidden = true
             self.historyLoadingView.stopLoading()
@@ -826,10 +746,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             let historyMissingMessage  = NSLocalizedString("No_history_message", comment: "No history message")
             self.historyLoadingView.noDataLabel.text = historyMissingMessage
             self.historyLoadingView.noDataView.isHidden = false
-            
         }
         historyCollectionView.reloadData()
-        
     }
     func getContext() -> NSManagedObjectContext{
         
@@ -842,8 +760,6 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         }
     }
     func setHistoryArray(historyInfo: [HistoryEntity]){
-        
-        print(historyInfo.count)
         for i in 0 ..< historyInfo.count {
             if (i == 0){
                 sectionArray.append(historyInfo[i])
@@ -865,26 +781,429 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
                     }
                 }
             }
-            
         }//for
         if (historyInfo.count == 1){
             historyFullArray.add(sectionArray)
         }
     }
-    func setDateFormat(dateData: Date)->String{
+    func setDateFormat(dateData: Date)->NSAttributedString{
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd-MMM-yyyy"
-        let stringDate = dateFormatter.string(from: dateData)
-        return stringDate
+        dateFormatter.dateFormat = "dd MMM yyyy"
+        var stringDate = dateFormatter.string(from: dateData)
+       var myMutableString = NSMutableAttributedString()
+        if ((stringDate.range(of: "Jan") != nil) || (stringDate.range(of: "يناير") != nil)) {
+            let dateString = NSLocalizedString("Jan", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Jan", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "يناير", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Feb") != nil) || (stringDate.range(of: "فبراير") != nil)) {
+            let dateString = NSLocalizedString("Feb", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Feb", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "فبراير", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Mar") != nil) || (stringDate.range(of: "مارس") != nil)) {
+           let dateString = NSLocalizedString("Mar", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Mar", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "مارس", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Apr") != nil) || (stringDate.range(of: "أبريل") != nil)) {
+            let dateString = NSLocalizedString("Apr", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Apr", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "أبريل", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "May") != nil) || (stringDate.range(of: "مايو") != nil)) {
+            let dateString = NSLocalizedString("May", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "May", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "مايو", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Jun") != nil) || (stringDate.range(of: "يونيو") != nil)) {
+            let dateString = NSLocalizedString("Jun", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Jun", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "يونيو", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Jul") != nil) || (stringDate.range(of: "يوليو") != nil)) {
+            let dateString = NSLocalizedString("Jul", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Jul", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "يوليو", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Aug") != nil) || (stringDate.range(of: "أغسطس") != nil)) {
+            let dateString = NSLocalizedString("Aug", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Aug", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "أغسطس", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Sep") != nil) || (stringDate.range(of: "سبتمبر") != nil)) {
+            let dateString = NSLocalizedString("Sep", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Sep", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "سبتمبر", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Oct") != nil) || (stringDate.range(of: "أكتوبر") != nil)) {
+            let dateString = NSLocalizedString("Oct", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Oct", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "أكتوبر", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Nov") != nil) || (stringDate.range(of: "نوفمبر") != nil)) {
+            let dateString = NSLocalizedString("Nov", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Nov", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "نوفمبر", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        else if ((stringDate.range(of: "Dec") != nil) || (stringDate.range(of: "ديسمبر") != nil)) {
+            let dateString = NSLocalizedString("Dec", comment: "Month name in history")
+            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
+                stringDate = stringDate.replacingOccurrences(of: "Dec", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "GESSUniqueBold-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+            else{
+                stringDate = stringDate.replacingOccurrences(of: "ديسمبر", with: dateString)
+                myMutableString = NSMutableAttributedString(
+                    string: stringDate,
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: headerFontSize)!])
+                myMutableString.addAttribute(NSAttributedStringKey.font,
+                                             value: UIFont(
+                                                name: "Lato-Bold",
+                                                size: headerFontSize)!,
+                                             range: NSRange(
+                                                location: 3,
+                                                length: 3))
+            }
+        }
+        return myMutableString
     }
     func setFontForHistory() {
         let searchPlaceHolder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
+        var searchTextFont = CGFloat()
+        if ( UIScreen.main.bounds.width <= 320 ) {
+            searchTextFont = 10
+        }
+        else {
+            searchTextFont = (historySearchBar.searchText.font?.pointSize)!
+        }
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
             historyLabel.font = UIFont(name: "Lato-Bold", size: historyLabel.font.pointSize)
             let attributes = [
                 NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
-                NSAttributedStringKey.font : UIFont(name: "Lato-Regular", size: (historySearchBar.searchText.font?.pointSize)!)! // Note the !
+                NSAttributedStringKey.font : UIFont(name: "Lato-Regular", size: searchTextFont)! // Note the !
             ]
             
             historySearchBar.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes:attributes)
@@ -894,11 +1213,10 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
            
             let attributes = [
                 NSAttributedStringKey.foregroundColor: UIColor.init(red: 202/255, green: 201/255, blue: 201/255, alpha: 1),
-                NSAttributedStringKey.font : UIFont(name: "GESSUniqueLight-Light", size: (historySearchBar.searchText.font?.pointSize)!)! // Note the !
+                NSAttributedStringKey.font : UIFont(name: "GESSUniqueLight-Light", size: searchTextFont)! // Note the !
             ]
             historySearchBar.searchText.attributedPlaceholder = NSAttributedString(string: searchPlaceHolder, attributes: attributes)
         }
     }
-    
 }
 

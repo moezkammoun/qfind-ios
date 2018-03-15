@@ -229,8 +229,8 @@
 				B8C4D7CD200C8DAB00E8D448 /* KASlideShow */,
 				B8D3B826200C686C0032C78B /* Font */,
 				B88A2DCB2008D7AD00BF1B8A /* ViewController */,
-				B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */,
 				B88A2D9E2008C3A000BF1B8A /* Main.storyboard */,
+				B88A2D9A2008C3A000BF1B8A /* AppDelegate.swift */,
 				B88A2DA42008C3A000BF1B8A /* Assets.xcassets */,
 				B88A2DA62008C3A000BF1B8A /* LaunchScreen.storyboard */,
 				B88A2DA92008C3A000BF1B8A /* Info.plist */,
@@ -493,7 +493,7 @@
 					B88A2D962008C3A000BF1B8A = {
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0920;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					B88A2DAD2008C3A000BF1B8A = {
 						CreatedOnToolsVersion = 9.2;
@@ -842,13 +842,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = RS529R9N6Z;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = VFTWATYU4W;
 				INFOPLIST_FILE = QFind/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.exalture.App.QFind;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qfind.qfind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "3709c1a4-1c01-46fa-b932-8d06d3b384a9";
+				PROVISIONING_PROFILE_SPECIFIER = QFindDevelopmentProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "QFind/KASlideShow/QFind-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -863,13 +867,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = RS529R9N6Z;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = VFTWATYU4W;
 				INFOPLIST_FILE = QFind/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.exalture.App.QFind;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qfind.qfind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "d417f17f-3730-4743-b3c5-1dc6a7422b9e";
+				PROVISIONING_PROFILE_SPECIFIER = QFindDistributionProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "QFind/KASlideShow/QFind-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

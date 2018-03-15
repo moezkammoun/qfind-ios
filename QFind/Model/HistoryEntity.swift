@@ -24,6 +24,13 @@ class HistoryEntity: NSManagedObject {
     @NSManaged var name: String?
     @NSManaged var arabicname: String?
     @NSManaged var openingtime: String?
+    @NSManaged var openingtitle: String?
+    @NSManaged var openingtime_arabic: String?
+    @NSManaged var openingtitle_arabic: String?
+    @NSManaged var closingtime: String?
+    @NSManaged var closingtitle: String?
+    @NSManaged var closingtime_arabic: String?
+    @NSManaged var closingtitle_arabic: String?
     @NSManaged var shortdescription: String?
     @NSManaged var arabiclocation: String?
     @NSManaged var snapchatpage: String?

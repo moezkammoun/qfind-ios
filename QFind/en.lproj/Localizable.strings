@@ -42,3 +42,17 @@
 "Cancel" = "Cancel";
 "No_Favorite_message" = "No favorites yet";
 "No_history_message" = "No history yet";
+"Jan" = "Jan";
+"Feb" = "Feb";
+"Mar" = "Mar";
+"Apr" = "Apr";
+"May" = "May";
+"Jun" = "Jun";
+"Jul" = "Jul";
+"Aug" = "Aug";
+"Sep" = "Sep";
+"Oct" = "Oct";
+"Nov" = "Nov";
+"Dec" = "Dec";
+"ErrorMessage" = "Error in connecting the server";
+

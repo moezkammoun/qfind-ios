@@ -53,9 +53,15 @@ class HistoryCollectionViewCell: UICollectionViewCell {
         favBtnTapAction?()
     }
     func searchResultData(searchResultCellValues: ServiceProvider){
-       
+       if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
         self.titleLabel.text = searchResultCellValues.service_provider_name
         self.subLabel.text = searchResultCellValues.service_provider_location
+        }
+       else {
+        self.titleLabel.text = searchResultCellValues.service_provider_name_arabic
+        self.subLabel.text = searchResultCellValues.service_provider_location_arabic
+        
+        }
         self.historyThumbnail.kf.indicatorType = .activity
         self.historyThumbnail.kf.setImage(with: URL(string: searchResultCellValues.service_provider_logo! ))
         if (historyThumbnail.image == nil) {

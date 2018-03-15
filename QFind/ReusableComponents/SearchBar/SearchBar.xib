@@ -43,10 +43,10 @@
                                 </constraint>
                             </constraints>
                         </imageView>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="What would you like to find today?" textAlignment="natural" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="q5L-Vo-8Vc">
                             <rect key="frame" x="29" y="5" width="223" height="26"/>
                             <color key="textColor" red="0.091605968770000004" green="0.19254547359999999" blue="0.24080395700000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
+                            <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                             <variation key="heightClass=regular-widthClass=regular">
                                 <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="22"/>
@@ -126,6 +126,6 @@
         <image name="Qmarker" width="29" height="29"/>
         <image name="hamburger-white" width="512" height="512"/>
         <image name="search" width="29" height="29"/>
-        <image name="toolbarBackground" width="512" height="512"/>
+        <image name="toolbarBackground" width="533" height="326"/>
     </resources>
 </document>

@@ -23,6 +23,10 @@ class BottomBarView: UIView {
     @IBOutlet weak var favoriteview: UIView!
     @IBOutlet weak var homeView: UIView!
     
+    @IBOutlet weak var favorireCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var homeCenterYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var historyCenterYConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var historyView: UIView!
     var bottombarDelegate : BottomProtocol?
     override init(frame: CGRect) {
@@ -39,7 +43,23 @@ class BottomBarView: UIView {
         addSubview(bottomView)
         bottomView.frame = self.bounds
         bottomView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
-        
+        if UIDevice().userInterfaceIdiom == .phone {
+            if (UIScreen.main.nativeBounds.height == 2436) {
+                favorireCenterYConstraint.constant = -12
+                homeCenterYConstraint.constant = -12
+                historyCenterYConstraint.constant = -12
+            }
+            else{
+                favorireCenterYConstraint.constant = 0
+                homeCenterYConstraint.constant = 0
+                historyCenterYConstraint.constant = 0
+            }
+        }
+        else{
+           favorireCenterYConstraint.constant = 0
+            homeCenterYConstraint.constant = 0
+            historyCenterYConstraint.constant = 0
+        }
     }
    
     @IBAction func didTapFavorite(_ sender: UIButton) {

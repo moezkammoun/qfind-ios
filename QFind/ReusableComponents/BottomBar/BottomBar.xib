@@ -12,11 +12,14 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BottomBarView" customModule="QFind" customModuleProvider="target">
             <connections>
                 <outlet property="bottomView" destination="iN0-l3-epB" id="kc7-ef-0JL"/>
+                <outlet property="favorireCenterYConstraint" destination="Zfb-XX-oAj" id="aue-xW-6uG"/>
                 <outlet property="favoriteButton" destination="TSK-w7-Q7b" id="wmp-Di-6wz"/>
                 <outlet property="favoriteview" destination="Wc3-wB-chg" id="CCK-SL-Bv5"/>
                 <outlet property="historyButton" destination="VVX-Np-EO6" id="TYy-3x-Vpw"/>
+                <outlet property="historyCenterYConstraint" destination="hM6-Xr-Ojc" id="OS0-bv-UXm"/>
                 <outlet property="historyView" destination="MMu-hb-Yk3" id="GGA-pp-Kkf"/>
                 <outlet property="homeButton" destination="82X-ES-3kD" id="7RA-d2-GKi"/>
+                <outlet property="homeCenterYConstraint" destination="SnG-Z4-ebq" id="05P-OQ-mxd"/>
                 <outlet property="homeView" destination="3EX-Zg-3Lk" id="Urw-qb-did"/>
             </connections>
         </placeholder>
@@ -28,76 +31,97 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wc3-wB-chg">
                     <rect key="frame" x="0.0" y="0.0" width="125" height="100"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TSK-w7-Q7b">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star" translatesAutoresizingMaskIntoConstraints="NO" id="YQ1-zd-lJS">
                             <rect key="frame" x="51.5" y="39" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="22" id="MxM-9A-0Ck">
+                                <constraint firstAttribute="height" constant="22" id="9dd-Vy-dTN">
                                     <variation key="heightClass=regular-widthClass=regular" constant="35"/>
                                 </constraint>
-                                <constraint firstAttribute="width" constant="22" id="uWa-Hb-hAB">
+                                <constraint firstAttribute="width" constant="22" id="AUj-Ly-v3d">
                                     <variation key="heightClass=regular-widthClass=regular" constant="35"/>
                                 </constraint>
                             </constraints>
-                            <state key="normal" image="star"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TSK-w7-Q7b">
+                            <rect key="frame" x="10" y="10" width="105" height="80"/>
                             <connections>
                                 <action selector="didTapFavorite:" destination="-1" eventType="touchUpInside" id="8MC-lj-xLk"/>
                             </connections>
                         </button>
                     </subviews>
                     <constraints>
+                        <constraint firstAttribute="trailing" secondItem="TSK-w7-Q7b" secondAttribute="trailing" constant="10" id="8F7-Gg-GNI"/>
                         <constraint firstItem="TSK-w7-Q7b" firstAttribute="centerY" secondItem="Wc3-wB-chg" secondAttribute="centerY" id="SII-zH-zds"/>
-                        <constraint firstItem="TSK-w7-Q7b" firstAttribute="centerX" secondItem="Wc3-wB-chg" secondAttribute="centerX" id="idA-Uc-o0g"/>
+                        <constraint firstItem="YQ1-zd-lJS" firstAttribute="centerX" secondItem="Wc3-wB-chg" secondAttribute="centerX" id="Uvc-ZX-Aue"/>
+                        <constraint firstItem="YQ1-zd-lJS" firstAttribute="centerY" secondItem="Wc3-wB-chg" secondAttribute="centerY" id="Zfb-XX-oAj"/>
+                        <constraint firstItem="TSK-w7-Q7b" firstAttribute="top" secondItem="Wc3-wB-chg" secondAttribute="top" constant="10" id="lrC-YS-iyG"/>
+                        <constraint firstAttribute="bottom" secondItem="TSK-w7-Q7b" secondAttribute="bottom" constant="10" id="mba-46-juu"/>
+                        <constraint firstItem="TSK-w7-Q7b" firstAttribute="leading" secondItem="Wc3-wB-chg" secondAttribute="leading" constant="10" id="nly-8g-Y2v"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3EX-Zg-3Lk">
                     <rect key="frame" x="125" y="0.0" width="125" height="100"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82X-ES-3kD">
-                            <rect key="frame" x="50.5" y="38.5" width="23" height="23"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" translatesAutoresizingMaskIntoConstraints="NO" id="mSh-fJ-oOn">
+                            <rect key="frame" x="51" y="38.5" width="22" height="23"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="23" id="NLA-lT-pct">
-                                    <variation key="heightClass=regular-widthClass=regular" constant="35"/>
+                                <constraint firstAttribute="height" constant="23" id="Peh-JA-Iy5">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="36"/>
                                 </constraint>
-                                <constraint firstAttribute="height" constant="23" id="Tbb-JC-I74">
+                                <constraint firstAttribute="width" constant="22" id="Tc8-Cg-3Ak">
                                     <variation key="heightClass=regular-widthClass=regular" constant="35"/>
                                 </constraint>
                             </constraints>
-                            <state key="normal" image="Qmarker"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82X-ES-3kD">
+                            <rect key="frame" x="10" y="10" width="105" height="80"/>
                             <connections>
                                 <action selector="didTapHome:" destination="-1" eventType="touchUpInside" id="jTT-sl-pwJ"/>
                             </connections>
                         </button>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="mSh-fJ-oOn" firstAttribute="centerX" secondItem="3EX-Zg-3Lk" secondAttribute="centerX" id="5nq-Sz-3hl"/>
                         <constraint firstItem="82X-ES-3kD" firstAttribute="centerX" secondItem="3EX-Zg-3Lk" secondAttribute="centerX" id="5x8-um-iCs"/>
                         <constraint firstItem="82X-ES-3kD" firstAttribute="centerY" secondItem="3EX-Zg-3Lk" secondAttribute="centerY" id="6FT-hj-oJd"/>
+                        <constraint firstItem="82X-ES-3kD" firstAttribute="top" secondItem="3EX-Zg-3Lk" secondAttribute="top" constant="10" id="8BH-aT-az6"/>
+                        <constraint firstAttribute="bottom" secondItem="82X-ES-3kD" secondAttribute="bottom" constant="10" id="F7F-Ca-QvP"/>
+                        <constraint firstItem="82X-ES-3kD" firstAttribute="leading" secondItem="3EX-Zg-3Lk" secondAttribute="leading" constant="10" id="SS2-Ck-TRG"/>
+                        <constraint firstItem="mSh-fJ-oOn" firstAttribute="centerY" secondItem="3EX-Zg-3Lk" secondAttribute="centerY" id="SnG-Z4-ebq"/>
+                        <constraint firstAttribute="trailing" secondItem="82X-ES-3kD" secondAttribute="trailing" constant="10" id="xSw-ma-0Kf"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MMu-hb-Yk3">
                     <rect key="frame" x="249" y="0.0" width="125" height="100"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VVX-Np-EO6">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="history" translatesAutoresizingMaskIntoConstraints="NO" id="4mK-Yg-L6Q">
                             <rect key="frame" x="52" y="40" width="20" height="21"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="21" id="AYd-dX-hxL">
-                                    <variation key="heightClass=regular-widthClass=regular" constant="31"/>
+                                <constraint firstAttribute="width" constant="20" id="t8c-JY-LVv">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="33"/>
                                 </constraint>
-                                <constraint firstAttribute="width" constant="20" id="PWu-Yx-r49">
-                                    <variation key="heightClass=regular-widthClass=regular" constant="35"/>
+                                <constraint firstAttribute="height" constant="21" id="xww-WD-Lsp">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="34"/>
                                 </constraint>
                             </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VVX-Np-EO6">
+                            <rect key="frame" x="10" y="10" width="105" height="80"/>
                             <color key="tintColor" red="0.90588235289999997" green="0.54901960780000003" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <state key="normal" image="history">
-                                <color key="titleShadowColor" red="1" green="0.60997188979999994" blue="0.26175884700000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
                             <connections>
                                 <action selector="didTapHistory:" destination="-1" eventType="touchUpInside" id="JBE-eY-6bo"/>
                             </connections>
                         </button>
                     </subviews>
                     <constraints>
+                        <constraint firstItem="VVX-Np-EO6" firstAttribute="top" secondItem="MMu-hb-Yk3" secondAttribute="top" constant="10" id="QFK-gi-7tR"/>
                         <constraint firstItem="VVX-Np-EO6" firstAttribute="centerY" secondItem="MMu-hb-Yk3" secondAttribute="centerY" id="Qzd-o3-Ddo"/>
                         <constraint firstItem="VVX-Np-EO6" firstAttribute="centerX" secondItem="MMu-hb-Yk3" secondAttribute="centerX" id="V7T-Rh-LsB"/>
+                        <constraint firstAttribute="trailing" secondItem="VVX-Np-EO6" secondAttribute="trailing" constant="10" id="XcR-JM-hgm"/>
+                        <constraint firstAttribute="bottom" secondItem="VVX-Np-EO6" secondAttribute="bottom" constant="10" id="gqn-Pe-wtW"/>
+                        <constraint firstItem="4mK-Yg-L6Q" firstAttribute="centerY" secondItem="MMu-hb-Yk3" secondAttribute="centerY" id="hM6-Xr-Ojc"/>
+                        <constraint firstItem="VVX-Np-EO6" firstAttribute="leading" secondItem="MMu-hb-Yk3" secondAttribute="leading" constant="10" id="p0Z-xV-EfC"/>
+                        <constraint firstItem="4mK-Yg-L6Q" firstAttribute="centerX" secondItem="MMu-hb-Yk3" secondAttribute="centerX" id="siv-gd-Dbx"/>
                     </constraints>
                 </view>
             </subviews>
