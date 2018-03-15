@@ -10,22 +10,15 @@ import UIKit
 protocol predicateTableviewProtocol {
      func tableView(_ tableView: UITableView, cellForSearchRowAt indexPath: IndexPath) -> UITableViewCell
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath)
-      func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int
-    
+    func tableView(_ tableView: UITableView, numberOfSearchRowsInSection section: Int) -> Int
     
 }
 class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
-
-    
     @IBOutlet weak var predicateSearchTable: UITableView!
-    
-   
     var predicateProtocol : predicateTableviewProtocol?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-       initialSetUp()
+        initialSetUp()
     }
     func initialSetUp(){
         self.view.layer.cornerRadius = 7.0
@@ -36,13 +29,9 @@ class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITabl
         self.view.layer.shadowOffset = CGSize(width: -1, height: 15)
         self.view.layer.shadowRadius = 5;
         self.view.layer.shadowOpacity = 0.5;
-
     }
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-      
-        if (UIDevice.current.userInterfaceIdiom == .pad)
-        {
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
             return 85
         }
         else{
@@ -62,10 +51,5 @@ class PredicateSearchViewController: UIViewController,UITableViewDelegate,UITabl
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
-    
-    
-    
-
 }

@@ -48,6 +48,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         setUILayout()
         sliderLoading.isHidden = false
@@ -60,11 +61,16 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             self.view.makeToast(checkInternet)
             sliderLoading.stopAnimating()
         }
-        
-    }
+        }
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        if (LocalizationLanguage.currentAppleLanguage() == "en") {
+            UIView.appearance().semanticContentAttribute = .forceLeftToRight
+        }
+        else {
+            UIView.appearance().semanticContentAttribute = .forceRightToLeft
+        }
         self.slideShow.addImage(UIImage(named: "sliderPlaceholder"))
         predicateSearchKey = ""
         if (UIDevice.current.userInterfaceIdiom == .pad) {
@@ -135,8 +141,6 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         NotificationCenter.default.addObserver(self, selector: #selector(HomeViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         searchText.delegate = self
-        
-
         self.findByCategoryButton.layer.masksToBounds = false;
         self.findByCategoryButton.layer.shadowOffset = CGSize(width: -1, height: 15)
         self.findByCategoryButton.layer.shadowRadius = 12;
@@ -154,22 +158,23 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     func setHomeSliderImages() {
         let sliderImagesArray = sliderImagesDefault.value(forKey: "sliderimages")
-        if (sliderImagesArray == nil)
-        {
+        if (sliderImagesArray == nil) {
             getQFindOfTheDayFromServer()
         }
         else{
             let needToCallWebservice = getArrayCount()
-            
             let sliderDate = sliderImagesDefault.value(forKey: "sliderDate") as! Date
             let isSameDate = Calendar.current.isDate(sliderDate, inSameDayAs:Date())
-            if(isSameDate && needToCallWebservice == false) {
+
+            if(isSameDate) {
                 getImage()
             }
             else {
-                 getQFindOfTheDayFromServer()
+                getQFindOfTheDayFromServer()
             }
-            
+            if(needToCallWebservice == true) {
+                getQFindOfTheDayFromServer()
+            }
         }
 
     }
@@ -179,28 +184,25 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
         let sliderArray = decodedTeams.sliderImages
         let sliderArrayCount = sliderArray.count
-        for var i in (0..<sliderArray.count) {
-            let index = sliderArray.index(of: "")
-            if (index < 5) {
-                sliderArray.removeObject(at: index)
-            }
-        }
-        if sliderArrayCount == sliderArray.count {
+        let storedSliderImgCount = sliderImagesDefault.value(forKey: "sliderImageCount") as! Int
+        if sliderArrayCount == storedSliderImgCount {
             return false
         }
         return true
     }
     @objc func keyboardWillShow(notification: NSNotification) {
        
-        if(UIDevice.current.userInterfaceIdiom == .pad) {
+           
+            if (UIScreen.main.bounds.height <= 568) {
             if self.view.frame.origin.y == 0{
                 self.view.frame.origin.y -= 250
-               
+                
             }
-        }
+            }
+        
         else {
             if self.view.frame.origin.y == 0{
-                self.view.frame.origin.y -= 250
+                self.view.frame.origin.y -= 190
               
             }
         }
@@ -210,14 +212,14 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     @objc func keyboardWillHide(notification: NSNotification) {
       
-        if(UIDevice.current.userInterfaceIdiom == .pad) {
+        if (UIScreen.main.bounds.height <= 568)  {
             if self.view.frame.origin.y != 0{
                 self.view.frame.origin.y += 250
             }
         }
         else {
             if self.view.frame.origin.y != 0{
-                self.view.frame.origin.y += 250
+                self.view.frame.origin.y += 190
             }
         }
         
@@ -263,13 +265,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
         if (isBackSpace == -92){
             predicateSearchKey = String(predicateSearchKey.characters.dropLast())
         }
-//        if ((predicateSearchKey.count) > 0 ) {
-//                        searchButton.isHidden = false
-//                    }
-//                    else {
-//                        searchButton.isHidden = true
-//                    }
-    
+
         if ((predicateSearchKey.count) >= 2)
         {
             controller.predicateProtocol = self
@@ -315,16 +311,39 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     @IBAction func didTapFindCategory(_ sender: UIButton) {
         if  (networkReachability?.isReachable)! {
-           
-            controller.view.removeFromSuperview()
-            slideShow.stop()
-            let categoryVC : CategoryViewController = storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
             
-            self.present(categoryVC, animated: false, completion: nil)
+            if (tokenDefault.value(forKey: "accessTokenString") == nil)
+            {
+                Alamofire.request(QFindRouter.getAccessToken(["clientid": "DEB47D9B-61DD-25A6-CB6F-46F310F78130",
+                                                              "clientsecret": "7B446C1F-94F4-967D-25BF-45A63DBC2BAF"]))
+                    .responseObject { (response: DataResponse<TokenData>) -> Void in
+                        switch response.result {
+                        case .success(let data):
+                            if let token = data.accessToken{
+                                tokenDefault.set(token, forKey: "accessTokenString")
+                                self.controller.view.removeFromSuperview()
+                                self.slideShow.stop()
+                                let categoryVC : CategoryViewController = self.storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
+                                
+                                self.present(categoryVC, animated: false, completion: nil)
+                            }
+                        case .failure(let error):
+                            print(error)
+                        }
+                        
+                }
+            }
+            else {
+                controller.view.removeFromSuperview()
+                slideShow.stop()
+                let categoryVC : CategoryViewController = storyboard?.instantiateViewController(withIdentifier: "categoryId") as! CategoryViewController
+                
+                self.present(categoryVC, animated: false, completion: nil)
+            }
             
         }
         else {
-            //let toastMessage = NSLocalizedString("checkInternet", comment: "checkInternet toast in the Home")
+            
             self.view.hideAllToasts()
             let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
             self.view.makeToast(checkInternet)
@@ -417,19 +436,13 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                         switch response.result {
                             
                         case .success(let data):
-                            
-                           
-                            
                             if ((data.response == "error") || (data.code != "200")){
                                 self.sliderLoading.stopAnimating()
                                 self.sliderLoading.isHidden = true
                                 self.slideShow.addImage(UIImage(named: "sliderPlaceholder"))
                             }
                             else{
-                                //self.sliderLoading.stopAnimating()
-                                //self.sliderLoading.isHidden = true
                                 self.qFindDict = data.qfindOfTheDayData
-                                
                                 self.imageDownloader(imgArray: (self.qFindDict?.image)!.mutableCopy() as! NSMutableArray)
                             }
                         case .failure(let error):
@@ -448,12 +461,10 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     
     func imageDownloader(imgArray : NSMutableArray){
-        
         while self.qFindArray.count < imgArray.count {
-            self.qFindArray.add("")
+            self.qFindArray.add(UIImage(named: "sliderPlaceholder"))
+            sliderImagesDefault.set(imgArray.count, forKey: "sliderImageCount")
         }
-        
-
         for var i in (0..<imgArray.count)
         {
             let slideiImageUrl = URL(string: imgArray[i] as! String)
@@ -461,25 +472,22 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                 ImageDownloader.default.downloadTimeout = 70
                 if let image = image {
                     self.arrayCount = self.arrayCount! + 1
-
-                    self.qFindArray[i] = image
-
+                       self.qFindArray[i] = image
                     if (self.arrayCount == imgArray.count)
                     {
-                        
-                        
                         let sliderData = SliderImagesModel(sliderImages: self.qFindArray)
                         let encodedData = NSKeyedArchiver.archivedData(withRootObject: sliderData)
                         sliderImagesDefault.set(encodedData, forKey: "sliderimages")
                         sliderImagesDefault.set(Date(), forKey: "sliderDate")
                         self.getImage()
-                    
-                        
                     }
                    
                 } else {
-                   
-                    print(error)
+                    var imgCount = sliderImagesDefault.value(forKey: "sliderImageCount") as! Int
+                    if (imgCount != 0) {
+                        imgCount = imgCount-1
+                        sliderImagesDefault.set(imgCount, forKey: "sliderImageCount")
+                    }
                 }
             })
         }
@@ -490,13 +498,6 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
     let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
     self.qFindArray = decodedTeams.sliderImages
-    
-    for var i in (0..<qFindArray.count) {
-         let index = self.qFindArray.index(of: "")
-            if (index < 5) {
-                self.qFindArray.removeObject(at: index)
-            }
-    }
     setSlideShow(imgArray: self.qFindArray)
     }
     func setFontForHomeView() {

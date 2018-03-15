@@ -16,6 +16,7 @@ class LoadingView: UIView {
     
     @IBOutlet weak var noDataView: UIView!
     var isNoDataDisplayed : Bool = false
+    var noDataFontSize =  CGFloat()
     override func awakeFromNib()
     {
         loadView()
@@ -69,13 +70,28 @@ class LoadingView: UIView {
     {
         self.isNoDataDisplayed = true
         activityIndicator.stopAnimating()
-      //  self.isHidden = true
+        activityIndicator.isHidden = true
+        //self.isHidden = true
         
     }
     
     func showNoDataView(){
         self.isNoDataDisplayed = true
         //self.isHidden = false
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            noDataFontSize = 27
+        }
+        else {
+            noDataFontSize = 19
+        }
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            noDataLabel.font = UIFont(name: "Lato-Regular", size: noDataFontSize)
+            
+        }
+        else {
+            noDataLabel.font = UIFont(name: "GESSUniqueLight-Light", size: noDataFontSize)
+            
+        }
         let noDataText = NSLocalizedString("No_result_found", comment: "No result message")
         self.noDataLabel.text = noDataText
         self.noDataView.isHidden = false

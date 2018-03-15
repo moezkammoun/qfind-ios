@@ -7,6 +7,10 @@
         <attribute name="arabiclocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arabicname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favoritedate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -17,6 +21,9 @@
         <attribute name="mobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="openingtime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingtitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortdescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="snapchatpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="twitterpage" optional="YES" attributeType="String" syncable="YES"/>
@@ -29,6 +36,10 @@
         <attribute name="arabiclocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arabicname" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="closingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date_history" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
@@ -39,13 +50,16 @@
         <attribute name="mobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="openingtime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingtitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortdescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="snapchatpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="twitterpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="345"/>
-        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="345"/>
+        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="450"/>
+        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="450"/>
     </elements>
 </model>

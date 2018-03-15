@@ -180,7 +180,8 @@ extension RootViewController: SidebarViewDelegate {
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = aboutUrl
                     
-                    webViewVc.titleString = NSLocalizedString("About us", comment: "About us Label in the webview page")
+                    //webViewVc.titleString = NSLocalizedString("QFind", comment: "QFind title Label in the webview page")
+                    webViewVc.titleString = "QFind"
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }
@@ -200,7 +201,8 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = qfindertUrl
-                    webViewVc.titleString = NSLocalizedString("How to become qfinder", comment: "How to become qfinder Label in the webview page")
+                    //webViewVc.titleString = NSLocalizedString("QFind", comment: "QFind title Label in the webview page")
+                    webViewVc.titleString = "QFind"
                     
                     self.present(webViewVc, animated: false, completion: nil)
                     
@@ -221,7 +223,8 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = termsAndConditionUrl
-                    webViewVc.titleString = NSLocalizedString("Terms & conditions", comment: "Terms & conditions Label in the webview page")
+                    //webViewVc.titleString = NSLocalizedString("QFind", comment: "QFind title Label in the webview page")
+                    webViewVc.titleString = "QFind"
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }
@@ -241,7 +244,8 @@ extension RootViewController: SidebarViewDelegate {
                     
                     let webViewVc:WebViewController = self.storyboard?.instantiateViewController(withIdentifier: "webViewId") as! WebViewController
                     webViewVc.webViewUrl = contactUrl
-                    webViewVc.titleString = NSLocalizedString("Contact us", comment: "Contact us Label in the webview page")
+                    //webViewVc.titleString = NSLocalizedString("QFind", comment: "QFind title Label in the webview page")
+                    webViewVc.titleString = "QFind"
                     self.present(webViewVc, animated: false, completion: nil)
                     
                 }

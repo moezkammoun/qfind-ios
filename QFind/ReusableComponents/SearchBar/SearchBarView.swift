@@ -48,12 +48,23 @@ class SearchBarView: UIView,UITextFieldDelegate {
     }
     func setFontForSearchText() {
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-            searchText.font = UIFont(name: "Lato-Regular", size: (searchText.font?.pointSize)!)
+            if ( UIScreen.main.bounds.width <= 320 ) {
+                searchText.font = UIFont(name: "Lato-Regular", size: 10)
+            }
+            else {
+                searchText.font = UIFont(name: "Lato-Regular", size: (searchText.font?.pointSize)!)
+            }
+            
             
         }
         else {
+            if ( UIScreen.main.bounds.width <= 320 ) {
+                searchText.font = UIFont(name: "GESSUniqueLight-Light", size: 10)
+            }
+            else {
             
             searchText.font = UIFont(name: "GESSUniqueLight-Light", size: (searchText.font?.pointSize)!)
+            }
         }
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
