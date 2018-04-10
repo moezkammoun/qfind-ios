@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>624819967136-5ie43atgu99f9h22asp1g412naqs6k6q.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.624819967136-5ie43atgu99f9h22asp1g412naqs6k6q</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCmP1YkC-TjKdgK_9m0x5KpCSVxyUBE0gA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>624819967136</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.qfind.qfind</string>
+	<key>PROJECT_ID</key>
+	<string>qfindios</string>
+	<key>STORAGE_BUCKET</key>
+	<string>qfindios.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:624819967136:ios:7a2b0d38aaf6b8e5</string>
+	<key>DATABASE_URL</key>
+	<string>https://qfindios.firebaseio.com</string>
+</dict>
+</plist>

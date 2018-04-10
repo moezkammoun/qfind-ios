@@ -15,6 +15,7 @@ class WebViewController: UIViewController,UIWebViewDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     var webViewUrl: URL? = nil
     var titleString: String? = nil
+    var titleFontSize =  CGFloat()
     override func viewDidLoad() {
         super.viewDidLoad()
         if ((titleString != nil) && (titleString != "")) {
@@ -27,6 +28,19 @@ class WebViewController: UIViewController,UIWebViewDelegate {
         webViewLoader.showLoading()
         webView.backgroundColor = UIColor.white
         webView.scrollView.bounces = false
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
+            titleFontSize = 35
+            
+        }
+        else {
+            titleFontSize = 25
+        }
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.font = UIFont(name: "Lato-Bold", size: titleFontSize)
+        }
+        else {
+            titleLabel.font = UIFont(name: "GESSUniqueBold-Bold", size: titleFontSize)
+        }
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

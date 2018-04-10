@@ -28,6 +28,8 @@
 		<string>twitter</string>
 		<string>snapchat</string>
 	</array>
+	<key>LSHasLocalizedDisplayName</key>
+	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -44,6 +46,8 @@
 		<string>GE_SS_Unique_Bold.otf</string>
 		<string>GE_SS_Unique_Light.otf</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

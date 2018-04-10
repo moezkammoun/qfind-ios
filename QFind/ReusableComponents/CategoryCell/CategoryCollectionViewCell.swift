@@ -29,22 +29,17 @@ class CategoryCollectionViewCell: UICollectionViewCell {
             ipadFontSize = 11
             ipadSubtitleFontSize = 10
         }
-                if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
-                    titleLabel.font = UIFont(name: "Lato-Light", size: ipadFontSize)
-                    subTitleLabel.font = UIFont(name: "Lato-Light", size: ipadSubtitleFontSize)
-                }
-                else {
-                    titleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadFontSize)
-                    subTitleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadSubtitleFontSize)
-                }
-       
+        if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
+            titleLabel.font = UIFont(name: "Lato-Light", size: ipadFontSize)
+            subTitleLabel.font = UIFont(name: "Lato-Light", size: ipadSubtitleFontSize)
+        }
+        else {
+            titleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadFontSize)
+            subTitleLabel.font = UIFont(name: "GESSUniqueLight-Light", size: ipadSubtitleFontSize)
+        }
     }
    
-    func setCategoryCellValues(categoryValues : Category)
-    {
-        
-        
-
+    func setCategoryCellValues(categoryValues : Category){
         
         self.titleLabel.text = categoryValues.categories_name
         if let imageUrl = categoryValues.categories_imge{

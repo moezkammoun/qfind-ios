@@ -135,7 +135,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
                 LocalizationLanguage.setAppleLAnguageTo(lang: "en")
                 languageKey = 1
                 if #available(iOS 9.0, *) {
-                   // UIView.appearance().semanticContentAttribute = .forceLeftToRight
+                    UIView.appearance().semanticContentAttribute = .forceLeftToRight
                     self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
                 
                 } else {
@@ -166,7 +166,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
                 LocalizationLanguage.setAppleLAnguageTo(lang: "ar")
                 languageKey = 2
                 if #available(iOS 9.0, *) {
-                    //UIView.appearance().semanticContentAttribute = .forceRightToLeft
+                    UIView.appearance().semanticContentAttribute = .forceRightToLeft
                     self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
                     
                 } else {
@@ -203,7 +203,11 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     }
     func homebuttonPressed() {
         settingsBottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+        //self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+        let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
+        let homeViewController = mainStoryBoard.instantiateViewController(withIdentifier: "homeId") as! HomeViewController
+        let appDelegate = UIApplication.shared.delegate
+        appDelegate?.window??.rootViewController = homeViewController
     }
     func historyButtonPressed() {
         settingsBottomBar.historyView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)

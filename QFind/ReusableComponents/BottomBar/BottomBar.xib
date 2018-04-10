@@ -20,6 +20,7 @@
                 <outlet property="historyView" destination="MMu-hb-Yk3" id="GGA-pp-Kkf"/>
                 <outlet property="homeButton" destination="82X-ES-3kD" id="7RA-d2-GKi"/>
                 <outlet property="homeCenterYConstraint" destination="SnG-Z4-ebq" id="05P-OQ-mxd"/>
+                <outlet property="homeImage" destination="mSh-fJ-oOn" id="paB-Uw-0a7"/>
                 <outlet property="homeView" destination="3EX-Zg-3Lk" id="Urw-qb-did"/>
             </connections>
         </placeholder>
@@ -62,14 +63,14 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3EX-Zg-3Lk">
                     <rect key="frame" x="125" y="0.0" width="125" height="100"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" translatesAutoresizingMaskIntoConstraints="NO" id="mSh-fJ-oOn">
-                            <rect key="frame" x="51" y="38.5" width="22" height="23"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Qmarker" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mSh-fJ-oOn">
+                            <rect key="frame" x="52" y="38.5" width="22" height="23"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="23" id="Peh-JA-Iy5">
-                                    <variation key="heightClass=regular-widthClass=regular" constant="36"/>
+                                <constraint firstAttribute="height" constant="23" id="G7i-Mu-b71">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="34"/>
                                 </constraint>
-                                <constraint firstAttribute="width" constant="22" id="Tc8-Cg-3Ak">
-                                    <variation key="heightClass=regular-widthClass=regular" constant="35"/>
+                                <constraint firstAttribute="width" constant="22" id="qOy-ee-L3H">
+                                    <variation key="heightClass=regular-widthClass=regular" constant="33"/>
                                 </constraint>
                             </constraints>
                         </imageView>
@@ -145,7 +146,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Qmarker" width="29" height="29"/>
+        <image name="Qmarker" width="76" height="76"/>
         <image name="history" width="29" height="29"/>
         <image name="star" width="40" height="40"/>
     </resources>

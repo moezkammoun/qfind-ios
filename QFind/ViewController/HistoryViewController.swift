@@ -52,10 +52,16 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         setUi()
         setRTLSupportForHistory()
         registerCell()
-       fetchHistoryInfo()
+       
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+        sectionArray = [HistoryEntity] ()
+        historyFullArray = NSMutableArray()
+        
+       
+         fetchHistoryInfo()
+       
         if (UIDevice.current.userInterfaceIdiom == .pad) {
             predicateTableHeight = 85
         }
@@ -342,7 +348,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
             controller.view.removeFromSuperview()
             
-            informationVC.serviceProviderArrayDict = servicePrividerDict
+           // informationVC.serviceProviderArrayDict = servicePrividerDict
+            informationVC.serviceProviderId = servicePrividerDict.id
             self.present(informationVC, animated: false, completion: nil)
         }
         else if (pageNameString == PageName.favorite){
@@ -351,7 +358,8 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
             controller.view.removeFromSuperview()
             setFavoriteDictionary(favDict: favoriteServiceDict)
-            informationVC.favoriteDictinary = favoriteDictionary
+            //informationVC.favoriteDictinary = favoriteDictionary
+            informationVC.serviceProviderId = favoriteDictionary.value(forKey: "id") as! Int
             informationVC.fromFavorite = true
             self.present(informationVC, animated: false, completion: nil)
         }
@@ -362,39 +370,21 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             self.historyView.removeGestureRecognizer(tapGestRecognizer)
             controller.view.removeFromSuperview()
             informationVC.fromHistory = true
-            informationVC.historyDict = historyServiceDict
+           // informationVC.historyDict = historyServiceDict
+             informationVC.serviceProviderId = Int(historyServiceDict.id)
             self.present(informationVC, animated: false, completion: nil)
 
         }
     }
     func setFavoriteDictionary(favDict: NSManagedObject){
-        favoriteDictionary.setValue(favDict.value(forKey: "address"), forKey: "address")
-        favoriteDictionary.setValue(favDict.value(forKey: "arabicaddress"), forKey: "arabicaddress")
-        favoriteDictionary.setValue(favDict.value(forKey: "category"), forKey: "category")
-        favoriteDictionary.setValue(favDict.value(forKey: "arabiccategory"), forKey: "arabiccategory")
-        favoriteDictionary.setValue(favDict.value(forKey: "email"), forKey: "email")
-        favoriteDictionary.setValue(favDict.value(forKey: "facebookpage"), forKey: "facebookpage")
+      
         favoriteDictionary.setValue(favDict.value(forKey: "id"), forKey: "id")
         favoriteDictionary.setValue(favDict.value(forKey: "imgurl"), forKey: "imgurl")
-        favoriteDictionary.setValue(favDict.value(forKey: "instagrampage"), forKey: "instagrampage")
-        favoriteDictionary.setValue(favDict.value(forKey: "maplocation"), forKey: "maplocation")
-        favoriteDictionary.setValue(favDict.value(forKey: "mobile"), forKey: "mobile")
+       
         favoriteDictionary.setValue(favDict.value(forKey: "name"), forKey: "name")
         favoriteDictionary.setValue(favDict.value(forKey: "arabicname"), forKey: "arabicname")
-        favoriteDictionary.setValue(favDict.value(forKey: "openingtime"), forKey: "openingtime")
-        favoriteDictionary.setValue(favDict.value(forKey: "openingtitle"), forKey: "openingtitle")
-        favoriteDictionary.setValue(favDict.value(forKey: "openingtime_arabic"), forKey: "openingtime_arabic")
-        favoriteDictionary.setValue(favDict.value(forKey: "openingtitle_arabic"), forKey: "openingtitle_arabic")
-        favoriteDictionary.setValue(favDict.value(forKey: "closingtime"), forKey: "closingtime")
-        favoriteDictionary.setValue(favDict.value(forKey: "closingtime_arabic"), forKey: "closingtime_arabic")
-        favoriteDictionary.setValue(favDict.value(forKey: "closingtitle"), forKey: "closingtitle")
-        favoriteDictionary.setValue(favDict.value(forKey: "closingtitle_arabic"), forKey: "closingtitle_arabic")
-
         favoriteDictionary.setValue(favDict.value(forKey: "shortdescription"), forKey: "shortdescription")
         favoriteDictionary.setValue(favDict.value(forKey: "arabiclocation"), forKey: "arabiclocation")
-        favoriteDictionary.setValue(favDict.value(forKey: "snapchatpage"), forKey: "snapchatpage")
-        favoriteDictionary.setValue(favDict.value(forKey: "twitterpage"), forKey: "twitterpage")
-        favoriteDictionary.setValue(favDict.value(forKey: "website"), forKey: "website")
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -418,7 +408,11 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         historyBottomBar.favoriteview.backgroundColor = UIColor.white
         historyBottomBar.historyView.backgroundColor = UIColor.white
         historyBottomBar.homeView.backgroundColor = UIColor.init(red: 200/255, green: 200/255, blue: 200/255, alpha: 1)
-        self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+       // self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+        let mainStoryBoard = UIStoryboard(name: "Main", bundle: nil)
+        let homeViewController = mainStoryBoard.instantiateViewController(withIdentifier: "homeId") as! HomeViewController
+        let appDelegate = UIApplication.shared.delegate
+        appDelegate?.window??.rootViewController = homeViewController
     }
     func historyButtonPressed() {
         setBottomBarHistoryBackground()

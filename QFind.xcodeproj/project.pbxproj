@@ -8,10 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		253D3DD4730755453772277E /* Pods_QFind.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95DEF7B06F24A040E13F4D59 /* Pods_QFind.framework */; };
+		B811008A205F9D7400B77BC6 /* QFind.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = B8CE940F205BE82900A78CDC /* QFind.entitlements */; };
+		B811008C205FA41E00B77BC6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B811008B205FA41D00B77BC6 /* GoogleService-Info.plist */; };
 		B826DCA1203424C0005BAF76 /* CustomFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B826DC9F203424C0005BAF76 /* CustomFooterView.swift */; };
 		B826DCA2203424C0005BAF76 /* CustomFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B826DCA0203424C0005BAF76 /* CustomFooterView.xib */; };
 		B826DCAA20343C69005BAF76 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B826DCA920343C69005BAF76 /* WebViewController.swift */; };
 		B826DCB020344C97005BAF76 /* GE_SS_Unique_Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B826DCAF20344C97005BAF76 /* GE_SS_Unique_Bold.otf */; };
+		B84D56D42064D9EE00F90AF4 /* LaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84D56D32064D9EE00F90AF4 /* LaunchViewController.swift */; };
 		B858B4AD2015EE1800C4812D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4AC2015EE1800C4812D /* LoadingView.swift */; };
 		B858B4AF2015EE2B00C4812D /* LoadingViewXib.xib in Resources */ = {isa = PBXBuildFile; fileRef = B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */; };
 		B858B4B1201606A400C4812D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B858B4B0201606A400C4812D /* SettingsViewController.swift */; };
@@ -32,6 +35,7 @@
 		B89F67412017556C006D3EFA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B89F67432017556C006D3EFA /* Localizable.strings */; };
 		B8A3390B202828A1003BF43C /* SliderImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A3390A202828A1003BF43C /* SliderImagesModel.swift */; };
 		B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */; };
+		B8B5B7E2205AD08100BEB5B6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8B5B7E4205AD08100BEB5B6 /* InfoPlist.strings */; };
 		B8B7627F2021B447004F90F9 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B7627E2021B447004F90F9 /* SidebarView.swift */; };
 		B8B762812021B46E004F90F9 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B762802021B46E004F90F9 /* RootViewController.swift */; };
 		B8BA01CA202F493100C5B1FA /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BA01C9202F493100C5B1FA /* ToastView.swift */; };
@@ -77,14 +81,29 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		B82D586C20652D9200A66CA6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		5E6C9D3A23B697489734286F /* Pods-QFind.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QFind.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QFind/Pods-QFind.debug.xcconfig"; sourceTree = "<group>"; };
 		95DEF7B06F24A040E13F4D59 /* Pods_QFind.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QFind.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A94D60E9E3F99FD715BAD73B /* Pods-QFind.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QFind.release.xcconfig"; path = "Pods/Target Support Files/Pods-QFind/Pods-QFind.release.xcconfig"; sourceTree = "<group>"; };
+		B811008B205FA41D00B77BC6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B826DC9F203424C0005BAF76 /* CustomFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomFooterView.swift; sourceTree = "<group>"; };
 		B826DCA0203424C0005BAF76 /* CustomFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomFooterView.xib; sourceTree = "<group>"; };
 		B826DCA920343C69005BAF76 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		B826DCAF20344C97005BAF76 /* GE_SS_Unique_Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = GE_SS_Unique_Bold.otf; sourceTree = "<group>"; };
+		B84D56D32064D9EE00F90AF4 /* LaunchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchViewController.swift; sourceTree = "<group>"; };
 		B858B4AC2015EE1800C4812D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		B858B4AE2015EE2B00C4812D /* LoadingViewXib.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingViewXib.xib; sourceTree = "<group>"; };
 		B858B4B0201606A400C4812D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -114,6 +133,8 @@
 		B89F67442017565A006D3EFA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B8A3390A202828A1003BF43C /* SliderImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderImagesModel.swift; sourceTree = "<group>"; };
 		B8B00E66200F7383002B3E82 /* Lato-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Italic.ttf"; sourceTree = "<group>"; };
+		B8B5B7E3205AD08100BEB5B6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B8B5B7E5205AD08200BEB5B6 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B8B7627E2021B447004F90F9 /* SidebarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		B8B762802021B46E004F90F9 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		B8BA01C9202F493100C5B1FA /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
@@ -133,6 +154,7 @@
 		B8C4D7DD200CC6D600E8D448 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8C4D7E0200CD42000E8D448 /* BottomBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomBar.xib; sourceTree = "<group>"; };
 		B8C4D7E2200CE6C400E8D448 /* BottomBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomBarView.swift; sourceTree = "<group>"; };
+		B8CE940F205BE82900A78CDC /* QFind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QFind.entitlements; sourceTree = "<group>"; };
 		B8D20D4920107A37008DDDE8 /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		B8D20D4D20107ACC008DDDE8 /* HistoryOrSearchCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HistoryOrSearchCell.xib; sourceTree = "<group>"; };
 		B8D20D572010B0F3008DDDE8 /* HistoryCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -200,6 +222,7 @@
 		B88A2D8E2008C3A000BF1B8A = {
 			isa = PBXGroup;
 			children = (
+				B811008B205FA41D00B77BC6 /* GoogleService-Info.plist */,
 				B88A2D992008C3A000BF1B8A /* QFind */,
 				B88A2DB12008C3A000BF1B8A /* QFindTests */,
 				B88A2DBC2008C3A000BF1B8A /* QFindUITests */,
@@ -222,6 +245,7 @@
 		B88A2D992008C3A000BF1B8A /* QFind */ = {
 			isa = PBXGroup;
 			children = (
+				B8CE940F205BE82900A78CDC /* QFind.entitlements */,
 				B8B7627D2021B42B004F90F9 /* SideBar */,
 				B8C4AC4F2019E780004DEFF6 /* Model */,
 				B8C4AC4C2019E70C004DEFF6 /* WebService */,
@@ -237,6 +261,7 @@
 				B88A2DA12008C3A000BF1B8A /* QFind.xcdatamodeld */,
 				B89F67432017556C006D3EFA /* Localizable.strings */,
 				B8C4AC542019EA46004DEFF6 /* Config.swift */,
+				B8B5B7E4205AD08100BEB5B6 /* InfoPlist.strings */,
 			);
 			path = QFind;
 			sourceTree = "<group>";
@@ -270,6 +295,7 @@
 				B858B4B0201606A400C4812D /* SettingsViewController.swift */,
 				B8E4D2922011C90F00074C37 /* PredicateSearchViewController.swift */,
 				B826DCA920343C69005BAF76 /* WebViewController.swift */,
+				B84D56D32064D9EE00F90AF4 /* LaunchViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -434,6 +460,8 @@
 				B88A2D952008C3A000BF1B8A /* Resources */,
 				58CC2367CCB43072315B6F13 /* [CP] Embed Pods Frameworks */,
 				39CB11CE928C9F6F7023070B /* [CP] Copy Pods Resources */,
+				B8BE62292062406F008BE33E /* ShellScript */,
+				B82D586C20652D9200A66CA6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -494,6 +522,11 @@
 						CreatedOnToolsVersion = 9.2;
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 					B88A2DAD2008C3A000BF1B8A = {
 						CreatedOnToolsVersion = 9.2;
@@ -533,6 +566,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B811008A205F9D7400B77BC6 /* QFind.entitlements in Resources */,
 				B8B00E67200F7384002B3E82 /* Lato-Italic.ttf in Resources */,
 				B88A2DA82008C3A000BF1B8A /* LaunchScreen.storyboard in Resources */,
 				B826DCB020344C97005BAF76 /* GE_SS_Unique_Bold.otf in Resources */,
@@ -540,6 +574,7 @@
 				B89F67412017556C006D3EFA /* Localizable.strings in Resources */,
 				B8D20D4E20107ACC008DDDE8 /* HistoryOrSearchCell.xib in Resources */,
 				B8D5AC92200DBB5F004F0BE1 /* SearchBar.xib in Resources */,
+				B8B5B7E2205AD08100BEB5B6 /* InfoPlist.strings in Resources */,
 				B88A2DA52008C3A000BF1B8A /* Assets.xcassets in Resources */,
 				B8D3B82A200C686D0032C78B /* Lato-Regular.ttf in Resources */,
 				B8C4D7E1200CD42000E8D448 /* BottomBar.xib in Resources */,
@@ -548,6 +583,7 @@
 				B8C4D7D5200CC07100E8D448 /* Lato-Light.ttf in Resources */,
 				B88A2DA02008C3A000BF1B8A /* Main.storyboard in Resources */,
 				B87BBFF02011E31900A026FB /* GE_SS_Unique_Light.otf in Resources */,
+				B811008C205FA41E00B77BC6 /* GoogleService-Info.plist in Resources */,
 				B8C4AC492019D4C9004DEFF6 /* DetailTableCell.xib in Resources */,
 				B8D3B829200C686D0032C78B /* Lato-Bold.ttf in Resources */,
 			);
@@ -611,17 +647,34 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-QFind/Pods-QFind-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-QFind/Pods-QFind-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		B8BE62292062406F008BE33E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -645,6 +698,7 @@
 				B8D20D4A20107A37008DDDE8 /* HistoryViewController.swift in Sources */,
 				B8B7627F2021B447004F90F9 /* SidebarView.swift in Sources */,
 				B8C4AC592019F9D8004DEFF6 /* APIClient.swift in Sources */,
+				B84D56D42064D9EE00F90AF4 /* LaunchViewController.swift in Sources */,
 				B826DCAA20343C69005BAF76 /* WebViewController.swift in Sources */,
 				B8C4AC532019E7D5004DEFF6 /* QFindRouter.swift in Sources */,
 				B8C4AC512019E79D004DEFF6 /* ModelClass.swift in Sources */,
@@ -721,6 +775,15 @@
 				B89F67442017565A006D3EFA /* en */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		B8B5B7E4205AD08100BEB5B6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B8B5B7E3205AD08100BEB5B6 /* en */,
+				B8B5B7E5205AD08200BEB5B6 /* ar */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -840,18 +903,23 @@
 			baseConfigurationReference = 5E6C9D3A23B697489734286F /* Pods-QFind.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QFind/QFind.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = VFTWATYU4W;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = QFind/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qfind.qfind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3709c1a4-1c01-46fa-b932-8d06d3b384a9";
+				PROVISIONING_PROFILE = "d417f17f-3730-4743-b3c5-1dc6a7422b9e";
 				PROVISIONING_PROFILE_SPECIFIER = QFindDevelopmentProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "QFind/KASlideShow/QFind-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -865,19 +933,23 @@
 			baseConfigurationReference = A94D60E9E3F99FD715BAD73B /* Pods-QFind.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = QFind/QFind.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = VFTWATYU4W;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = QFind/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qfind.qfind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d417f17f-3730-4743-b3c5-1dc6a7422b9e";
-				PROVISIONING_PROFILE_SPECIFIER = QFindDistributionProfile;
+				PROVISIONING_PROFILE_SPECIFIER = QFindDevelopmentProfile;
 				SWIFT_OBJC_BRIDGING_HEADER = "QFind/KASlideShow/QFind-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

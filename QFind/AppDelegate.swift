@@ -8,21 +8,39 @@
 
 import Alamofire
 import CoreData
+import Firebase
 import UIKit
 let tokenDefault = UserDefaults.standard
 var languageKey = 1
-
+var deepLinkId: Int?
+var deepLink: Bool? = false
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var historyDetailsArray:[HistoryEntity]?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        self.window?.makeToast("1")
         // Override point for customization after application launch.
         UIApplication.shared.statusBarStyle = .lightContent
           AppLocalizer.DoTheMagic()
+        if(deepLinkId == nil) {
+            self.window = UIWindow(frame: UIScreen.main.bounds)
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            
+            let initialViewController = storyboard.instantiateViewController(withIdentifier: "launchId")
+            
+            self.window?.rootViewController = initialViewController
+            //self.window?.makeKeyAndVisible()
+        }
+        
         getAccessTokenFromServer()
         deletePreviousMonthHistoryFromCoreData()
+
+        FirebaseApp.configure()
+        //Fabric.sharedSDK().debug = true
+        
         return true
         
     
@@ -56,6 +74,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        
+        deepLink = true
+            let webUrl = userActivity.webpageURL
+            guard let components = URLComponents(url: webUrl!, resolvingAgainstBaseURL: false) else {
+                return false
+            }
+            let queryItems = components.queryItems
+            var parameters = [String: String]()
+            for item in queryItems! {
+                parameters[item.name] = item.value
+                if (item.name == "category_id") {                    
+                    deepLinkId = Int(item.value!)!
+                    
+               
+//                    
+//                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                    let viewController = storyboard.instantiateViewController(withIdentifier :"informationId") as! DetailViewController
+//                    let navController = UINavigationController.init(rootViewController: viewController)
+//
+//                    if let window = self.window, let rootViewController = window.rootViewController {
+//                        var currentController = rootViewController
+//                        while let presentedController = currentController.presentedViewController {
+//                            currentController = presentedController
+//                        }
+//                        currentController.present(navController, animated: true, completion: nil)
+//                    }
+                    
+                }//
+                
+            }
+        return true
+    }
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        return true
+    }
     // MARK: - Core Data stack
 
     @available(iOS 10.0, *)
@@ -180,19 +235,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 case .success(let data):
                     if let token = data.accessToken{
                            tokenDefault.set(token, forKey: "accessTokenString")
-                        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                        let initialViewController : HomeViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "homeId") as! HomeViewController
-                        self.window = UIWindow(frame: UIScreen.main.bounds)
-                        self.window?.rootViewController = initialViewController
-                        self.window?.makeKeyAndVisible()
-                        
+//                        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//                        let initialViewController : HomeViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "homeId") as! HomeViewController
+//                        self.window = UIWindow(frame: UIScreen.main.bounds)
+//                        self.window?.rootViewController = initialViewController
+//                        self.window?.makeKeyAndVisible()
+
                     }
                 case .failure(let error):
                     print(error)
                 }
-                
+
         }
     }
+        
     }
     func deletePreviousMonthHistoryFromCoreData() {
         let monthsToAdd = -1

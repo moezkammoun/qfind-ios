@@ -34,7 +34,7 @@ class DetailTableViewCell: UITableViewCell {
                 informationText.font = UIFont(name: "GESSUniqueBold-Bold", size: informationText.font.pointSize)
             }
         
-       
+        
         if (informationCellDict["key"] == "service_provider_website"){
             
             let websiteFullUrl = informationCellDict["value"]
@@ -48,48 +48,56 @@ class DetailTableViewCell: UITableViewCell {
             informationText.font = UIFont(name: "Lato-Bold", size: informationText.font.pointSize)
         }
         if (informationCellDict["key"] == "service_provider_opening_time") {
+            let closedLabel = NSLocalizedString("Closed", comment: "closed label in timepopup")
            if ((LocalizationLanguage.currentAppleLanguage()) == "ar") {
-            let fullArray = informationCellDict["value"]?.components(separatedBy: " ")
-            let timeMutableString1 = NSMutableAttributedString(
-                string:fullArray![0],
-                attributes: [NSAttributedStringKey.font:UIFont(
-                    name: "Lato-Bold",
-                    size: informationText.font.pointSize)!])
-            let timeMutableString2 = NSMutableAttributedString(
-                string:  " ",
-                attributes: [NSAttributedStringKey.font:UIFont(
-                    name: "Lato-Bold",
-                    size: informationText.font.pointSize)!])
-            let timeMutableString3 = NSMutableAttributedString(
-                string:  fullArray![1],
-                attributes: [NSAttributedStringKey.font:UIFont(
-                    name: "GESSUniqueBold-Bold",
-                    size: informationText.font.pointSize)!])
-            let timeMutableString4 = NSMutableAttributedString(
-                string:  fullArray![2],
-                attributes: [NSAttributedStringKey.font:UIFont(
-                    name: "Lato-Bold",
-                    size: informationText.font.pointSize)!])
+            if (( informationCellDict["value"]?.caseInsensitiveCompare(closedLabel)) == ComparisonResult.orderedSame) {
+                informationText.text = informationCellDict["value"]
+            }
+            else {
+                let fullArray = informationCellDict["value"]?.components(separatedBy: " ")
+                let timeMutableString1 = NSMutableAttributedString(
+                    string:fullArray![0],
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: informationText.font.pointSize)!])
+                let timeMutableString2 = NSMutableAttributedString(
+                    string:  " ",
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: informationText.font.pointSize)!])
+                let timeMutableString3 = NSMutableAttributedString(
+                    string:  fullArray![1],
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "GESSUniqueBold-Bold",
+                        size: informationText.font.pointSize)!])
+                let timeMutableString4 = NSMutableAttributedString(
+                    string:  fullArray![2],
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: informationText.font.pointSize)!])
+                
+                let timeMutableString5 = NSMutableAttributedString(
+                    string:fullArray![3],
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "Lato-Bold",
+                        size: informationText.font.pointSize)!])
+                let timeMutableString6 = NSMutableAttributedString(
+                    string:  fullArray![4],
+                    attributes: [NSAttributedStringKey.font:UIFont(
+                        name: "GESSUniqueBold-Bold",
+                        size: informationText.font.pointSize)!])
+                timeMutableString1.append(timeMutableString2)
+                timeMutableString1.append(timeMutableString3)
+                timeMutableString1.append(timeMutableString2)
+                timeMutableString1.append(timeMutableString4)
+                timeMutableString1.append(timeMutableString2)
+                timeMutableString1.append(timeMutableString5)
+                timeMutableString1.append(timeMutableString2)
+                timeMutableString1.append(timeMutableString6)
+                informationText.attributedText = timeMutableString1
             
-            let timeMutableString5 = NSMutableAttributedString(
-                string:fullArray![3],
-                attributes: [NSAttributedStringKey.font:UIFont(
-                    name: "Lato-Bold",
-                    size: informationText.font.pointSize)!])
-            let timeMutableString6 = NSMutableAttributedString(
-                string:  fullArray![4],
-                attributes: [NSAttributedStringKey.font:UIFont(
-                    name: "GESSUniqueBold-Bold",
-                    size: informationText.font.pointSize)!])
-            timeMutableString1.append(timeMutableString2)
-            timeMutableString1.append(timeMutableString3)
-            timeMutableString1.append(timeMutableString2)
-            timeMutableString1.append(timeMutableString4)
-            timeMutableString1.append(timeMutableString2)
-            timeMutableString1.append(timeMutableString5)
-            timeMutableString1.append(timeMutableString2)
-            timeMutableString1.append(timeMutableString6)
-            informationText.attributedText = timeMutableString1
+            }
+            
            }
 
         }
