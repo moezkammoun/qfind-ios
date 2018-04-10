@@ -17,6 +17,7 @@ enum QFindRouter: URLRequestConvertible {
     case getSearchResult([String: Any])
     case getQFindOfTheDay([String: Any])
     case getServiceProvider([String: Any])
+    case getServiceProviderData([String: Any])
 
     
     var method: Alamofire.HTTPMethod {
@@ -35,7 +36,8 @@ enum QFindRouter: URLRequestConvertible {
             return .get
         case .getServiceProvider:
             return .get
-
+        case .getServiceProviderData:
+            return .get
         }
     }
     
@@ -57,6 +59,8 @@ enum QFindRouter: URLRequestConvertible {
            return "api/q-find"
         case .getServiceProvider( _):
             return "api/get-service-provider"
+        case .getServiceProviderData( _):
+            return "api/get-service-provider-inner"
 
         }
     }
@@ -96,6 +100,8 @@ enum QFindRouter: URLRequestConvertible {
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest,
                                                               with: parameters)
         case .getServiceProvider(let parameters):
+            return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
+        case .getServiceProviderData(let parameters):
             return try! Alamofire.URLEncoding.default.encode(mutableURLRequest, with: parameters)
 
         }

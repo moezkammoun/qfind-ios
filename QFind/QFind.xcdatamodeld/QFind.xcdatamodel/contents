@@ -1,65 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="FavoriteEntity" representedClassName=".FavoriteEntity" syncable="YES">
-        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="arabicaddress" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="arabiccategory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arabiclocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arabicname" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtitle" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favoritedate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imgurl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="instagrampage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="maplocation" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="mobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtitle" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortdescription" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="snapchatpage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="twitterpage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="HistoryEntity" representedClassName=".HistoryEntity" syncable="YES">
-        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="arabicaddress" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="arabiccategory" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arabiclocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="arabicname" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtitle" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="closingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date_history" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="facebookpage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="imgurl" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="instagrampage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="maplocation" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="mobile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtime" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtime_arabic" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtitle" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="openingtitle_arabic" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortdescription" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="snapchatpage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="twitterpage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="450"/>
-        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="450"/>
+        <element name="FavoriteEntity" positionX="-63" positionY="-18" width="128" height="150"/>
+        <element name="HistoryEntity" positionX="-63" positionY="108" width="128" height="150"/>
     </elements>
 </model>

@@ -29,7 +29,7 @@
 "ENGLISH" = "English";
 "Yes" = "YES";
 "No" = "NO";
-"Selected_arabic" = "You have already selected Arabic";
+"Selected_arabic" = "Current Language is Arabic";
 "Check_internet" = "Check your internet connections";
 "Favorite_delete_message" = "Item will be deleted from favorites. Do you want to continue?";
 "Added_to_favorite" = "Added to favorites";
@@ -41,7 +41,7 @@
 "Delete" = "Delete";
 "Cancel" = "Cancel";
 "No_Favorite_message" = "No favorites yet";
-"No_history_message" = "No history yet";
+"No_history_message" = "No views yet";
 "Jan" = "Jan";
 "Feb" = "Feb";
 "Mar" = "Mar";
@@ -55,4 +55,14 @@
 "Nov" = "Nov";
 "Dec" = "Dec";
 "ErrorMessage" = "Error in connecting the server";
+"QFind" = "QFind";
+"Sunday" = "Sunday";
+"Monday" = "Monday";
+"Tuesday" = "Tuesday";
+"Wednesday" = "Wednesday";
+"Thursday" = "Thursday";
+"Friday" = "Friday";
+"Saturday" = "Saturday";
+"Closed" = "Closed";
+
 

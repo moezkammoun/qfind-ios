@@ -240,7 +240,14 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         slideShow.transitionDuration = 1.5
         slideShow.transitionType = KASlideShowTransitionType.slide
         slideShow.imagesContentMode = .scaleAspectFit
-        slideShow.images = imageArray as! NSMutableArray
+        if imageArray.count == 1 {
+            self.slideShow.images = NSMutableArray()
+            self.slideShow.addImage(imageArray[0] as! UIImage)
+        }
+        else {
+            slideShow.images = imageArray as! NSMutableArray
+        }
+       
         slideShow.add(KASlideShowGestureType.swipe)
         slideShow.start()
         
@@ -431,8 +438,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 let servicePrividerDict = serviceProviderArray[indexPath.row]
                 let informationVC : DetailViewController = storyboard?.instantiateViewController(withIdentifier: "informationId") as! DetailViewController
                 controller.view.removeFromSuperview()
-                
-                informationVC.serviceProviderArrayDict = servicePrividerDict
+                informationVC.serviceProviderId = servicePrividerDict.id
                 self.present(informationVC, animated: false, completion: nil)
             }
             
@@ -795,9 +801,9 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         }
     }
     func imageDownloader(imgArray : NSArray){
-        
+        self.categoryQFindArray = NSMutableArray()
         while self.categoryQFindArray.count < imgArray.count {
-            self.categoryQFindArray.add("")
+           
             self.categoryQFindArray.add(UIImage(named: "sliderPlaceholder"))
             sliderImagesDefault.set(imgArray.count, forKey: "sliderImageCount")
         }
@@ -824,7 +830,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                     var imgCount = sliderImagesDefault.value(forKey: "sliderImageCount") as! Int
                     if (imgCount != 0) {
                         imgCount = imgCount-1
-                        sliderImagesDefault.set(imgCount, forKey: "sliderImageCount")
+                       
                     }
                 }
             })
@@ -895,6 +901,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
             }
         }
     }
+    
     //Refreshcontrol
     
     //compute the scroll value and play witht the threshold to get desired effect

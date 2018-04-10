@@ -181,6 +181,7 @@ struct ServiceProviderData: ResponseObjectSerializable {
     var serviceProviderData: [ServiceProvider]? = []
     var code:  String? = nil
     var response: String? = nil
+   
     
     public init?(response: HTTPURLResponse, representation: AnyObject) {
         
@@ -191,6 +192,8 @@ struct ServiceProviderData: ResponseObjectSerializable {
         if let data = representation["result"] as? [[String: Any]] {
             
             self.serviceProviderData = ServiceProvider.collection(response: response, representation: data as AnyObject )
+           
+           
         }
         
         
@@ -209,14 +212,14 @@ struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializab
     var service_provider_website: String? = nil
     var service_provider_mobile_number: String? = nil
     var service_provider_map_location: String? = nil
-    var service_provider_opening_time: String? = nil
-    var service_provider_opening_time_arabic: String? = nil
-    var service_provider_closing_time: String? = nil
-    var service_provider_closing_time_arabic: String? = nil
-    var service_provider_opening_title: String? = nil
-    var service_provider_opening_title_arabic: String? = nil
-    var service_provider_closing_title_arabic: String? = nil
-    var service_provider_closing_title: String? = nil
+//    var service_provider_opening_time: String? = nil
+//    var service_provider_opening_time_arabic: String? = nil
+//    var service_provider_closing_time: String? = nil
+//    var service_provider_closing_time_arabic: String? = nil
+//    var service_provider_opening_title: String? = nil
+//    var service_provider_opening_title_arabic: String? = nil
+//    var service_provider_closing_title_arabic: String? = nil
+//    var service_provider_closing_title: String? = nil
     var service_provider_facebook_page: String? = nil
     var service_provider_linkdin_page: String? = nil
     var service_provider_instagram_page: String? = nil
@@ -229,10 +232,13 @@ struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializab
     var service_provider_location_arabic: String? = nil
     var service_provider_category_arabic: String? = nil
     var image : NSArray? = nil
+   // var service_provider_time: NSArray? = nil
+    var serviceProviderTimeArray: [ServiceProviderTime]? = []
 
     public init?(response: HTTPURLResponse, representation: AnyObject) {
+        
         if let representation = representation as? [String: Any] {
-            
+
             self.service_provider_name = representation["service_provider_name"] as? String
              self.service_provider_address = representation["service_provider_address"] as? String
             self.service_provider_location = representation["service_provider_location"] as? String
@@ -243,17 +249,7 @@ struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializab
             self.service_provider_website = representation["service_provider_website"] as? String
             self.service_provider_mobile_number = representation["service_provider_mobile_number"] as? String
             self.service_provider_map_location = representation["service_provider_map_location"] as? String
-            self.service_provider_opening_time = representation["service_provider_opening_time"] as? String
-            self.service_provider_opening_time_arabic = representation["service_provider_opening_time_arabic"] as? String
-            self.service_provider_closing_time = representation["service_provider_closing_time"] as? String
-            self.service_provider_closing_time_arabic = representation["service_provider_closing_time_arabic"] as? String
-            self.service_provider_opening_title = representation["service_provider_opening_title"] as? String
             
-            
-            
-            self.service_provider_opening_title_arabic = representation["service_provider_opening_title_arabic"] as? String
-            self.service_provider_closing_title = representation["service_provider_closing_title"] as? String
-            self.service_provider_closing_title_arabic = representation["service_provider_closing_title_arabic"] as? String
             self.service_provider_facebook_page = representation["service_provider_facebook_page"] as? String
             self.service_provider_linkdin_page = representation["service_provider_linkdin_page"] as? String
             self.service_provider_instagram_page = representation["service_provider_instagram_page"] as? String
@@ -266,7 +262,64 @@ struct ServiceProvider: ResponseObjectSerializable, ResponseCollectionSerializab
             self.service_provider_location_arabic = representation["service_provider_location_arabic"] as? String
             self.service_provider_category_arabic = representation["service_provider_category_arabic"] as? String
             self.image = representation["image"] as? NSArray
+            if let data = representation["service_provider_time"] as? [[String: Any]] {
+                self.serviceProviderTimeArray = ServiceProviderTime.collection(response: response, representation: data as AnyObject )
+                
+                
+            }
+            
+
         }
         
+    }
+}
+struct ServiceProviderTime: ResponseObjectSerializable,ResponseCollectionSerializable {
+        var day: String? = nil
+        var service_provider_opening_time: String? = nil
+        var service_provider_opening_time_arabic: String? = nil
+        var service_provider_closing_time: String? = nil
+        var service_provider_closing_time_arabic: String? = nil
+        var service_provider_opening_title: String? = nil
+        var service_provider_opening_title_arabic: String? = nil
+        var service_provider_closing_title_arabic: String? = nil
+        var service_provider_closing_title: String? = nil
+    
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        if let representation = representation as? [String: Any] {
+            self.day = representation["day"] as? String
+            self.service_provider_opening_time = representation["service_provider_opening_time"] as? String
+            self.service_provider_opening_time_arabic = representation["service_provider_opening_time_arabic"] as? String
+            self.service_provider_closing_time = representation["service_provider_closing_time"] as? String
+            self.service_provider_closing_time_arabic = representation["service_provider_closing_time_arabic"] as? String
+            self.service_provider_opening_title = representation["service_provider_opening_title"] as? String
+            
+            
+            
+            self.service_provider_opening_title_arabic = representation["service_provider_opening_title_arabic"] as? String
+            self.service_provider_closing_title = representation["service_provider_closing_title"] as? String
+            self.service_provider_closing_title_arabic = representation["service_provider_closing_title_arabic"] as? String
+            
+            
+            
+        }
+    }
+}
+
+struct InformationProviderData: ResponseObjectSerializable {
+    var informationproviderData: ServiceProvider?
+    var code:  String? = nil
+    var response: String? = nil
+    
+    
+    
+    public init?(response: HTTPURLResponse, representation: AnyObject) {
+        if let representationData = representation as? [String: Any] {
+            self.code = representationData["code"] as? String
+            self.response = representationData["response"] as? String
+        }
+        
+        if let data = representation["result"] {
+            self.informationproviderData = ServiceProvider.init(response: response, representation: data as AnyObject)
+        }
     }
 }

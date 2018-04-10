@@ -23,6 +23,7 @@ class BottomBarView: UIView {
     @IBOutlet weak var favoriteview: UIView!
     @IBOutlet weak var homeView: UIView!
     
+    @IBOutlet weak var homeImage: UIImageView!
     @IBOutlet weak var favorireCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var homeCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var historyCenterYConstraint: NSLayoutConstraint!
@@ -60,6 +61,8 @@ class BottomBarView: UIView {
             homeCenterYConstraint.constant = 0
             historyCenterYConstraint.constant = 0
         }
+        homeImage.layer.minificationFilter = kCAFilterTrilinear
+        homeImage.layer.minificationFilterBias = 0.1
     }
    
     @IBAction func didTapFavorite(_ sender: UIButton) {

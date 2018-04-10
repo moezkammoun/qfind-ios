@@ -31,7 +31,7 @@
 "ENGLISH" = "English";
 "Yes" = "نعم";
 "No" = "لا";
-"Selected_arabic" = "لقد قمت باختيار اللغة العربية بالفعل";
+"Selected_arabic" = "اللغة الحالية عي العربية";
 "Check_internet" = "تأكد من اتصالك بالانترنت";
 "Favorite_delete_message" = "سيتم حذف البند من المفضلة. هل تريد المتابعة";
 "Added_to_favorite" = "تم الإضافة إلى المفضلة";
@@ -43,7 +43,7 @@
 "Delete" = "مسح";
 "Cancel" = "إلغاء";
 "No_Favorite_message" = "لم تضف أي مفضلة بعد";
-"No_history_message" = "لا يوجد نتائج بخث سابقة";
+"No_history_message" = "لا توجد عمليات بحث سابقة";
 "Jan" = "يناير";
 "Feb" = "فبراير";
 "Mar" = "مارس";
@@ -57,3 +57,12 @@
 "Nov" = "نوفمبر";
 "Dec" = "ديسمبر";
 "ErrorMessage" = "حدث خطأ أثناء محاولة الاتصال مع الخادم";
+"QFind" = "كيو فايند";
+"Sunday" = "الأحد";
+"Monday" = "الاثنين";
+"Tuesday" = "الثلاثاء";
+"Wednesday" = "الأربعاء";
+"Thursday" = "الخميس";
+"Friday" = "الجمعة";
+"Saturday" = "السبت";
+"Closed" = "مغلق";

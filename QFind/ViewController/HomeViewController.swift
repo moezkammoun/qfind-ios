@@ -48,8 +48,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
+       
         setUILayout()
         sliderLoading.isHidden = false
         sliderLoading.startAnimating()
@@ -65,6 +64,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+
         if (LocalizationLanguage.currentAppleLanguage() == "en") {
             UIView.appearance().semanticContentAttribute = .forceLeftToRight
         }
@@ -119,15 +119,21 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             slideShow.delegate = self
             slideShow.delay = 1
             slideShow.transitionDuration = 1.5
-            slideShow.transitionType = KASlideShowTransitionType.slide
+           slideShow.transitionType = KASlideShowTransitionType.slide
             slideShow.imagesContentMode = .scaleAspectFit
-            slideShow.images = imgArray as! NSMutableArray
+        if imgArray.count == 1 {
+            self.slideShow.images = NSMutableArray()
+            self.slideShow.addImage(imgArray[0] as! UIImage)
+        }
+        else {
+             slideShow.images = imgArray as! NSMutableArray
+        }
             slideShow.add(KASlideShowGestureType.swipe)
             slideShow.start()
             pageControl.numberOfPages = imgArray.count
             pageControl.currentPage = Int(slideShow.currentIndex)
             pageControl.addTarget(self, action: #selector(HomeViewController.pageChanged), for: .valueChanged)
-        
+       
         
     }
     func setUILayout() {
@@ -443,7 +449,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                             }
                             else{
                                 self.qFindDict = data.qfindOfTheDayData
-                                self.imageDownloader(imgArray: (self.qFindDict?.image)!.mutableCopy() as! NSMutableArray)
+                                self.imageDownloader(imgArray: (self.qFindDict?.image)!)
                             }
                         case .failure(let error):
                             self.sliderLoading.stopAnimating()
@@ -460,14 +466,19 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     }
     
     
-    func imageDownloader(imgArray : NSMutableArray){
+    func imageDownloader(imgArray : NSArray){
+       
+        self.qFindArray = NSMutableArray()
+        
         while self.qFindArray.count < imgArray.count {
             self.qFindArray.add(UIImage(named: "sliderPlaceholder"))
+            
             sliderImagesDefault.set(imgArray.count, forKey: "sliderImageCount")
         }
         for var i in (0..<imgArray.count)
         {
             let slideiImageUrl = URL(string: imgArray[i] as! String)
+          
             KingfisherManager.shared.retrieveImage(with: slideiImageUrl!, options: nil, progressBlock: nil, completionHandler: { (image, error, cacheType, imageURL) -> () in
                 ImageDownloader.default.downloadTimeout = 70
                 if let image = image {
@@ -486,7 +497,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                     var imgCount = sliderImagesDefault.value(forKey: "sliderImageCount") as! Int
                     if (imgCount != 0) {
                         imgCount = imgCount-1
-                        sliderImagesDefault.set(imgCount, forKey: "sliderImageCount")
+                        
                     }
                 }
             })
@@ -494,12 +505,14 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
  
    
     }
- func getImage(){
-    let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
-    let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
-    self.qFindArray = decodedTeams.sliderImages
-    setSlideShow(imgArray: self.qFindArray)
+    func getImage(){
+        let decoded  = sliderImagesDefault.object(forKey: "sliderimages") as! Data
+        let decodedTeams = NSKeyedUnarchiver.unarchiveObject(with: decoded) as! SliderImagesModel
+        self.qFindArray = decodedTeams.sliderImages
+        
+        setSlideShow(imgArray: self.qFindArray)
     }
+    
     func setFontForHomeView() {
          let searchPlaceHolder = NSLocalizedString("SEARCH_TEXT", comment: "SEARCH_TEXT Label in the home page")
         if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
