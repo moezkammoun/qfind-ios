@@ -8,6 +8,6 @@
 
 import Foundation
 struct Config {
-    static let baseURL = "http://ec2-18-219-90-185.us-east-2.compute.amazonaws.com/"
+    static let baseURL = "https://www.qfind.qa/"
 
 }

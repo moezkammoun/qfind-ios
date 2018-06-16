@@ -23,6 +23,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet var timePopup: UIView!
     @IBOutlet weak var detailView: UIView!
+    @IBOutlet weak var shareButton: UIButton!
     
     @IBOutlet weak var detailLoadingView: LoadingView!
     @IBOutlet weak var timePopupInnerView: UIView!
@@ -201,12 +202,21 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
     @IBAction func didTapShare(_ sender: UIButton) {
         if  (networkReachability?.isReachable)! {
             let firstActivityItem = "QFind"
-            let secondActivityItem : NSURL = NSURL(string: "https://moushtarayatapp.com?category_id=\(informationId)")!
+            
+           // let secondActivityItem : NSURL = NSURL(string: "https://moushtarayatapp.com?provider_id=\(informationId)")!
+             let secondActivityItem : NSURL = NSURL(string: "https://www.qfind.qa/site/play-store?provider_id=\(informationId)")!
+            
+            
             let activityViewController : UIActivityViewController = UIActivityViewController(
                 activityItems: [firstActivityItem, secondActivityItem], applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = (sender )
             activityViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.up
-            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 150, y: 150, width: 0, height: 0)
+            if (LocalizationLanguage.currentAppleLanguage() == "en") {
+            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: shareButton.frame.origin.x, y: shareButton.frame.origin.y, width: 0, height: 0)
+        }
+        else {
+            activityViewController.popoverPresentationController?.sourceRect = CGRect(x: 120, y: 150, width: 0, height: 0)
+        }
 //            activityViewController.excludedActivityTypes = [
 //                UIActivityType.postToWeibo,
 //                UIActivityType.print,
@@ -481,9 +491,9 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
             
         }
         else {
-            self.view.makeToast("Not  *****   deeplink")
+            
              self.dismiss(animated: false, completion: nil)
-            self.view.makeToast("Not  *****   deeplink")
+            
         }
        
     }
@@ -599,6 +609,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                     }
                     else {
                         weekWorkingTime = [ "key" : "timeKey" ,"value" : popupAppendString, "dayValue" : workigTime.day!]
+                weekWorkingTimeArray.add(weekWorkingTime)
                        
                     }
             let closedLabel = NSLocalizedString("Closed", comment: "closed label in timepopup")
@@ -652,108 +663,28 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
         guard let arabicNameString = (serviceProviderArrayDict?.service_provider_name_arabic) else{
             return
         }
-//        guard let address = (serviceProviderArrayDict?.service_provider_address) else{
-//            return
-//        }
-//        guard let arabicAddress = (serviceProviderArrayDict?.service_provider_address_arabic) else{
-//            return
-//        }
+
         guard let shortDescription = (serviceProviderArrayDict?.service_provider_location) else{
             return
         }
         guard let arabicLocation = (serviceProviderArrayDict?.service_provider_location_arabic) else{
             return
         }
-//        guard let category = (serviceProviderArrayDict?.service_provider_category) else{
-//            return
-//        }
-//        guard let arabicCategory = (serviceProviderArrayDict?.service_provider_category_arabic) else{
-//            return
-//        }
+
         guard let logoImage = (serviceProviderArrayDict?.service_provider_logo) else{
             return
         }
         guard let serviceId = (serviceProviderArrayDict?.id) else{
             return
         }
-//        guard let email = (serviceProviderArrayDict?.service_provider_mail_account) else{
-//            return
-//        }
-//        guard let websitePage = (serviceProviderArrayDict?.service_provider_website) else{
-//            return
-//        }
-//        guard let mobile = (serviceProviderArrayDict?.service_provider_mobile_number) else{
-//            return
-//        }
-//        guard let mapLocation = (serviceProviderArrayDict?.service_provider_map_location) else{
-//            return
-//        }
-        /*
-        guard let openingTime = (serviceProviderArrayDict?.service_provider_opening_time) else{
-            return
-        }
-        guard let openingTitle = (serviceProviderArrayDict?.service_provider_opening_title) else{
-            return
-        }
-        guard let openingTimeArabic = (serviceProviderArrayDict?.service_provider_opening_time_arabic) else{
-            return
-        }
-        guard let openingTitleArabic = (serviceProviderArrayDict?.service_provider_opening_title_arabic) else{
-            return
-        }
-        guard let closingTime = (serviceProviderArrayDict?.service_provider_closing_time) else{
-            return
-        }
-        guard let closingTimeArabic = (serviceProviderArrayDict?.service_provider_closing_time_arabic) else{
-            return
-        }
-        guard let closingTitle = (serviceProviderArrayDict?.service_provider_closing_title) else{
-            return
-        }
-        guard let closingTitleArabic = (serviceProviderArrayDict?.service_provider_closing_title_arabic) else{
-            return
-        }
-  */
-//        guard let facebookPage = (serviceProviderArrayDict?.service_provider_facebook_page) else{
-//            return
-//        }
-//        guard let instagramPage = (serviceProviderArrayDict?.service_provider_instagram_page) else{
-//            return
-//        }
-//        guard let twitterPage = (serviceProviderArrayDict?.service_provider_twitter_page) else{
-//            return
-//        }
-//        guard let snapChatPage = (serviceProviderArrayDict?.service_provider_snapchat_page) else{
-//            return
-//        }
+
         let entityFavorite =
             NSEntityDescription.entity(forEntityName: "FavoriteEntity",
                                        in: managedContext)!
         let favoriteAttribute = NSManagedObject(entity: entityFavorite,
                                                 insertInto: managedContext)
         favoriteAttribute.setValue(serviceId, forKey: "id")
-//        favoriteAttribute.setValue(address, forKey: "address")
-//        favoriteAttribute.setValue(arabicAddress, forKey: "arabicaddress")
-//        favoriteAttribute.setValue(category, forKey: "category")
-//        favoriteAttribute.setValue(arabicCategory, forKey: "arabiccategory")
-//        favoriteAttribute.setValue(email, forKey: "email")
-//        favoriteAttribute.setValue(websitePage, forKey: "website")
-//        favoriteAttribute.setValue(mobile, forKey: "mobile")
-//        favoriteAttribute.setValue(mapLocation, forKey: "maplocation")
-        /*
-        favoriteAttribute.setValue(openingTime, forKey: "openingtime")
-        favoriteAttribute.setValue(openingTitle, forKey: "openingtitle")
-        favoriteAttribute.setValue(openingTimeArabic, forKey: "openingtime_arabic")
-        favoriteAttribute.setValue(openingTitleArabic, forKey: "openingtitle_arabic")
-        favoriteAttribute.setValue(closingTime, forKey: "closingtime")
-        favoriteAttribute.setValue(closingTitle, forKey: "closingtitle")
-        favoriteAttribute.setValue(closingTimeArabic, forKey: "closingtime_arabic")
-        favoriteAttribute.setValue(closingTitleArabic, forKey: "closingtitle_arabic")
-  */
-//        favoriteAttribute.setValue(facebookPage, forKey: "facebookpage")
-//        favoriteAttribute.setValue(instagramPage, forKey: "instagrampage")
-//        favoriteAttribute.setValue(twitterPage, forKey: "twitterpage")
-//        favoriteAttribute.setValue(snapChatPage, forKey: "snapchatpage")
+
         favoriteAttribute.setValue(nameString, forKey: "name")
         favoriteAttribute.setValue(arabicNameString, forKey: "arabicname")
         favoriteAttribute.setValue(logoImage, forKey: "imgurl")
@@ -1144,7 +1075,7 @@ class DetailViewController: RootViewController,BottomProtocol,MFMailComposeViewC
                             self.detailLoadingView.stopLoading()
                             self.detailLoadingView.isHidden = true
                         }
-                    case .failure(let error): break
+                    case .failure(let error): 
                         self.detailLoadingView.stopLoading()
                         self.detailLoadingView.isHidden = true
                     }

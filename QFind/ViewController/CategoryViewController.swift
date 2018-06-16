@@ -363,7 +363,8 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         controller.view.removeFromSuperview()
         searchBarView.searchText.text = ""
-        
+        categoryView.removeGestureRecognizer(tapGestRecognizer)
+        controller.view.removeFromSuperview()
             if categoryPageNameString == PageNameInCategory.category
             {
                 if  (networkReachability?.isReachable)!{
@@ -517,9 +518,11 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     }
     // MARK: Searchbar
     func searchButtonPressed() {
+        categoryView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
         if  (networkReachability?.isReachable)!{
              if ((predicateSearchKey.count) > 0 ) {
+                 if (predicateSearchKey != " ") {
             let trimmedText = searchBarView.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
            
                 let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
@@ -528,6 +531,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
                 historyVC.searchType = 4
                 historyVC.searchKey = trimmedText
                 self.present(historyVC, animated: false, completion: nil)
+            }
             }
             
         }
@@ -539,8 +543,12 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         }
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
-        
+        if (controller != nil) {
+            categoryView.removeGestureRecognizer(tapGestRecognizer)
+            controller.view.removeFromSuperview()
+        }
         predicateSearchKey = textField.text! + string
+        
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
@@ -570,6 +578,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
         
        
         return true
+        
     }
     @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
@@ -595,7 +604,7 @@ class CategoryViewController: RootViewController,KASlideShowDelegate,UICollectio
     func tableView(_ tableView: UITableView, didSelectSearchRowAt indexPath: IndexPath) {
         let predicatedict = predicateSearchArray![indexPath.row]
         searchBarView.searchText.text = predicatedict.search_name
-         categoryView.removeGestureRecognizer(tapGestRecognizer)
+        categoryView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
        
         let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController

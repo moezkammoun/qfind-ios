@@ -452,11 +452,13 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
     }
     //MARK:Searchbar
     func searchButtonPressed() {
+       
         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
         let trimmedText = historySearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         if  (networkReachability?.isReachable)!  {
             if ((predicateSearchKey.count) > 0 ) {
+            if (predicateSearchKey != " ") {
             previousPage = pageNameString
             pageNameString = PageName.searchResult
             setLocalizedVariable()
@@ -465,6 +467,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             }
             getSearchResultFromServer(searchType: 4, searchKey: searchItemKey)
             }
+            }
         }
         else {
             self.view.hideAllToasts()
@@ -472,10 +475,16 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             let checkInternet =  NSLocalizedString("Check_internet", comment: "check internet message")
             self.view.makeToast(checkInternet)
         }
+         historySearchBar.searchText.text = ""
+         predicateSearchKey = ""
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
-        
+        if (controller != nil) {
+            self.historyView.removeGestureRecognizer(tapGestRecognizer)
+            controller.view.removeFromSuperview()
+        }
         predicateSearchKey = textField.text! + string
+        
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
@@ -497,6 +506,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
             controller.view.removeFromSuperview()
         }
         return true
+        
     }
     @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
@@ -522,6 +532,7 @@ class HistoryViewController: RootViewController,UICollectionViewDelegate,UIColle
         historySearchBar.searchText.text = predicateSearchdict.search_name
         self.historyView.removeGestureRecognizer(tapGestRecognizer)
         controller.view.removeFromSuperview()
+        
         setBottomBarSearchBackground()
         previousPage = pageNameString
         pageNameString = PageName.searchResult

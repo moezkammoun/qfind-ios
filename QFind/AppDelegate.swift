@@ -10,6 +10,7 @@ import Alamofire
 import CoreData
 import Firebase
 import UIKit
+
 let tokenDefault = UserDefaults.standard
 var languageKey = 1
 var deepLinkId: Int?
@@ -20,19 +21,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var historyDetailsArray:[HistoryEntity]?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        self.window?.makeToast("1")
+        
         // Override point for customization after application launch.
         UIApplication.shared.statusBarStyle = .lightContent
           AppLocalizer.DoTheMagic()
         if(deepLinkId == nil) {
+           
             self.window = UIWindow(frame: UIScreen.main.bounds)
-            
+
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            
+
             let initialViewController = storyboard.instantiateViewController(withIdentifier: "launchId")
-            
+
             self.window?.rootViewController = initialViewController
-            //self.window?.makeKeyAndVisible()
+            self.window?.makeKeyAndVisible()
         }
         
         getAccessTokenFromServer()
@@ -67,6 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
+       
         if #available(iOS 10.0, *) {
             self.saveContext()
         } else {
@@ -83,31 +86,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             let queryItems = components.queryItems
             var parameters = [String: String]()
+        if(queryItems != nil) {
             for item in queryItems! {
                 parameters[item.name] = item.value
-                if (item.name == "category_id") {                    
+                if (item.name == "provider_id") {                    
                     deepLinkId = Int(item.value!)!
                     
-               
-//                    
-//                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                    let viewController = storyboard.instantiateViewController(withIdentifier :"informationId") as! DetailViewController
-//                    let navController = UINavigationController.init(rootViewController: viewController)
-//
-//                    if let window = self.window, let rootViewController = window.rootViewController {
-//                        var currentController = rootViewController
-//                        while let presentedController = currentController.presentedViewController {
-//                            currentController = presentedController
-//                        }
-//                        currentController.present(navController, animated: true, completion: nil)
-//                    }
-                    
+                        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                        let initialViewController : LaunchViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "launchId") as! LaunchViewController
+                        self.window = UIWindow(frame: UIScreen.main.bounds)
+                        self.window?.rootViewController = initialViewController
+                        self.window?.makeKeyAndVisible()
                 }//
                 
             }
+        }
+ 
         return true
     }
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+ 
+    func application(_ application: UIApplication, open url: URL,
+                     sourceApplication: String?, annotation: Any) -> Bool {
         
         return true
     }
