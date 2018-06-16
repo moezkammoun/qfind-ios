@@ -47,6 +47,9 @@ class CategoryCollectionViewCell: UICollectionViewCell {
             thumbnailView.kf.setImage(with: URL(string: imageUrl))
             
         }
+        if (thumbnailView.image == nil) {
+            thumbnailView.image = UIImage(named: "placeholder")
+        }
         self.layoutIfNeeded()
     }
     func setSubCategoryCellValues(subCategoryValues : SubCategory){
@@ -55,6 +58,9 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         if let imageUrl = subCategoryValues.sub_categories_imge{
             
             thumbnailView.kf.setImage(with: URL(string: imageUrl))
+        }
+        if (thumbnailView.image == nil) {
+            thumbnailView.image = UIImage(named: "placeholder")
         }
         
     }

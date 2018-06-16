@@ -89,11 +89,17 @@ class SearchBarView: UIView,UITextFieldDelegate {
 //            searchButton.isHidden = true
 //        }
         
-        
-        
+       
+        if (((searchString.characters.count) == 1) && (searchString == " "))  {
+           
+           
+            return false
+        }
+        else {
         searchDelegate?.textField(searchText, shouldChangeSearcgCharacters: range, replacementString: string)
         
         return true
+        }
     }
     @IBAction func didTapSearchButton(_ sender: UIButton) {
         searchDelegate?.searchButtonPressed()

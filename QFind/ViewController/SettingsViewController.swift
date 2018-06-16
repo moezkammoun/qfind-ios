@@ -221,11 +221,13 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
          let trimmedText = settingsSearchBar.searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
        if  (networkReachability?.isReachable)!  {
         if ((predicateSearchKey.count) > 0 ) {
+             if (predicateSearchKey != " ") {
             let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
             historyVC.pageNameString = PageName.searchResult
             historyVC.searchType = 4
             historyVC.searchKey = trimmedText
             self.present(historyVC, animated: false, completion: nil)
+            }
         }
        }
        else {
@@ -237,6 +239,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
     }
     func textField(_ textField: UITextField, shouldChangeSearcgCharacters range: NSRange, replacementString string: String) -> Bool {
         predicateSearchKey = textField.text! + string
+        
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
@@ -258,6 +261,7 @@ class SettingsViewController: RootViewController,SearchBarProtocol,BottomProtoco
             controller.view.removeFromSuperview()
         }
         return true
+        
     }
     @objc func dismissPopupView(sender: UITapGestureRecognizer) {
         controller.view.removeFromSuperview()

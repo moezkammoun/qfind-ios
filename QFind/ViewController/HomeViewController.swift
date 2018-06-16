@@ -60,6 +60,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             self.view.makeToast(checkInternet)
             sliderLoading.stopAnimating()
         }
+        
         }
    
     override func viewWillAppear(_ animated: Bool) {
@@ -99,6 +100,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             if ((LocalizationLanguage.currentAppleLanguage()) == "en") {
                 slideShow.arabic = false
                 searchText.textAlignment = .left
+                
+                
             }
             else{
                 slideShow.arabic = true
@@ -266,6 +269,10 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 
         predicateSearchKey = textField.text! + string
+        if (((predicateSearchKey.characters.count) == 1) && (predicateSearchKey == " "))  {
+            return false
+        }
+        else {
         let  char = string.cString(using: String.Encoding.utf8)!
         let isBackSpace = strcmp(char, "\\b")
         if (isBackSpace == -92){
@@ -287,6 +294,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
             controller.view.removeFromSuperview()
         }
         return true
+        }
     }
     @objc func dismissPopupView(sender: UITapGestureRecognizer)
     {
@@ -413,6 +421,8 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
          if  (networkReachability?.isReachable)!  {
         
             if ((predicateSearchKey.count) > 0 ) {
+                if (predicateSearchKey != " ") {
+                
                  let trimmedText = searchText.text?.trimmingCharacters(in: .whitespacesAndNewlines)
                 let historyVC : HistoryViewController = storyboard?.instantiateViewController(withIdentifier: "historyId") as! HistoryViewController
                 historyVC.searchType = 4
@@ -421,7 +431,7 @@ class HomeViewController: RootViewController,UITextFieldDelegate, KASlideShowDel
                 self.present(historyVC, animated: false, completion: nil)
             }
            
-       
+            }
         }
         else{
                 self.view.hideAllToasts()
